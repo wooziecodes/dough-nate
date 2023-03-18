@@ -1,5 +1,7 @@
 import os
 from flask import Flask, request, jsonify
+import telegram
+import time
 from firebase_admin import credentials, firestore, initialize_app
 from telegram import Bot
 
@@ -12,7 +14,7 @@ db = firestore.client()
 
 # Telegram Bot Token
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-bot = Bot(token=TELEGRAM_TOKEN)
+bot = telegram.Bot(token='5917180724:AAFLdEV378hB4hnRyKCTXNpw3Cv2ts6w8z0')
 
 
 @app.route("/timer_ping", methods=['POST'])
