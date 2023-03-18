@@ -14,7 +14,7 @@ db = firestore.client()
 
 # Telegram Bot Token
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-bot = telegram.Bot(token='5917180724:AAFLdEV378hB4hnRyKCTXNpw3Cv2ts6w8z0')
+bot = telegram.Bot(token='6160910424:AAFzXahHVctqzM8zD6mLM-Njqe4_f3x4WJ8')
 
 
 @app.route("/timer_ping", methods=['POST'])
@@ -24,7 +24,7 @@ def timer_ping():
 
     if ping == "Timer":
         message = "Ping received from Timer microservice."
-        chat_id = os.environ.get("TELEGRAM_CHAT_ID")  # You can replace this with a specific chat ID
+        chat_id = "-1001982079564"
         bot.send_message(chat_id=chat_id, text=message)
         return jsonify({"code": 200, "message": "Ping received successfully."})
     else:
