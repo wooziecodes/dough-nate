@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 # Initialize Firestore DB
 
-cred = credentials.Certificate('../key.json')
+cred = credentials.Certificate("../key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
-reportsCollection = db.collection('reports')
+reportsCollection = db.collection("reports")
 
 CORS(app)
 
@@ -28,19 +28,19 @@ class Report(object):
             "reportType": self.reportType
         }
 
-@app.route('/reports', methods=['GET'])
+@app.route("/reports", methods=["GET"])
 def get_reports():
     reports = []
     for doc in reportsCollection.get():
         report = doc.to_dict()
-        report['id'] = doc.id
+        report["id"] = doc.id
         reports.append(report)
     return jsonify({
         "code": 200,
         "data": reports
     }), 200
 
-@app.route('/reports/<string:reportId>', methods=['GET'])
+@app.route("/reports/<string:reportId>", methods=["GET"])
 def find_by_id(reportId):
     if reportId:
         doc_ref = reportsCollection.document(reportId)
@@ -51,7 +51,7 @@ def find_by_id(reportId):
                 "message": "Report not found."
             }), 404
         report = doc.to_dict()
-        report['id'] = doc.id
+        report["id"] = doc.id
         return jsonify({
             "code": 200,
             "data": report
@@ -61,7 +61,7 @@ def find_by_id(reportId):
         "message": "Report not found."
     }), 404
 
-@app.route('/reports', methods=['POST'])
+@app.route("/reports", methods=["POST"])
 def create_listing():
     data = request.get_json()
     try:
@@ -74,11 +74,11 @@ def create_listing():
 
     return jsonify({
         "code": 201,
-        "message": "Successfully created report",
+        "message": "Successfully created report.",
         "data": data
     }), 201
 
-@app.route('/reports/<string:reportId>', methods=['PUT'])
+@app.route("/reports/<string:reportId>", methods=["PUT"])
 def update_report(reportId):
     data = request.get_json()
     if not data:
@@ -90,32 +90,32 @@ def update_report(reportId):
     if not doc_ref.get().exists:
         return jsonify({
             "code": 404,
-            "message": "Report not found"
+            "message": "Report not found."
         }), 404
     doc_ref.update(data)
     return jsonify({
         "code": 200,
-        "message": "Report updated successfully"
+        "message": "Report updated successfully."
     }), 200
 
-@app.route('/reports/<string:reportId>', methods=['DELETE'])
+@app.route("/reports/<string:reportId>", methods=["DELETE"])
 def delete_report(reportId):
     if reportId:
         doc_ref = reportsCollection.document(reportId)
         if not doc_ref.get().exists:
             return jsonify({
                 "code": 404,
-                "message": "Report not found"
+                "message": "Report not found."
             }), 404
         doc_ref.delete()
         return jsonify({
             "code": 200,
-            "message": "Report deleted successfully"
+            "message": "Report deleted successfully."
         }), 200
     return jsonify({
         "code": 500,
         "message": "Error deleting report."
     }), 500
 
-if __name__ == '__main__':
+if __name__ == "__main__":
         app.run(port=5005, debug=True)

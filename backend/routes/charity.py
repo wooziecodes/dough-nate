@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 # Initialize Firestore DB
 
-cred = credentials.Certificate('../key.json')
+cred = credentials.Certificate("../key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
-charityCollection = db.collection('charities')
+charityCollection = db.collection("charities")
 
 CORS(app)
 
@@ -28,19 +28,19 @@ class Report(object):
             "charityAddress": self.charityAddress
         }
 
-@app.route('/charities', methods=['GET'])
+@app.route("/charities", methods=["GET"])
 def get_charities():
     charities = []
     for doc in charityCollection.get():
         charity = doc.to_dict()
-        charity['id'] = doc.id
+        charity["id"] = doc.id
         charities.append(charity)
     return jsonify({
         "code": 200,
         "data": charities
     }), 200
 
-@app.route('/charities/<string:charityId>', methods=['GET'])
+@app.route("/charities/<string:charityId>", methods=["GET"])
 def find_by_id(charityId):
     if charityId:
         doc_ref = charityCollection.document(charityId)
@@ -51,7 +51,7 @@ def find_by_id(charityId):
                 "message": "Charity not found."
             }), 404
         charity = doc.to_dict()
-        charity['id'] = doc.id
+        charity["id"] = doc.id
         return jsonify({
             "code": 200,
             "data": charity
@@ -61,7 +61,7 @@ def find_by_id(charityId):
         "message": "Charity not found."
     }), 404
 
-@app.route('/charities', methods=['POST'])
+@app.route("/charities", methods=["POST"])
 def create_charity():
     data = request.get_json()
     try:
@@ -74,11 +74,11 @@ def create_charity():
 
     return jsonify({
         "code": 201,
-        "message": "Successfully created charity",
+        "message": "Successfully created charity.",
         "data": data
     }), 201
 
-@app.route('/charities/<string:charityId>', methods=['PUT'])
+@app.route("/charities/<string:charityId>", methods=["PUT"])
 def update_charity(charityId):
     data = request.get_json()
     if not data:
@@ -90,32 +90,32 @@ def update_charity(charityId):
     if not doc_ref.get().exists:
         return jsonify({
             "code": 404,
-            "message": "Charity not found"
+            "message": "Charity not found."
         }), 404
     doc_ref.update(data)
     return jsonify({
         "code": 200,
-        "message": "Charity updated successfully"
+        "message": "Charity updated successfully."
     }), 200
 
-@app.route('/charities/<string:charityId>', methods=['DELETE'])
+@app.route("/charities/<string:charityId>", methods=["DELETE"])
 def delete_volunteer(charityId):
     if charityId:
         doc_ref = charityCollection.document(charityId)
         if not doc_ref.get().exists:
             return jsonify({
                 "code": 404,
-                "message": "Charity not found"
+                "message": "Charity not found."
             }), 404
         doc_ref.delete()
         return jsonify({
             "code": 200,
-            "message": "Charity deleted successfully"
+            "message": "Charity deleted successfully."
         }), 200
     return jsonify({
         "code": 500,
         "message": "Error deleting charity."
     }), 500
 
-if __name__ == '__main__':
+if __name__ == "__main__":
         app.run(port=5002, debug=True)

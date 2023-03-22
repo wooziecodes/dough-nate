@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 # Initialize Firestore DB
 
-cred = credentials.Certificate('../key.json')
+cred = credentials.Certificate("../key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
-bakeryCollection = db.collection('bakeries')
+bakeryCollection = db.collection("bakeries")
 
 CORS(app)
 
@@ -30,25 +30,25 @@ class Bakery(object):
             "isBanned": self.isBanned
         }
 
-@app.route("/bakeries", methods=['GET'])
+@app.route("/bakeries", methods=["GET"])
 def get_bakeries():
     bakeries = []
     for doc in bakeryCollection.get():
         bakery = doc.to_dict()
-        bakery['id'] = doc.id
+        bakery["id"] = doc.id
         bakeries.append(bakery)
     return jsonify({
         "code": 200,
         "data": bakeries
     }), 200
 
-@app.route("/bakeries/<string:bakeryEmail>", methods=['GET'])
+@app.route("/bakeries/<string:bakeryEmail>", methods=["GET"])
 def find_by_email(bakeryEmail):
     if bakeryEmail:
         bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
         for doc in bakeries:
             bakery = doc.to_dict()
-            bakery['id'] = doc.id
+            bakery["id"] = doc.id
             return jsonify({
                 "code": 200,
                 "data": bakery
@@ -58,7 +58,7 @@ def find_by_email(bakeryEmail):
         "message": "Bakery not found."
     }), 404
 
-@app.route("/bakeries", methods=['POST'])
+@app.route("/bakeries", methods=["POST"])
 def create_bakery():
     data = request.get_json()
     try:
@@ -71,18 +71,18 @@ def create_bakery():
     
     return jsonify({
         "code": 201,
-        "message": "Successfully created bakery",
+        "message": "Successfully created bakery.",
         "data": data
     }), 201
 
-@app.route("/bakeries/<string:bakeryEmail>", methods=['PUT'])
+@app.route("/bakeries/<string:bakeryEmail>", methods=["PUT"])
 def update_bakery(bakeryEmail):
     if bakeryEmail:
         data = request.get_json()
         if not data:
             return jsonify({
                 "code": 400,
-                "message": "Please provide data to update"
+                "message": "Please provide data to update."
             }), 400
         bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
         for doc in bakeries:
@@ -95,10 +95,10 @@ def update_bakery(bakeryEmail):
             doc_ref.update(data)
             return jsonify({
                 "code": 200,
-                "message": "Bakery has been updated"
+                "message": "Bakery has been updated."
             }), 200
 
-@app.route("/bakeries/<string:bakeryEmail>", methods=['DELETE'])
+@app.route("/bakeries/<string:bakeryEmail>", methods=["DELETE"])
 def delete_bakery(bakeryEmail):
     if bakeryEmail:
         bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
@@ -107,12 +107,12 @@ def delete_bakery(bakeryEmail):
             if not doc_ref.get().exists:
                 return jsonify({
                     "code": 404,
-                    "message": "Bakery not found"
+                    "message": "Bakery not found."
                 }), 404
             doc_ref.delete()
             return jsonify({
-                'code': 200,
-                'message': 'Bakery deleted successfully'
+                "code": 200,
+                "message": "Bakery deleted successfully."
             }), 200
     return jsonify({
         "code": 500,

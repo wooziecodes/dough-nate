@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 # Initialize Firestore DB
 
-cred = credentials.Certificate('../key.json')
+cred = credentials.Certificate("../key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
-listingsCollection = db.collection('listings')
+listingsCollection = db.collection("listings")
 
 CORS(app)
 
@@ -34,19 +34,19 @@ class Listing(object):
             "status": self.status
         }
     
-@app.route('/listings', methods=['GET'])
+@app.route("/listings", methods=["GET"])
 def get_listings():
     listings = []
     for doc in listingsCollection.get():
         listing = doc.to_dict()
-        listing['id'] = doc.id
+        listing["id"] = doc.id
         listings.append(listing)
     return jsonify({
         "code": 200,
         "data": listings
     }), 200
 
-@app.route('/listings/<string:listingId>', methods=['GET'])
+@app.route("/listings/<string:listingId>", methods=["GET"])
 def find_by_id(listingId):
     if listingId:
         doc_ref = listingsCollection.document(listingId)
@@ -57,7 +57,7 @@ def find_by_id(listingId):
                 "message": "Listing not found."
             }), 404
         listing = doc.to_dict()
-        listing['id'] = doc.id
+        listing["id"] = doc.id
         return jsonify({
             "code": 200,
             "data": listing
@@ -67,14 +67,14 @@ def find_by_id(listingId):
         "message": "Listing not found."
     }), 404
 
-@app.route('/listings/charity/<string:charityId>', methods = ['GET'])
+@app.route("/listings/charity/<string:charityId>", methods = ["GET"])
 def get_charity_listings(charityId):
     if charityId:
         listings = []
         docs = listingsCollection.where("charityId", "==", charityId).stream()
         for doc in docs:
             listing = doc.to_dict()
-            listing['id'] = doc.id
+            listing["id"] = doc.id
             listings.append(listing)
             return jsonify({
                 "code": 200,
@@ -82,10 +82,10 @@ def get_charity_listings(charityId):
             }), 200
     return jsonify({
         "code": 404,
-        "message": "No listings with such charity"
+        "message": "No listings with such charity."
     }), 404
 
-@app.route('/listings', methods=['POST'])
+@app.route("/listings", methods=["POST"])
 def create_listing():
     data = request.get_json()
     try:
@@ -98,11 +98,11 @@ def create_listing():
 
     return jsonify({
         "code": 201,
-        "message": "Successfully created listing",
+        "message": "Successfully created listing.",
         "data": data
     }), 201
 
-@app.route('/listings/<string:listingId>', methods=['PUT'])
+@app.route("/listings/<string:listingId>", methods=["PUT"])
 def update_listing(listingId):
     data = request.get_json()
     if not data:
@@ -119,27 +119,27 @@ def update_listing(listingId):
     doc_ref.update(data)
     return jsonify({
         "code": 200,
-        "message": "Listing updated successfully"
+        "message": "Listing updated successfully."
     }), 200
 
-@app.route('/listings/<string:listingId>', methods=['DELETE'])
+@app.route("/listings/<string:listingId>", methods=["DELETE"])
 def delete_listing(listingId):
     if listingId:
         doc_ref = listingsCollection.document(listingId)
         if not doc_ref.get().exists:
             return jsonify({
                 "code": 404,
-                "message": "Listing not found"
+                "message": "Listing not found."
             }), 404
         doc_ref.delete()
         return jsonify({
             "code": 200,
-            "message": "Listing deleted successfully"
+            "message": "Listing deleted successfully."
         }), 200
     return jsonify({
         "code": 500,
         "message": "Error deleting listing."
     }), 500
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=5004, debug=True)

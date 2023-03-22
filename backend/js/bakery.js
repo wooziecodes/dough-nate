@@ -4,18 +4,18 @@ $(document).ready(function () {
 
 function getBakeries() {
     $(async () => {
-        var serviceUrl = "http://localhost:5003/bakeries"
+        var serviceUrl = "http://localhost:5001/bakeries"
         try {
             const response = await fetch(serviceUrl, {
-                method: 'GET'
+                method: "GET"
             })
             const result = await response.json();
             if (response.ok) {
                 if (response.status === 200) {
-                    $('#bakeryTable').empty()
+                    $("#bakeryTable").empty()
                     var no = 1
                     for (bakery of result.data) {
-                        $('#bakeryTable').append(`
+                        $("#bakeryTable").append(`
                             <tr>
                                 <th class="align-middle" scope="row">${no}</th>
                                 <td class="align-middle">${bakery.bakeryName}</td>
@@ -38,15 +38,15 @@ function getBakeries() {
 }
 
 $(document).on("click", ".deleteBtn", function () {
-    var email = $(this).parent().siblings('.email').text()
+    var email = $(this).parent().siblings(".email").text()
     deleteBakery(email)
 })
 
 function addBakery() {
-    var bakeryName = $('#newName').val()
-    var bakeryAddress = $('#newAddress').val()
-    var bakeryPhone = parseInt($('#newPhone').val())
-    var bakeryEmail = $('#newEmail').val()
+    var bakeryName = $("#newName").val()
+    var bakeryAddress = $("#newAddress").val()
+    var bakeryPhone = parseInt($("#newPhone").val())
+    var bakeryEmail = $("#newEmail").val()
 
     $(async () => {
         var serviceUrl = "http://localhost:5003/bakeries"
@@ -60,20 +60,20 @@ function addBakery() {
         try {
             const response = await fetch(serviceUrl, {
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
                 },
-                method: 'POST',
+                method: "POST",
                 body: data
             })
             const result = await response.json()
             if (response.ok) {
                 if (response.status == 201) {
-                    alert('Bakery added')
-                    $('#newName').val('')
-                    $('#newAddress').val('')
-                    $('#newPhone').val('')
-                    $('#newEmail').val('')
+                    alert("Bakery added")
+                    $("#newName").val("")
+                    $("#newAddress").val("")
+                    $("#newPhone").val("")
+                    $("#newEmail").val("")
                     getBakeries()
                 }
             }
@@ -89,7 +89,7 @@ function deleteBakery(email) {
         var serviceUrl = "http://localhost:5003/bakeries/" + email
         try {
             const response = await fetch(serviceUrl, {
-                method: 'DELETE'
+                method: "DELETE"
             })
             const result = await response.json();
             if (response.ok) {
