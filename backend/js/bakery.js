@@ -9,7 +9,7 @@ function getBakeries() {
             const response = await fetch(serviceUrl, {
                 method: "GET"
             })
-            const result = await response.json();
+            const result = await response.json()
             if (response.ok) {
                 if (response.status === 200) {
                     $("#bakeryTable").empty()
@@ -32,7 +32,7 @@ function getBakeries() {
                 }
             }
         } catch (error) {
-            alert("There are no bakeries, or there is a problem.");
+            alert("There are no bakeries, or there is a problem.")
         }
     })
 }

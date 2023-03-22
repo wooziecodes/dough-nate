@@ -1,0 +1,76 @@
+<!--choi do here-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reports</title>
+    <link rel="stylesheet" type="text/css" href="./css/report.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Reports</h1>
+
+        <table id="table">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Who are you reporting?</th>
+                    <th scope="col">Report Status</th>
+                    <th scope="col">Report Text</th>
+                    <th scope="col">Charity Name</th>
+                    <th scope="col">Bakery Name</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                            <!-- <th scope="col">Report Id</th> -->
+                            <!-- <th scope="col">Listing Id</th> -->
+                            <!-- <th scope="col">Volunteer Id</th> -->
+                </tr>
+            </thead>
+            <tbody id="reportTable">
+            </tbody>
+        </table>
+        <h2>Add new Report</h2>
+
+        <!-- <div class="input-group mb-3"> -->
+            <!-- <input type="text" class="form-control" placeholder="report status" aria-label="Name" id="reportStatus"> -->
+        <!-- </div> -->
+        <!-- <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="listing id" aria-label="Name" id="listingId">
+        </div> -->
+        <div class="input-group mb-3 flex flex-col">
+            <label for="reportWho">Who are you reporting: </label>
+            
+            <select name="reportWho" id="reportWho">
+              <option value="volunteer">Volunteer</option>
+              <option value="charity">Charity</option>
+            </select>        
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="report Text" aria-label="Name" id="reportText">
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="charity name" aria-label="Name" id="charityName">
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="bakery name" aria-label="Name" id="bakeryName">
+        </div>
+        <button type="button" class="btn btn-success" onclick="addReport()">Add Report</button>
+        <script src="../backend/js/report.js"></script>
+    </div>
+
+
+</body>
+
+</html>
