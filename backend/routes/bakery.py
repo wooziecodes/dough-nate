@@ -75,12 +75,40 @@ def create_bakery():
         "data": data
     }), 201
 
+@app.route("/bakeries/<string:bakeryEmail>", methods=['PUT'])
+def update_bakery(bakeryEmail):
+    if bakeryEmail:
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                "code": 400,
+                "message": "Please provide data to update"
+            }), 400
+        bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
+        for doc in bakeries:
+            doc_ref = bakeryCollection.document(doc.id)
+            if not doc_ref.get().exists:
+                return jsonify({
+                    "code": 404,
+                    "message": "Bakery not found."
+                }), 404
+            doc_ref.update(data)
+            return jsonify({
+                "code": 200,
+                "message": "Bakery has been updated"
+            }), 200
+
 @app.route("/bakeries/<string:bakeryEmail>", methods=['DELETE'])
 def delete_bakery(bakeryEmail):
     if bakeryEmail:
         bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
         for doc in bakeries:
             doc_ref = bakeryCollection.document(doc.id)
+            if not doc_ref.get().exists:
+                return jsonify({
+                    "code": 404,
+                    "message": "Bakery not found"
+                }), 404
             doc_ref.delete()
             return jsonify({
                 'code': 200,
@@ -92,4 +120,4 @@ def delete_bakery(bakeryEmail):
     }), 500
 
 if __name__ == "__main__":
-    app.run(port=5003, debug=True)
+    app.run(port=5001, debug=True)
