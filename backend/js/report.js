@@ -1,21 +1,37 @@
 //choi do here
-// $(document).ready(function () {
-//     reports = JSON.parse(reports)
-
-//     for (report of reports) {
-//         $('#reportTable').append(`
-//         <tr>
-//             <td>${report.reportStatus}</td>
-//             <td>${report.reportText}</td>
-//         </tr>
-//     `)
-//     }
-
-// })
-
 $(document).ready(function () {
     getReports()
+    getListingsWithCharityId()
 })
+
+function getListingsWithCharityId(charityId) {
+    $(async () => {
+        var serviceUrl = "http://localhost:5004/listings/charity/" + charityId
+        try {
+            const response = await fetch(serviceUrl, {
+                method: "GET"
+            })
+            const result = await response.json()
+            if (response.ok) {
+                if (response.status === 200) {
+                    console.log("0", result.data[0].bakeryName)
+                    $("bakeryName").empty()
+                    // for (bakeryname in result.data[0].bakeryName){
+                        // console.log("bakeryname", bakeryname)
+                    const bakeryname = result.data[0].bakeryName
+                    $("bakeryName").append(`
+                        <option value="${bakeryname}">${bakeryname}</option>
+                    `)
+                    // }
+                    console.log("0", result.data[0].charityName)
+                }
+            }
+        } catch(error) {
+            alert("nihaoma")
+            alert(error.message)
+        }
+    })
+}
 
 function getReports() {
     $(async () => {
@@ -27,7 +43,7 @@ function getReports() {
             const result = await response.json()
             if (response.ok) {
                 if (response.status === 200) {
-                    ("#reportTable".empty())
+                    $("#reportTable").empty()
                     var no = 1
                     for (report of result.data) {
                         $("#reportTable").append(`
@@ -74,45 +90,49 @@ $(document).on("click", ".updateBtn", function () {
 
 
 function addReport() {
-    // var reportId = parseInt($('#newId').val())
-    // var reportStatus = $('#reportStatus').val()
-    // var listingId = $('#listingId').val()
     var reportWho = $('#reportWho').val()
     var reportText = $('#reportText').val()
     var volunteerId = $('#volunteerId').val()
     var charityName = $('#charityName').val()
     var bakeryName = $('#bakeryName').val()
 
-    $.ajax({
-        url: '/reports',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            // reportStatus: reportStatus,
+    $(async () => {
+        var serviceUrl = "http://localhost:5005/reports"
+        data = JSON.stringify({
             reportWho: reportWho,
-            listingId: listingId,
             reportText: reportText,
-            charityName: charityName,
-            bakeryName: bakeryName,
-            reportStatus: 'under review',
             volunteerId: volunteerId,
-        }),
-        success: function (data) {
-            alert('Report added')
-            // $('#newlistingId').val('')
-            $('#newreportText').val('')
-            $('#newreportWho').val('')
-            $('#newVolunteerId').val('')
-            $('#newCharityName').val('')
-            $('#newBakeryName').val('')
-            getReports()
-        },
-        error: function (xhr, status, error) {
-            var message = JSON.parse(xhr.responseText).error
-            alert('Error: ' + message)
+            charityName: charityName,
+            bakeryName: bakeryName
+            // isBanned: false
+        })
+        try {
+            const response = await fetch(serviceUrl, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                method: "POST",
+                body: data
+            })
+            const result = await response.json()
+            if (response.ok) {
+                if (response.status == 201) {
+                    alert("Report added")
+                    $("#newReportWho").val("")
+                    $("#newReportText").val("")
+                    $("#newVolunteerId").val("")
+                    $("#newCharityName").val("")
+                    $('#newBakeryName').val('')
+                    getBakeries()
+                }
+            }
+        } catch (error) {
+            alert("Error creating report.")
         }
     })
 }
+
 
 function updateReport(id, report) {
     $.ajax({

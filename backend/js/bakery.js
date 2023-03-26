@@ -49,7 +49,7 @@ function addBakery() {
     var bakeryEmail = $("#newEmail").val()
 
     $(async () => {
-        var serviceUrl = "http://localhost:5003/bakeries"
+        var serviceUrl = "http://localhost:5001/bakeries"
         data = JSON.stringify({
             bakeryName: bakeryName,
             bakeryAddress: bakeryAddress,
@@ -86,7 +86,7 @@ function addBakery() {
 function deleteBakery(email) {
     $(async () => {
         console.log(email)
-        var serviceUrl = "http://localhost:5003/bakeries/" + email
+        var serviceUrl = "http://localhost:5001/bakeries/" + email
         try {
             const response = await fetch(serviceUrl, {
                 method: "DELETE"
