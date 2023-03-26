@@ -94,6 +94,7 @@
       auth.signInWithEmailAndPassword(email, password)
         .then(() => {
           let profileUrl;
+          let userType;
 
           switch (profile) {
             case 'bakery':
@@ -108,21 +109,22 @@
           }
 
           $.ajax({
-            type: "POST",
-            url: profileUrl,
-            data: JSON.stringify({ email: email }),
-            contentType: "application/json",
-            dataType: "json",
-            success: function(response) {
-              console.log('Profile POST request successful:', response);
-              alert('Profile POST request successful.');
-              window.location.href = 'index.html';
-            },
-            error: function(error) {
-              console.error('Profile POST request failed:', error);
-              alert('Profile POST request failed. Please try again.');
-            }
-          });
+  type: "POST",
+  url: profileUrl,
+  data: JSON.stringify({ email: email, userType: userType }), 
+  contentType: "application/json",
+  dataType: "json",
+  success: function(response) {
+    console.log('Profile POST request successful:', response);
+    alert('Profile POST request successful.');
+    window.location.href = 'index.html';
+  },
+  error: function(error) {
+    console.error('Profile POST request failed:', error);
+    alert('Profile POST request failed. Please try again.');
+  }
+});
+
         })
         .catch((error) => {
           console.error('Error logging in:', error);
