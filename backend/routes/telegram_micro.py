@@ -24,7 +24,9 @@ def timer_ping():
 
     if ping == "Timer":
         message = "Ping received from Timer microservice."
-        chat_id = "-1001982079564"
+        chat_id = "-1001982079564"  
+        #json fetch bakery info from listingID 
+        #process bakery info, food data 
         bot.send_message(chat_id=chat_id, text=message)
         return jsonify({"code": 200, "message": "Ping received successfully."})
     else:
