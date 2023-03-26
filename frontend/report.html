@@ -1,4 +1,3 @@
-<!--choi do here-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,34 +27,22 @@
                     <th scope="col">Report Text</th>
                     <th scope="col">Charity Name</th>
                     <th scope="col">Bakery Name</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                            <!-- <th scope="col">Report Id</th> -->
-                            <!-- <th scope="col">Listing Id</th> -->
-                            <!-- <th scope="col">Volunteer Id</th> -->
                 </tr>
             </thead>
             <tbody id="reportTable">
             </tbody>
         </table>
         <h2>Add new Report</h2>
-
-        <!-- <div class="input-group mb-3"> -->
-            <!-- <input type="text" class="form-control" placeholder="report status" aria-label="Name" id="reportStatus"> -->
-        <!-- </div> -->
-        <!-- <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="listing id" aria-label="Name" id="listingId">
-        </div> -->
         <div class="input-group mb-3 flex flex-col">
             <label for="reportWho">Who are you reporting: </label>
             
             <select name="reportWho" id="reportWho">
               <option value="volunteer">Volunteer</option>
               <option value="charity">Charity</option>
-            </select>        
+            </select>    
+            
+            <select name="bakeryName" id="bakeryName"></select>
+
         </div>
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="report Text" aria-label="Name" id="reportText">
@@ -67,6 +54,7 @@
             <input type="text" class="form-control" placeholder="bakery name" aria-label="Name" id="bakeryName">
         </div>
         <button type="button" class="btn btn-success" onclick="addReport()">Add Report</button>
+        <button type="button" class="btn btn-success" onclick="getListingsWithCharityId('Z1JgdfJKXofMvB5pq7zf')">get listings</button>
         <script src="../backend/js/report.js"></script>
     </div>
 
