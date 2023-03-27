@@ -76,7 +76,7 @@ def get_charity_listings(charityId):
             listing = doc.to_dict()
             listing["id"] = doc.id
             listings.append(listing)
-            return jsonify({
+        return jsonify({
                 "code": 200,
                 "data": listings
             }), 200
@@ -114,7 +114,7 @@ def update_listing(listingId):
     if not doc_ref.get().exists:
         return jsonify({
             "code": 404,
-            "message": "Report not found."
+            "message": "Listing not found."
         }), 404
     doc_ref.update(data)
     return jsonify({

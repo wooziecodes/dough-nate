@@ -42,17 +42,22 @@ def get_bakeries():
         "data": bakeries
     }), 200
 
-@app.route("/bakeries/<string:bakeryEmail>", methods=["GET"])
-def find_by_email(bakeryEmail):
-    if bakeryEmail:
-        bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
-        for doc in bakeries:
-            bakery = doc.to_dict()
-            bakery["id"] = doc.id
+@app.route("/bakeries/<string:bakeryId>", methods=["GET"])
+def find_by_id(bakeryId):
+    if bakeryId:
+        doc_ref = bakeryCollection.document(bakeryId)
+        doc = doc_ref.get()
+        if not doc.exists:
             return jsonify({
-                "code": 200,
-                "data": bakery
-            }), 200
+                "code": 404,
+                "message": "Bakery not found."
+            }), 404
+        bakery = doc.to_dict()
+        bakery["id"] = doc.id
+        return jsonify({
+            "code": 200,
+            "data": bakery
+        }), 200
     return jsonify({
         "code": 404,
         "message": "Bakery not found."
@@ -61,6 +66,7 @@ def find_by_email(bakeryEmail):
 @app.route("/bakeries", methods=["POST"])
 def create_bakery():
     data = request.get_json()
+    print(data)
     try:
         bakeryCollection.document().set(data)
     except:
@@ -75,45 +81,41 @@ def create_bakery():
         "data": data
     }), 201
 
-@app.route("/bakeries/<string:bakeryEmail>", methods=["PUT"])
-def update_bakery(bakeryEmail):
-    if bakeryEmail:
+@app.route("/bakeries/<string:bakeryId>", methods=["PUT"])
+def update_bakery(bakeryId):
+    if bakeryId:
         data = request.get_json()
         if not data:
             return jsonify({
                 "code": 400,
                 "message": "Please provide data to update."
             }), 400
-        bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
-        for doc in bakeries:
-            doc_ref = bakeryCollection.document(doc.id)
-            if not doc_ref.get().exists:
-                return jsonify({
-                    "code": 404,
-                    "message": "Bakery not found."
-                }), 404
-            doc_ref.update(data)
+        doc_ref = bakeryCollection.document(bakeryId)
+        if not doc_ref.get().exists:
             return jsonify({
-                "code": 200,
-                "message": "Bakery has been updated."
-            }), 200
+                "code": 404,
+                "message": "Bakery not found."
+            }), 404
+        doc_ref.update(data)
+        return jsonify({
+            "code": 200,
+            "message": "Bakery updated successfully."
+        }), 200
 
-@app.route("/bakeries/<string:bakeryEmail>", methods=["DELETE"])
-def delete_bakery(bakeryEmail):
-    if bakeryEmail:
-        bakeries = bakeryCollection.where("bakeryEmail", "==", bakeryEmail).stream()
-        for doc in bakeries:
-            doc_ref = bakeryCollection.document(doc.id)
-            if not doc_ref.get().exists:
-                return jsonify({
-                    "code": 404,
-                    "message": "Bakery not found."
-                }), 404
-            doc_ref.delete()
+@app.route("/bakeries/<string:bakeryId>", methods=["DELETE"])
+def delete_bakery(bakeryId):
+    if bakeryId:
+        doc_ref = bakeryCollection.document(bakeryId)
+        if not doc_ref.get().exists:
             return jsonify({
-                "code": 200,
-                "message": "Bakery deleted successfully."
-            }), 200
+                "code": 404,
+                "message": "Bakery not found."
+            }), 404
+        doc_ref.delete()
+        return jsonify({
+            "code": 200,
+            "message": "Bakery deleted successfully."
+        }), 200
     return jsonify({
         "code": 500,
         "message": "Error deleting bakery."
