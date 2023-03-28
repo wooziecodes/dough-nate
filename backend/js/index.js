@@ -1,13 +1,15 @@
 //weisheng do here
 $(document).ready(function () {
-    info = retrieveUserType()
+    bakery = "zwxvGoUR8LTAOw2uzrxI24WAEnE2"
+    charity = "wXjex84ieu8KvvKnXMti"
+    volunteer = "7ILUdTNmiXV1vWn8RZF9"
+    retrieveUserType(charity)
 
-    showListings(info)
 })
 
-function retrieveUserType() {
+function retrieveUserType(userid) {
     $(async () => {
-        var serviceUrl = "http://localhost:5005/users"
+        var serviceUrl = "http://localhost:5006/users/" + userid
         try {
             const response = await fetch(serviceUrl, {
                 method: "GET"
@@ -16,7 +18,7 @@ function retrieveUserType() {
             if (response.ok) {
                 if (response.status === 200) {
                     console.log(result.data.userType)
-                    return [result.data.userType, result.data.id]
+                    showListings(result.data.userType)
                 }
             }
         } catch (error) {
@@ -37,10 +39,11 @@ function showListings(info) {
             if (response.ok) {
                 if (response.status === 200) {
                     console.log(result.data)
-                    if (info[0] == "bakery") {
+                    if (info == "bakery") {
                         for (listing of result.data) {
-                            if (listing.status == "created" && listing.bakeryId == info[1]) {
+                            if (listing.status == "created" ) {
                                 //allergens need to fix
+ 
                                 $("#listings").append(`
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
@@ -54,9 +57,9 @@ function showListings(info) {
 
                         }
 
-                    } else if (info[0] == "charity") {
+                    } else if (info == "charity") {
                         for (listing of result.data) {
-                            if (listing.status == "created"  ) {
+                            if (listing.status == "delivered") {
                                 //allergens need to fix
                                 $("#listings").append(`
                                 <tr>
@@ -70,9 +73,9 @@ function showListings(info) {
                             }
 
                         }
-                    } else if (info[0] == "volunteer") {
+                    } else if (info == "volunteer") {
                         for (listing of result.data) {
-                            if (listing.status == "created" && listing.bakeryId == info[1]) {
+                            if (listing.status == "created" && listing.bakeryId == info) {
                                 //allergens need to fix
                                 $("#listings").append(`
                                 <tr>
