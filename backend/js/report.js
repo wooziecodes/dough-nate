@@ -6,7 +6,9 @@ $(document).ready(function () {
 
 function getListingsWithCharityId(charityId) {
     $(async () => {
+        charityId = 'Z1JgdfJKXofMvB5pq7zf'
         var serviceUrl = "http://localhost:5004/listings/charity/" + charityId
+
         try {
             const response = await fetch(serviceUrl, {
                 method: "GET"
@@ -14,21 +16,41 @@ function getListingsWithCharityId(charityId) {
             const result = await response.json()
             if (response.ok) {
                 if (response.status === 200) {
-                    console.log("0", result.data[0].bakeryName)
-                    $("bakeryName").empty()
-                    // for (bakeryname in result.data[0].bakeryName){
-                        // console.log("bakeryname", bakeryname)
-                    const bakeryname = result.data[0].bakeryName
-                    $("bakeryName").append(`
-                        <option value="${bakeryname}">${bakeryname}</option>
-                    `)
-                    // }
-                    console.log("0", result.data[0].charityName)
+                    console.log(result.data[0].id)
+           
+
+                    const bakeryName = [];
+                    const createdTime = [];
+                    const listingId = [];
+                    for(let i=0; i<result.data.length; i++){
+                        // console.log(i);
+                        console.log(result.data[i].createTime)
+                        bakeryName.push(result.data[i].bakeryName);
+                        createdTime.push(result.data[i].createTime);
+                        listingId.push(result.data[i].id);
+                    }
+                    
+                    if(bakeryName.length == 1){
+                        $("#bakeryName").empty();
+                        $("#bakeryName").append(`
+                            <option value="${bakeryName}">${bakeryName} | </option>
+                        `);
+                    } else {
+                        console.log('meow')
+                        $("#bakeryName").empty()
+                        for (let i = 0; i < bakeryName.length; i++) {
+                            // const bakeryname = result.data[0].bakeryName[i]
+
+                            $("#bakeryName").append(`
+                                <option value="${listingId[i]}">${bakeryName[i]} || ${createdTime[i]}</option>
+                            `)
+                        }
+                    }
                 }
             }
         } catch(error) {
             alert("nihaoma")
-            alert(error.message)
+            // alert(error.message)
         }
     })
 }
@@ -92,19 +114,17 @@ $(document).on("click", ".updateBtn", function () {
 function addReport() {
     var reportWho = $('#reportWho').val()
     var reportText = $('#reportText').val()
-    var volunteerId = $('#volunteerId').val()
-    var charityName = $('#charityName').val()
-    var bakeryName = $('#bakeryName').val()
+    var listingId = $('#bakeryName').val()
+
 
     $(async () => {
         var serviceUrl = "http://localhost:5005/reports"
         data = JSON.stringify({
             reportWho: reportWho,
             reportText: reportText,
-            volunteerId: volunteerId,
-            charityName: charityName,
-            bakeryName: bakeryName
-            // isBanned: false
+            listingId: listingId,
+            reportStatus: "reviewing",
+            reportType: 'bakery'
         })
         try {
             const response = await fetch(serviceUrl, {
@@ -121,43 +141,47 @@ function addReport() {
                     alert("Report added")
                     $("#newReportWho").val("")
                     $("#newReportText").val("")
-                    $("#newVolunteerId").val("")
-                    $("#newCharityName").val("")
-                    $('#newBakeryName').val('')
-                    getBakeries()
+                    $("#newListingId").val("")
+                    $("#newReportStatus").val("")
+                    $("#newReportType").val("")
+                    // $("#newVolunteerId").val("")
+                    // $("#newCharityName").val("")
+                    // $('#newBakeryName').val('')
+                    // getBakeries()
                 }
             }
         } catch (error) {
             alert("Error creating report.")
+            alert(error.message)
         }
     })
 }
 
 
-function updateReport(id, report) {
-    $.ajax({
-        url: '/reports/' + id,
-        type: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify(report),
-        success: function () {
-            // Refresh the report table
-            getReports()
-        }
-    })
-}
+// function updateReport(id, report) {
+//     $.ajax({
+//         url: '/reports/' + id,
+//         type: 'PUT',
+//         contentType: 'application/json',
+//         data: JSON.stringify(report),
+//         success: function () {
+//             // Refresh the report table
+//             getReports()
+//         }
+//     })
+// }
 
-function deleteReport(id) {
-    $.ajax({
-        url: '/reports/' + id,
-        type: 'DELETE',
-        success: function (data) {
-            alert('Report deleted successfully')
-            getReports()
-        },
-        error: function (xhr, status, error) {
-            var message = JSON.parse(xhr.responseText).error
-            alert('Error: ' + message)
-        }
-    })
-}
+// function deleteReport(id) {
+//     $.ajax({
+//         url: '/reports/' + id,
+//         type: 'DELETE',
+//         success: function (data) {
+//             alert('Report deleted successfully')
+//             getReports()
+//         },
+//         error: function (xhr, status, error) {
+//             var message = JSON.parse(xhr.responseText).error
+//             alert('Error: ' + message)
+//         }
+//     })
+// }

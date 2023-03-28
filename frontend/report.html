@@ -17,44 +17,20 @@
 <body>
     <div class="container">
         <h1>Reports</h1>
+        <a href="admin.html" class="button">Go to Admin page (invisible to users)</a>
 
-        <table id="table">
-            <thead>
-                <tr>
-                    <th scope="col">No.</th>
-                    <th scope="col">Who are you reporting?</th>
-                    <th scope="col">Report Status</th>
-                    <th scope="col">Report Text</th>
-                    <th scope="col">Charity Name</th>
-                    <th scope="col">Bakery Name</th>
-                </tr>
-            </thead>
-            <tbody id="reportTable">
-            </tbody>
-        </table>
         <h2>Add new Report</h2>
-        <div class="input-group mb-3 flex flex-col">
-            <label for="reportWho">Who are you reporting: </label>
-            
-            <select name="reportWho" id="reportWho">
-              <option value="volunteer">Volunteer</option>
-              <option value="charity">Charity</option>
-            </select>    
-            
+        
+        <div class="input-group">
+            <label for="reportWho">Who are you reporting?</label>
             <select name="bakeryName" id="bakeryName"></select>
+          </div>
+        <div class="mb-3">
+            <label for="reportWhy">Why are you reporting?</label>
+            <textarea class="form-control" placeholder="report Text" aria-label="Name" id="reportText"></textarea>
+        </div>
 
-        </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="report Text" aria-label="Name" id="reportText">
-        </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="charity name" aria-label="Name" id="charityName">
-        </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="bakery name" aria-label="Name" id="bakeryName">
-        </div>
         <button type="button" class="btn btn-success" onclick="addReport()">Add Report</button>
-        <button type="button" class="btn btn-success" onclick="getListingsWithCharityId('Z1JgdfJKXofMvB5pq7zf')">get listings</button>
         <script src="../backend/js/report.js"></script>
     </div>
 

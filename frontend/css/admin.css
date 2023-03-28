@@ -1,1 +1,47 @@
 /* choi do here */
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 36px;
+    text-align: center;
+}
+
+#table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 30px;
+}
+
+#table th {
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 12px;
+}
+
+#table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+
+#table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.src {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.src:hover {
+    background-color: #555;
+}
