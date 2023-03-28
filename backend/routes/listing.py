@@ -85,6 +85,28 @@ def get_charity_listings(charityId):
         "message": "No listings with such charity."
     }), 404
 
+@app.route('/listings/bakery/<string:bakeryId>', methods = ['GET'])
+def get_bakery_listings(bakeryId):
+    docs = db.collections('listings').where('bakeryId', '==', bakeryId)
+
+    data = []
+    for doc in docs:
+        listing = doc.to_dict()
+        listing['id'] = doc.id
+        data.append(listing)
+    return jsonify(data), 200
+
+@app.route('/listings/volunteer/<string:volunteerId>', methods = ['GET'])
+def get_volunteer_listings(volunteerId):
+    docs = db.collections('listings').where('volunteerId', '==', volunteerId)
+
+    data = []
+    for doc in docs:
+        listing = doc.to_dict()
+        listing['id'] = doc.id
+        data.append(listing)
+    return jsonify(data), 200
+
 @app.route("/listings", methods=["POST"])
 def create_listing():
     data = request.get_json()
