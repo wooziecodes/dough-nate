@@ -1,9 +1,34 @@
 //weisheng do here
 $(document).ready(function () {
-    bakery = "zwxvGoUR8LTAOw2uzrxI24WAEnE2"
-    charity = "wXjex84ieu8KvvKnXMti"
-    volunteer = "7ILUdTNmiXV1vWn8RZF9"
-    retrieveUserType(charity)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBaoic75rFEDPfz-hGlhDRfN6SQwTpeaBw",
+        authDomain: "dough-nate.firebaseapp.com",
+        projectId: "dough-nate",
+        storageBucket: "dough-nate.appspot.com",
+        messagingSenderId: "708520153741",
+        appId: "1:708520153741:web:98b6ef93a1b0fc7a65c8c4",
+        measurementId: "G-WTLBTLCP7K"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = app.auth();
+
+    // Listen for authentication state changes
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // User is signed in
+            retrieveUserType(user.uid)
+            console.log('User is signed in:', user);
+        } else {
+            // User is signed out
+            console.log('User is signed out');
+        }
+    });
+    // bakery = "zwxvGoUR8LTAOw2uzrxI24WAEnE2"
+    // charity = "wXjex84ieu8KvvKnXMti"
+    // volunteer = "7ILUdTNmiXV1vWn8RZF9"
+
 
 })
 
@@ -41,10 +66,10 @@ function showListings(info) {
                     console.log(result.data)
                     if (info == "bakery") {
                         for (listing of result.data) {
-                            if (listing.status == "created" ) {
-                                //allergens need to fix
- 
-                                $("#listings").append(`
+
+                            //allergens need to fix
+
+                            $("#listings").append(`
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.breadContent}</td>
@@ -53,13 +78,13 @@ function showListings(info) {
 
                                 </tr>
                             `)
-                            }
+
 
                         }
 
                     } else if (info == "charity") {
                         for (listing of result.data) {
-                            if (listing.status == "delivered") {
+                            if (["created", "picking up", "delivering","delivered"].includes(listing.status)) {
                                 //allergens need to fix
                                 $("#listings").append(`
                                 <tr>
@@ -75,7 +100,7 @@ function showListings(info) {
                         }
                     } else if (info == "volunteer") {
                         for (listing of result.data) {
-                            if (listing.status == "created" && listing.bakeryId == info) {
+                            if (["accepted", "picking up", "delivering","delivered"].includes(listing.status)) {
                                 //allergens need to fix
                                 $("#listings").append(`
                                 <tr>
