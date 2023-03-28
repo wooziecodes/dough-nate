@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Selector - Sign Up</title>
+  <!-- Firebase -->
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <!-- Add the Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    #signup-form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #f8f8f8;
+      border-radius: 4px;
+    }
+    label, input, select {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+    }
+    #error-msg {
+      color: red;
+      margin-bottom: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create a Profile</h1>
+  <form id="signup-form">
+    <label for="profile">Profile:</label>
+    <select id="profile" onchange="showProfileInputs();">
+      <option value="">-- Select Profile --</option>
+      <option value="bakery">Bakery</option>
+      <option value="volunteer">Volunteer</option>
+      <option value="charity">Charity</option>
+    </select>
+    <br>
+    <div id="shared-inputs">
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+      <br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+      <br>
+      <label for="name">Name:</label>
+      <input type="text" id="name" required>
+      <br>
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" required>
+      <br>
+    </div>
+    <div id="bakery-inputs" class="hidden">
+      <label for="bakeryAddress">Bakery Address:</label>
+      <input type="text" id="bakeryAddress">
+      <br>
+    </div>
+    <div id="volunteer-inputs" class="hidden">
+      <label for="driverPlate">Driver License Plate:</label>
+      <input type="text" id="driverPlate">
+      <br>
+    </div>
+    <div id="charity-inputs" class="hidden">
+      <label for="charityAddress">Charity Address:</label>
+      <input type="text" id="charityAddress">
+      <br>
+    </div>
+    <button type="submit">Sign Up</button>
+  </form>
+  <script>
+
+const firebaseConfig = {
+      apiKey: "AIzaSyBaoic75rFEDPfz-hGlhDRfN6SQwTpeaBw",
+      authDomain: "dough-nate.firebaseapp.com",
+      projectId: "dough-nate",
+      storageBucket: "dough-nate.appspot.com",
+      messagingSenderId: "708520153741",
+      appId: "1:708520153741:web:98b6ef93a1b0fc7a65c8c4",
+      measurementId: "G-WTLBTLCP7K"
+    };
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = app.auth();
+    const db = app.firestore();
+  
+    // Show profile-specific input fields
+    function showProfileInputs() {
+      const profile = document.getElementById("profile").value;
+      const bakeryInputs = document.getElementById("bakery-inputs");
+      const volunteerInputs = document.getElementById("volunteer-inputs");
+      const charityInputs = document.getElementById("charity-inputs");
+  
+      bakeryInputs.style.display = profile === "bakery" ? "block" : "none";
+      volunteerInputs.style.display = profile === "volunteer" ? "block" : "none";
+      charityInputs.style.display = profile === "charity" ? "block" : "none";
+    }
+  
+    document.getElementById("signup-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+  
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const profile = document.getElementById("profile").value;
+      let collection;
+  
+      switch (profile) {
+        case "bakery":
+          collection = "bakeries";
+          break;
+        case "volunteer":
+          collection = "volunteers";
+          break;
+        case "charity":
+          collection = "charities";
+          break;
+        default:
+          return;
+      }
+
+      function redirectToIndex(userType, email) {
+    localStorage.setItem("userType", userType);
+    localStorage.setItem("email", email);
+    window.location.href = "index.html";
+  }
+  
+      // Sign up user with email and password
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+  
+          let data = {
+            email,
+            name,
+            phone,
+          };
+  
+          if (profile === "bakery") {
+      data.bakeryAddress = document.getElementById("bakeryAddress").value;
+    } else if (profile === "volunteer") {
+      data.driverPlate = document.getElementById("driverPlate").value;
+      data.isBanned = false;
+    } else if (profile === "charity") {
+      data.charityAddress = document.getElementById("charityAddress").value;
+    }
+
+    // Save user data to Firestore
+    return Promise.all([
+      db.collection(collection).doc(user.uid).set(data),
+      saveUserToUsersCollection(user.uid, profile, email),
+    ]);
+  })
+        .then(() => {
+          // Redirect user to the dashboard or show success message
+          console.log("User signed up and data saved successfully");
+          redirectToIndex(profile, email);
+
+        })
+        .catch((error) => {
+          console.error("Error signing up and saving data: ", error);
+        });
+
+
+// function saveUserToUsersCollection(uid, userType, email) {
+//   const userData = {
+//     uid,
+//     userType,
+//     email,
+//   };
+//   return db.collection("users").doc(uid).set(userData);
+// }
+
+function saveUserToUsersCollection(uid, userType, email) {
+  const userData = {
+    uid,
+    userType,
+    email,
+  };
+  return db.collection("users").add(userData);
+}
+
+
+    });
+  </script>
+  
