@@ -1,0 +1,35 @@
+/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+#map {
+    position: absolute;
+    height: 70%;
+    width: 60%;
+    left: 20%;
+    top: 15%;
+}
+
+#cover {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(100, 100, 100, 0.6);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 
+   * Optional: Makes the sample page fill the window. 
+   */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.mapbtn:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

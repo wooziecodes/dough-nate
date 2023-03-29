@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $("#cover").hide()
     uid = "sample"
     getListings(uid)
 })
@@ -90,6 +91,7 @@ function populateTable(id, userType) {
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.breadContent}</td>
                                     ${toAppend}
+                                    <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
                                 </tr>
                             `)
 
@@ -163,7 +165,7 @@ function populateTable(id, userType) {
 
                             var address = getAddress(listing.bakeryId)
 
-                            $("#bakeryTableBody").append(`
+                            $("#volunteerTableBody").append(`
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.charityName}</td>
@@ -233,9 +235,101 @@ function getAddress(bakeryId) {
                     return result.data.bakeryAddress
                 }
             }
-        } catch(error) {
+        } catch (error) {
             alert("Error fetching bakery address.")
             return
         }
     })
 }
+
+async function convertPostal(postals) {
+    var toReturn = []
+    var url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[0] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+    var response = await fetch(url)
+    var data = await response.json()
+    var lat = data.results[0].LATITUDE
+    var long = data.results[0].LONGITUDE
+    toReturn.push({
+        "lat": lat,
+        "long": long
+    })
+
+    if (postals.length > 1) {
+        url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[1] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+        var response = await fetch(url)
+        var data = await response.json()
+        var lat = data.results[0].LATITUDE
+        var long = data.results[0].LONGITUDE
+        toReturn.push({
+            "lat": lat,
+            "long": long
+        })
+    } 
+
+    return toReturn
+}
+
+function displayMap(listingid) {
+    $(async () => {
+        var serviceUrl = "http://localhost:5004/listings/" + listingid
+        var postals = []
+        const response = await fetch(serviceUrl, {
+            method: "GET"
+        })
+        const result = await response.json()
+        if (response.ok) {
+            if (response.status == 200) {
+                serviceUrl = "http://localhost:5001/bakeries/" + result.data.bakeryId
+                const bresponse = await fetch(serviceUrl, {
+                    method: "GET"
+                })
+                const bresult = await bresponse.json()
+                postals.push(bresult.data.postal)
+                if (getUserType() != "bakery") {
+                    serviceUrl = "http://localhost:5002/charities/" + result.data.charityId
+                    const cresponse = await fetch(serviceUrl, {
+                        method: "GET"
+                    })
+                    const cresult = await cresponse.json()
+                    postals.push(cresult.data.postal)
+                }
+            }
+        }
+
+        convertPostal(postals).then(async function (result) {
+            const { Map } = await google.maps.importLibrary("maps");
+
+            const position = { lat: parseFloat(result[0].lat), lng: parseFloat(result[0].long) }
+
+            var map = new Map(document.getElementById("map"), {
+                center: position,
+                zoom: 13,
+            });
+
+            new google.maps.Marker({
+                position: position,
+                map,
+                title: "A"
+            })
+
+            if (result.length > 1) {
+                new google.maps.Marker({
+                    position: { lat: parseFloat(result[1].lat), lng: parseFloat(result[1].long) },
+                    map,
+                    title: "B"
+                })
+            }
+            $("#cover").show()     
+            $("#map").show()    
+        })
+    })
+}
+
+function getUserType() {
+    return "charity"
+}
+
+$("#cover").click(function() {
+    $("#cover").hide()
+    $("#map").hide()
+})
