@@ -4,15 +4,22 @@ import time
 import os
 import firebase_admin
 import pytz
+import pika 
 from firebase_admin import firestore, credentials, initialize_app
 from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 import requests
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
-# cred = credentials.Certificate("./key.json")
-# firebase_admin.initialize_app(cred)
-# db = firestore.client()
+# RabbitMQ Connection
+RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
+connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
+channel = connection.channel()
+channel.queue_declare(queue='timer_ping')
+
+cred = credentials.Certificate("./key.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 timer = Flask(__name__)
 
@@ -122,6 +129,15 @@ def pull_data():
     else:
         print('no documents found')
 
+
+#listing id
+def send_timer_ping(listing_id):
+    data = {
+        "ping": "Timer",
+        "listing_id": listing_id
+    }
+    channel.basic_publish(exchange='', routing_key='timer_ping', body=json.dumps(data))
+    print(" [x] Sent %r" % data)
 
 if __name__ == '__main__':
     sched.add_job(id='job1', func=pull_data, trigger='interval', seconds = 3)

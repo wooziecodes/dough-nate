@@ -65,6 +65,8 @@
     <div id="bakery-inputs" class="hidden">
       <label for="bakeryAddress">Bakery Address:</label>
       <input type="text" id="bakeryAddress">
+      <label for="bakeryPostal">Bakery Postal Code:</label> 
+      <input type="number" id="bakerypostal">      
       <br>
     </div>
     <div id="volunteer-inputs" class="hidden">
@@ -134,7 +136,7 @@ const firebaseConfig = {
       function redirectToIndex(userType, email) {
     localStorage.setItem("userType", userType);
     localStorage.setItem("email", email);
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   }
   
       // Sign up user with email and password
@@ -150,6 +152,10 @@ const firebaseConfig = {
   
           if (profile === "bakery") {
       data.bakeryAddress = document.getElementById("bakeryAddress").value;
+      data.Postal = document.getElementById("bakerypostal").value;
+      console.log(data.Postal)
+      console.log(document.getElementById("bakerypostal").value)
+     
     } else if (profile === "volunteer") {
       data.driverPlate = document.getElementById("driverPlate").value;
       data.isBanned = false;
