@@ -66,7 +66,6 @@ def find_by_id(bakeryId):
 @app.route("/bakeries", methods=["POST"])
 def create_bakery():
     data = request.get_json()
-    print(data)
     try:
         bakeryCollection.document().set(data)
     except:

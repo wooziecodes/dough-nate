@@ -1,7 +1,27 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyBaoic75rFEDPfz-hGlhDRfN6SQwTpeaBw",
+    authDomain: "dough-nate.firebaseapp.com",
+    projectId: "dough-nate",
+    storageBucket: "dough-nate.appspot.com",
+    messagingSenderId: "708520153741",
+    appId: "1:708520153741:web:98b6ef93a1b0fc7a65c8c4",
+    measurementId: "G-WTLBTLCP7K"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const auth = app.auth();
+
 $(document).ready(function () {
     $("#cover").hide()
-    uid = "sample"
-    getListings(uid)
+    $("#map").hide()
+    // Listen for authentication state changes
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // User is signed in
+            getListings(user.uid)
+        }
+    });
 })
 
 function getListings(uid) {
@@ -25,7 +45,7 @@ function getListings(uid) {
                             $("#volunteerTable").show()
                             break
                     }
-                    populateTable(result.data.id, result.data.userType)
+                    populateTable(uid, result.data.userType)
                 }
             }
         } catch (error) {
@@ -39,13 +59,13 @@ function populateTable(id, userType) {
         var serviceUrl = "http://localhost:5004/listings/"
         switch (userType) {
             case ("charity"):
-                serviceUrl += "/charity/" + id
+                serviceUrl += "charity/" + id
                 break
             case ("bakery"):
-                serviceUrl += "/bakery/" + id
+                serviceUrl += "bakery/" + id
                 break
             case ("volunteer"):
-                serviceUrl += "/volunteer/" + id
+                serviceUrl += "volunteer/" + id
                 break
         }
 
@@ -75,7 +95,7 @@ function populateTable(id, userType) {
                                 case ("delivering"):
                                     toAppend = `
                                         <td class="align-middle text-info">Driver is delivering
-                                        <button type="button" class="btn btn-success" onclick="updateStatus('${listing.id}', 'delivered')">Delivered</button>
+                                        <button type="button" class="btn btn-success" onclick="updateStatus('${listing.id}', 'delivered', '${id}')">Delivered</button>
                                         </td>
                                     `
                                     break
@@ -116,7 +136,7 @@ function populateTable(id, userType) {
                                 case ("pickingup"):
                                     toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up
-                                        <button type="button" class="btn btn-success" onclick="updateStatus('${listing.id}', 'pickedup')">Picked up</button>
+                                        <button type="button" class="btn btn-success" onclick="updateStatus('${listing.id}', 'pickedup', '${id}')">Picked up</button>
                                         </td>
                                     `
                                     break
@@ -137,6 +157,7 @@ function populateTable(id, userType) {
                                     <td class="align-middle">${listing.charityName}</td>
                                     <td class="align-middle">${listing.breadContent}</td>
                                     ${toAppend}
+                                    <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
                                 </tr>
                             `)
 
@@ -186,7 +207,7 @@ function populateTable(id, userType) {
     })
 }
 
-function updateStatus(listingid, status) {
+function updateStatus(listingid, status, uid) {
     $(async () => {
         var serviceUrl = "http://localhost:5004/listings/" + listingid
         if (status == "pickedup") {
@@ -212,7 +233,6 @@ function updateStatus(listingid, status) {
             if (response.ok) {
                 if (response.status == 200) {
                     alert("Listing updated.")
-                    uid = "sample"
                     getListings(uid)
                 }
             }
@@ -264,7 +284,7 @@ async function convertPostal(postals) {
             "lat": lat,
             "long": long
         })
-    } 
+    }
 
     return toReturn
 }
@@ -285,51 +305,65 @@ function displayMap(listingid) {
                 })
                 const bresult = await bresponse.json()
                 postals.push(bresult.data.postal)
-                if (getUserType() != "bakery") {
-                    serviceUrl = "http://localhost:5002/charities/" + result.data.charityId
-                    const cresponse = await fetch(serviceUrl, {
-                        method: "GET"
-                    })
-                    const cresult = await cresponse.json()
-                    postals.push(cresult.data.postal)
-                }
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        // User is signed in
+                        var serviceUrl = "http://localhost:5006/users/" + user.uid
+                        try {
+                            const response = await fetch(serviceUrl, {
+                                method: "GET"
+                            })
+                            const uresult = await response.json()
+                            if (response.ok) {
+                                if (response.status === 200) {
+                                    userType = uresult.data.userType
+                                    if (userType != "bakery" || result.data.charityId != "") {
+                                        serviceUrl = "http://localhost:5002/charities/" + result.data.charityId
+                                        const cresponse = await fetch(serviceUrl, {
+                                            method: "GET"
+                                        })
+                                        const cresult = await cresponse.json()
+                                        postals.push(cresult.data.postal)
+                                    }
+                                    convertPostal(postals).then(async function (result) {
+                                        const { Map } = await google.maps.importLibrary("maps");
+
+                                        const position = { lat: parseFloat(result[0].lat), lng: parseFloat(result[0].long) }
+
+                                        var map = new Map($("#map")[0], {
+                                            center: position,
+                                            zoom: 13,
+                                        });
+
+                                        new google.maps.Marker({
+                                            position: position,
+                                            map,
+                                            title: "A"
+                                        })
+
+                                        if (result.length > 1) {
+                                            new google.maps.Marker({
+                                                position: { lat: parseFloat(result[1].lat), lng: parseFloat(result[1].long) },
+                                                map,
+                                                title: "B"
+                                            })
+                                        }
+                                        $("#cover").show()
+                                        $("#map").show()
+                                    })
+                                }
+                            }
+                        } catch (error) {
+                            alert("Error retrieving user type")
+                        }
+                    }
+                });
             }
         }
-
-        convertPostal(postals).then(async function (result) {
-            const { Map } = await google.maps.importLibrary("maps");
-
-            const position = { lat: parseFloat(result[0].lat), lng: parseFloat(result[0].long) }
-
-            var map = new Map(document.getElementById("map"), {
-                center: position,
-                zoom: 13,
-            });
-
-            new google.maps.Marker({
-                position: position,
-                map,
-                title: "A"
-            })
-
-            if (result.length > 1) {
-                new google.maps.Marker({
-                    position: { lat: parseFloat(result[1].lat), lng: parseFloat(result[1].long) },
-                    map,
-                    title: "B"
-                })
-            }
-            $("#cover").show()     
-            $("#map").show()    
-        })
     })
 }
 
-function getUserType() {
-    return "charity"
-}
-
-$("#cover").click(function() {
+$("#cover").click(function () {
     $("#cover").hide()
     $("#map").hide()
 })

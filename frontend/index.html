@@ -28,5 +28,23 @@
     <table class="table table-dark">
       <tbody id="listings"></tbody>
     </table>
+    <div class="container newListingContainer">
+        <form>
+            <legend>Create new listing</legend>
+            <div class="mb-3">
+                <label for="breadContent" class="form-label">Number of bread</label>
+                <input type="text" class="form-control" id="breadContent">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Allergens</label>
+                <div id="allergenList">
+                    
+                </div>
+                <input type="text" class="form-control" id="allergen">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addAllergen()">Add allergen</button>
+            <button type="button" class="btn btn-primary" onclick="addListing()">Submit</button>
+        </form>
+    </div>
   </body>
 </html>
