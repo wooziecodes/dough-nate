@@ -1,18 +1,22 @@
 //weisheng do here
-$(document).ready(function () {
-    const firebaseConfig = {
-        apiKey: "AIzaSyBaoic75rFEDPfz-hGlhDRfN6SQwTpeaBw",
-        authDomain: "dough-nate.firebaseapp.com",
-        projectId: "dough-nate",
-        storageBucket: "dough-nate.appspot.com",
-        messagingSenderId: "708520153741",
-        appId: "1:708520153741:web:98b6ef93a1b0fc7a65c8c4",
-        measurementId: "G-WTLBTLCP7K"
-    };
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = app.auth();
+const firebaseConfig = {
+    apiKey: "AIzaSyBaoic75rFEDPfz-hGlhDRfN6SQwTpeaBw",
+    authDomain: "dough-nate.firebaseapp.com",
+    projectId: "dough-nate",
+    storageBucket: "dough-nate.appspot.com",
+    messagingSenderId: "708520153741",
+    appId: "1:708520153741:web:98b6ef93a1b0fc7a65c8c4",
+    measurementId: "G-WTLBTLCP7K"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const auth = app.auth();
+
+$(document).ready(function () {
+    $(".newListingContainer").hide()
+    
 
     // Listen for authentication state changes
     auth.onAuthStateChanged((user) => {
@@ -25,11 +29,6 @@ $(document).ready(function () {
             console.log('User is signed out');
         }
     });
-    // bakery = "zwxvGoUR8LTAOw2uzrxI24WAEnE2"
-    // charity = "wXjex84ieu8KvvKnXMti"
-    // volunteer = "7ILUdTNmiXV1vWn8RZF9"
-
-
 })
 
 function retrieveUserType(userid) {
@@ -42,7 +41,9 @@ function retrieveUserType(userid) {
             const result = await response.json()
             if (response.ok) {
                 if (response.status === 200) {
-                    console.log(result.data.userType)
+                    if (result.data.userType == "bakery") {
+                        $(".newListingContainer").show()
+                    }
                     showListings(result.data.userType)
                 }
             }
@@ -84,7 +85,7 @@ function showListings(info) {
 
                     } else if (info == "charity") {
                         for (listing of result.data) {
-                            if (["created", "picking up", "delivering","delivered"].includes(listing.status)) {
+                            if (["created", "picking up", "delivering", "delivered"].includes(listing.status)) {
                                 //allergens need to fix
                                 $("#listings").append(`
                                 <tr>
@@ -100,7 +101,7 @@ function showListings(info) {
                         }
                     } else if (info == "volunteer") {
                         for (listing of result.data) {
-                            if (["accepted", "picking up", "delivering","delivered"].includes(listing.status)) {
+                            if (["accepted", "picking up", "delivering", "delivered"].includes(listing.status)) {
                                 //allergens need to fix
                                 $("#listings").append(`
                                 <tr>
@@ -122,3 +123,61 @@ function showListings(info) {
         }
     })
 }
+
+function addAllergen() {
+    var allergen = $("#allergen").val()
+    $("#allergenList").append(`
+        <span class="badge text-bg-primary">${allergen}</span>
+    `)
+}
+
+function addListing() {
+    var breadContent = $("#breadContent").val()
+    var allergens = []
+    $("#allergenList").children().each(function () {
+        allergens.push($(this).text())
+    })
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            var serviceUrl = "http://localhost:5001/bakeries/" + user.uid
+            const response = await fetch(serviceUrl, {
+                method: "GET"
+            })
+            const result = await response.json()
+            var bakeryName = result.data.name
+
+            var serviceUrl = "http://localhost:5004/listings"
+
+            data = JSON.stringify({
+                allergens: allergens,
+                bakeryId: user.uid,
+                bakeryName: bakeryName,
+                breadContent: parseInt($("#breadContent").val()),
+                charityId: "",
+                charityName: "",
+                //createTime: firestore.Timestamp.now()
+            })
+
+            try {
+                const response = await fetch(serviceUrl, {
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    method: "POST",
+                    body: data
+                })
+                const result = await response.json()
+                if (response.ok) {
+                    if (response.status == 201) {
+                        alert("Listing created")
+                    }
+                }
+            } catch (error) {
+                alert("Error creating report.")
+                alert(error.message)
+            }
+        }
+    });
+}
+//filter by usertype
