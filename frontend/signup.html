@@ -4,83 +4,91 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile Selector - Sign Up</title>
+
   <!-- Firebase -->
-  <!-- The core Firebase JS SDK is always required and must be listed first -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <!-- Add the Firebase products that you want to use -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    #signup-form {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      background-color: #f8f8f8;
-      border-radius: 4px;
-    }
-    label, input, select {
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    button {
-      width: 100%;
-    }
-    #error-msg {
-      color: red;
-      margin-bottom: 10px;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-  <h1>Create a Profile</h1>
-  <form id="signup-form">
-    <label for="profile">Profile:</label>
-    <select id="profile" onchange="showProfileInputs();">
-      <option value="">-- Select Profile --</option>
-      <option value="bakery">Bakery</option>
-      <option value="volunteer">Volunteer</option>
-      <option value="charity">Charity</option>
-    </select>
-    <br>
-    <div id="shared-inputs">
-      <label for="email">Email:</label>
-      <input type="email" id="email" required>
-      <br>
-      <label for="password">Password:</label>
-      <input type="password" id="password" required>
-      <br>
-      <label for="name">Name:</label>
-      <input type="text" id="name" required>
-      <br>
-      <label for="phone">Phone:</label>
-      <input type="text" id="phone" required>
-      <br>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h1 class="text-center mt-5">Create a Profile</h1>
+        <form id="signup-form" class="mt-4">
+          <div class="form-group">
+            <label for="profile">Profile:</label>
+            <select id="profile" class="form-control" onchange="showProfileInputs();">
+              <option value="">-- Select Profile --</option>
+              <option value="bakery">Bakery</option>
+              <option value="volunteer">Volunteer</option>
+              <option value="charity">Charity</option>
+            </select>
+          </div>
+          <div id="shared-inputs">
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" id="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone:</label>
+              <input type="text" id="phone" class="form-control" required>
+            </div>
+          </div>
+          <div id="bakery-inputs" class="hidden">
+            <div class="form-group">
+              <label for="bakeryAddress">Bakery Address:</label>
+              <input type="text" id="bakeryAddress" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="bakeryPostal">Bakery Postal Code:</label>
+              <input type="number" id="bakerypostal" class="form-control">
+            </div>
+          </div>
+          <div id="volunteer-inputs" class="hidden">
+            <div class="form-group">
+              <label for="driverPlate">Driver License Plate:</label>
+              <input type="text" id="driverPlate" class="form-control">
+            </div>
+          </div>
+          <div id="charity-inputs" class="hidden">
+            <div class="form-group">
+              <label for="charityAddress">Charity Address:</label>
+              <input type="text" id="charityAddress" class="form-control">
+            </div>
+          </div>
+          <div class="form-group text-center mt-4">
+            <button type="submit" class="btn btn-primary text-center">Sign Up</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div id="bakery-inputs" class="hidden">
-      <label for="bakeryAddress">Bakery Address:</label>
-      <input type="text" id="bakeryAddress">
-      <label for="bakeryPostal">Bakery Postal Code:</label> 
-      <input type="number" id="bakerypostal">      
-      <br>
-    </div>
-    <div id="volunteer-inputs" class="hidden">
-      <label for="driverPlate">Driver License Plate:</label>
-      <input type="text" id="driverPlate">
-      <br>
-    </div>
+  </div>
+
+
+<!-- 
+
+    
     <div id="charity-inputs" class="hidden">
       <label for="charityAddress">Charity Address:</label>
       <input type="text" id="charityAddress">
       <br>
     </div>
     <button type="submit">Sign Up</button>
-  </form>
+  </form> -->
   <script>
 
 const firebaseConfig = {
