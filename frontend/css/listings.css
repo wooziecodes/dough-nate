@@ -1,7 +1,117 @@
-/* 
- * Always set the map height explicitly to define the size of the div element
- * that contains the map. 
- */
+#nav {
+    width: 100%;
+    height: 10%;
+    background-color: #FFF6EE;
+    margin-bottom: 2%;
+    display: flex;
+    align-items: center;
+}
+
+#logo {
+    height: 80%;
+}
+
+#welcome {
+    color: #56381C;
+    font-weight: bold;
+}
+
+#first {
+    margin-left: auto;
+}
+
+#current {
+    font-weight: bold;
+    color: #56381C;
+}
+
+.selectors {
+    color: #E2B582;
+    margin-right: 2%;
+    text-decoration: none;
+}
+
+.selectors:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@-webkit-keyframes hvr-bob {
+    0% {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+    }
+
+    50% {
+        -webkit-transform: translateY(-4px);
+        transform: translateY(-4px);
+    }
+
+    100% {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes hvr-bob {
+    0% {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+    }
+
+    50% {
+        -webkit-transform: translateY(-4px);
+        transform: translateY(-4px);
+    }
+
+    100% {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+    }
+}
+
+@-webkit-keyframes hvr-bob-float {
+    100% {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes hvr-bob-float {
+    100% {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+    }
+}
+
+.hvr-bob {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+
+.hvr-bob:hover,
+.hvr-bob:focus,
+.hvr-bob:active {
+    -webkit-animation-name: hvr-bob-float, hvr-bob;
+    animation-name: hvr-bob-float, hvr-bob;
+    -webkit-animation-duration: .3s, 1.5s;
+    animation-duration: .3s, 1.5s;
+    -webkit-animation-delay: 0s, .3s;
+    animation-delay: 0s, .3s;
+    -webkit-animation-timing-function: ease-out, ease-in-out;
+    animation-timing-function: ease-out, ease-in-out;
+    -webkit-animation-iteration-count: 1, infinite;
+    animation-iteration-count: 1, infinite;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-direction: normal, alternate;
+    animation-direction: normal, alternate;
+}
+
+
 #map {
     position: absolute;
     height: 70%;
@@ -19,11 +129,9 @@
     left: 0;
 }
 
-/* 
-   * Optional: Makes the sample page fill the window. 
-   */
 html,
 body {
+    font-family: 'Inter', sans-serif !important;
     height: 100%;
     margin: 0;
     padding: 0;

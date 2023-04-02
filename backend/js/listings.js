@@ -15,6 +15,7 @@ const auth = app.auth();
 $(document).ready(function () {
     $("#cover").hide()
     $("#map").hide()
+    $("#report").hide()
     // Listen for authentication state changes
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -37,6 +38,7 @@ function getListings(uid) {
                     switch (result.data.userType) {
                         case ("charity"):
                             $("#charityTable").show()
+                            $("#report").show()
                             break
                         case ("bakery"):
                             $("#bakeryTable").show()
@@ -45,11 +47,38 @@ function getListings(uid) {
                             $("#volunteerTable").show()
                             break
                     }
+                    greet(uid, result.data.userType)
                     populateTable(uid, result.data.userType)
                 }
             }
         } catch (error) {
             alert("There are no listings, or there is a problem.")
+        }
+    })
+}
+
+function greet(id, userType) {
+    $(async () => {
+        var serviceUrl = "http://localhost:"
+        switch (userType) {
+            case ("charity"):
+                serviceUrl += "5002/charities/" + id
+                break
+            case ("bakery"):
+                serviceUrl += "5001/bakeries/" + id
+                break
+            case ("volunteer"):
+                serviceUrl += "5003/volunteers/" + id
+                break
+        }
+        const response = await fetch(serviceUrl, {
+            method: "GET"
+        })
+        const result = await response.json()
+        if (response.ok) {
+            if (response.status === 200) {
+                $("#welcome").text("Welcome, " + result.data.name + "!")
+            }
         }
     })
 }
@@ -264,25 +293,27 @@ function getAddress(bakeryId) {
 
 async function convertPostal(postals) {
     var toReturn = []
-    var url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[0] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+    var url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[0]["postal"] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
     var response = await fetch(url)
     var data = await response.json()
     var lat = data.results[0].LATITUDE
     var long = data.results[0].LONGITUDE
     toReturn.push({
         "lat": lat,
-        "long": long
+        "long": long,
+        "name": postals[0]["name"]
     })
 
     if (postals.length > 1) {
-        url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[1] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+        url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[1]["postal"] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
         var response = await fetch(url)
         var data = await response.json()
         var lat = data.results[0].LATITUDE
         var long = data.results[0].LONGITUDE
         toReturn.push({
             "lat": lat,
-            "long": long
+            "long": long,
+            "name": postals[1]["name"]
         })
     }
 
@@ -304,7 +335,10 @@ function displayMap(listingid) {
                     method: "GET"
                 })
                 const bresult = await bresponse.json()
-                postals.push(bresult.data.postal)
+                postals.push({
+                    "postal": bresult.data.postal,
+                    "name": bresult.data.name
+                })
                 auth.onAuthStateChanged(async (user) => {
                     if (user) {
                         // User is signed in
@@ -323,7 +357,10 @@ function displayMap(listingid) {
                                             method: "GET"
                                         })
                                         const cresult = await cresponse.json()
-                                        postals.push(cresult.data.postal)
+                                        postals.push({
+                                            "postal": cresult.data.postal,
+                                            "name": cresult.data.name
+                                        })
                                     }
                                     convertPostal(postals).then(async function (result) {
                                         const { Map } = await google.maps.importLibrary("maps");
@@ -338,14 +375,14 @@ function displayMap(listingid) {
                                         new google.maps.Marker({
                                             position: position,
                                             map,
-                                            title: "A"
+                                            title: result[0].name,
                                         })
 
                                         if (result.length > 1) {
                                             new google.maps.Marker({
                                                 position: { lat: parseFloat(result[1].lat), lng: parseFloat(result[1].long) },
                                                 map,
-                                                title: "B"
+                                                title: result[1].name
                                             })
                                         }
                                         $("#cover").show()
