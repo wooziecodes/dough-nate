@@ -5,16 +5,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Listing</title>
-    <link rel="stylesheet" href="./css/index.css"/>
+    <link rel="stylesheet" href="./css/index.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
@@ -27,35 +30,52 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   </head>
   <body>
-    <script src="../backend/js/index.js"></script>
     <div id="nav">
-      <img src="../logo.svg" id="logo">
+      <img src="../logo.svg" id="logo" />
       <span id="welcome"></span>
-      <a class="selectors hvr-bob first" id="current" href="./index.html">View Listings</a>
+      <a class="selectors hvr-bob first" id="current" href="./index.html"
+        >View Listings</a
+      >
       <a class="selectors hvr-bob" href="./listings.html">My Listings</a>
-      <a class="selectors hvr-bob report" href="./report.html">Report a Listing</a>
-  </div>
-    <h1 id="usertype"></h1>
-    <table class="table table-dark">
-      <tbody id="listings"></tbody>
-    </table>
-    <div class="container newListingContainer">
-        <form>
-            <legend>Create new listing</legend>
-            <div class="mb-3">
-                <label for="breadContent" class="form-label">Number of bread</label>
-                <input type="text" class="form-control" id="breadContent">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Allergens</label>
-                <div id="allergenList">
-                    
-                </div>
-                <input type="text" class="form-control" id="allergen">
-            </div>
-            <button type="button" class="btn btn-primary" onclick="addAllergen()">Add allergen</button>
-            <button type="button" class="btn btn-primary" onclick="addListing()">Submit</button>
-        </form>
+      <a class="selectors hvr-bob report" href="./report.html"
+        >Report a Listing</a
+      >
     </div>
+
+    <div class="container">
+      <h1 id="usertype"></h1>
+      <table class="table">
+        <thead>
+          <tr style="font-weight: bolder !important">
+            <th scope="col">Bakery Name</th>
+            <th scope="col">Bread Conntent</th>
+            <th scope="col">Release Time</th>
+            <th scope="col">Allergens</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody id="listings"></tbody>
+      </table>
+    </div>
+
+    <div class="container newListingContainer">
+      <form>
+        <legend>Create new listing</legend>
+        <div class="mb-3">
+          <label for="breadContent" class="form-label">Number of bread</label>
+          <input type="text" class="form-control" id="breadContent" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Allergens</label>
+          <div id="allergenList"></div>
+          <input type="text" class="form-control" id="allergen" />
+        </div>
+        <button type="button" class="btn" onclick="addAllergen()">
+          Add allergen
+        </button>
+        <button type="button" class="btn" onclick="addListing()">Submit</button>
+      </form>
+    </div>
+    <script src="../backend/js/index.js"></script>
   </body>
 </html>
