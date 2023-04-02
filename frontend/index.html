@@ -5,13 +5,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Listing</title>
-    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/index.css"/>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
@@ -25,6 +28,13 @@
   </head>
   <body>
     <script src="../backend/js/index.js"></script>
+    <div id="nav">
+      <img src="../logo.svg" id="logo">
+      <span id="welcome"></span>
+      <a class="selectors hvr-bob first" id="current" href="./index.html">View Listings</a>
+      <a class="selectors hvr-bob" href="./listings.html">My Listings</a>
+      <a class="selectors hvr-bob report" href="./report.html">Report a Listing</a>
+  </div>
     <h1 id="usertype"></h1>
     <table class="table table-dark">
       <tbody id="listings"></tbody>

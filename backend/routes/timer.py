@@ -25,6 +25,80 @@ timer = Flask(__name__)
 
 sched = BackgroundScheduler()
 
+
+def pull_data():
+    data = requests.get("http://127.0.0.1:5004/listings")
+    docs = data.json()['data']
+    print(docs)
+    # docs = db.collection('listings').get()
+    # now = datetime.now()
+
+    if docs:
+        for doc in docs:
+            #handle id and releaseTime
+            # doc_dict = doc.to_dict()
+            doc_id = doc['id']
+            timestamp_str = doc['releaseTime']
+            
+            # timestamp = DatetimeWithNanoseconds.fromisoformat()
+            # Fri 31 Mar 2023 08:28:07 GMT
+            timestamp_str = ''.join(timestamp_str.split(','))
+            timestamp1 = datetime.strptime(timestamp_str, '%a %d %b %Y %H:%M:%S %Z')
+            timestamp = pytz.utc.localize(timestamp1)
+            # print(datetime_object)
+            # timestamp = DatetimeWithNanoseconds.fromisoformat(str(timestamp_str))
+
+            # Get current time in UTC
+            now = datetime.now(timezone.utc)
+
+            # Compare timestamps
+            if timestamp > now:
+                # print(doc_id)
+                # print(timestamp_str)
+                # print(now)
+                print('The Firestore timestamp is greater than the current time.')
+            else:
+                # print(doc_id)
+                print(timestamp_str)
+                print(now)
+
+                print('The current time is greater than the Firestone timestamp.')
+                send_timer_ping(doc_id)  # Call send_timer_ping() with the document ID
+                #send listing to telebot
+                # formatted_data = {
+                #     "bakeryName": doc['bakeryName'],
+                #     "breadContent": doc['breadContent'],
+                #     "allergens": doc['allergens']
+                # }
+                # requests.post("http://127.0.0.1:5000/timer_ping", data=jsonify({
+                #     "code": 69,
+                #     "data": formatted_data
+                # }))
+                requests.delete("http://127.0.0.1:5004/listings/" + doc_id)
+
+    else:
+        print('no documents found')
+
+
+#listing id
+def send_timer_ping(listing_id):
+    data = {
+        "ping": "Timer",
+        "listing_id": listing_id
+    }
+    channel.basic_publish(exchange='', routing_key='timer_ping', body=json.dumps(data))
+    print(" [x] Sent %r" % data)
+
+if __name__ == '__main__':
+    sched.add_job(id='job1', func=pull_data, trigger='interval', seconds = 3)
+    sched.add_job(lambda : sched.print_jobs(),'interval',seconds=3)
+    sched.start()
+    timer.run(port=5003, debug=True, use_reloader = False)
+
+
+
+
+
 # @timer.route('/')
 # def index():
 #     return render_template('index.html')
@@ -76,71 +150,3 @@ sched = BackgroundScheduler()
 #         return jsonify({'error': 'Listing not found.'}), 404
 #     doc_ref.delete()
 #     return jsonify({'message': 'Listing deleted successfully'}), 200
-
-
-def pull_data():
-    data = requests.get("http://127.0.0.1:5004/listings")
-    docs = data.json()['data']
-    print(docs)
-    # docs = db.collection('listings').get()
-    # now = datetime.now()
-
-    if docs:
-        for doc in docs:
-            #handle id and releaseTime
-            # doc_dict = doc.to_dict()
-            doc_id = doc['id']
-            timestamp_str = doc['releaseTime']
-            
-            # timestamp = DatetimeWithNanoseconds.fromisoformat()
-            # Fri 31 Mar 2023 08:28:07 GMT
-            timestamp_str = ''.join(timestamp_str.split(','))
-            timestamp1 = datetime.strptime(timestamp_str, '%a %d %b %Y %H:%M:%S %Z')
-            timestamp = pytz.utc.localize(timestamp1)
-            # print(datetime_object)
-            # timestamp = DatetimeWithNanoseconds.fromisoformat(str(timestamp_str))
-
-            # Get current time in UTC
-            now = datetime.now(timezone.utc)
-
-            # Compare timestamps
-            if timestamp > now:
-                # print(doc_id)
-                # print(timestamp_str)
-                # print(now)
-                print('The Firestore timestamp is greater than the current time.')
-            else:
-                # print(doc_id)
-                print(timestamp_str)
-                print(now)
-                print('The current time is greater than the Firestone timestamp.')
-                #send listing to telebot
-                # formatted_data = {
-                #     "bakeryName": doc['bakeryName'],
-                #     "breadContent": doc['breadContent'],
-                #     "allergens": doc['allergens']
-                # }
-                # requests.post("http://127.0.0.1:5000/timer_ping", data=jsonify({
-                #     "code": 69,
-                #     "data": formatted_data
-                # }))
-                requests.delete("http://127.0.0.1:5004/listings/" + doc_id)
-
-    else:
-        print('no documents found')
-
-
-#listing id
-def send_timer_ping(listing_id):
-    data = {
-        "ping": "Timer",
-        "listing_id": listing_id
-    }
-    channel.basic_publish(exchange='', routing_key='timer_ping', body=json.dumps(data))
-    print(" [x] Sent %r" % data)
-
-if __name__ == '__main__':
-    sched.add_job(id='job1', func=pull_data, trigger='interval', seconds = 3)
-    sched.add_job(lambda : sched.print_jobs(),'interval',seconds=3)
-    sched.start()
-    timer.run(port=5003, debug=True, use_reloader = False)
