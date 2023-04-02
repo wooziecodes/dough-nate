@@ -8,67 +8,142 @@
   margin-bottom: 10px;
 } */
 .container {
-    max-width: 800px;
-    margin: 0 auto;
+  /* max-width: 800px; */
+  margin: 0 auto;
 }
 
 h1 {
-    font-size: 36px;
-    text-align: center;
+  font-size: 36px;
+  text-align: center;
 }
 
 h2 {
-    font-size: 24px;
-    margin-top: 40px;
-    margin-bottom: 20px;
+  font-size: 24px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+/* select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: white;
+    background-image: url('dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  select:focus {
+    outline: none;
+    border-color: blue;
+  } */
+.container {
+  background-color: #fff6ee;
+}
+.select {
+  font-size: 16px;
+  font-weight: bolder;
+  color: grey;
+  background-color: #fff6ee;
+  border-color: #a09082;
+  border-width: 3px;
+  cursor: pointer;
+}
+textarea {
+  font-size: 16px;
+  font-weight: bolder;
+  color: grey;
+  background-color: #fff6ee;
+  border-color: #a09082;
+  border-width: 3px;
+  cursor: pointer;
+}
+textarea:focus {
+  outline: none;
+  border-color: burlywood;
+}
+select:focus {
+  outline: none;
+  border-color: burlywood;
+}
+option::before {
+  content: "\2022 "; /* adds a bullet point before each option */
+  color: red;
+  font-size: 20px;
+  margin-right: 5px;
 }
 
+option::after {
+  content: " (car)"; /* adds "(car)" after each option */
+  color: blue;
+  font-size: 16px;
+}
+
+/* .option {
+    background-color: green;
+} */
 .input-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 label {
-    display: block;
-    margin-bottom: 5px;
+  display: block;
+  margin-bottom: 5px;
 }
 
 select,
 textarea {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  /* border: 1px solid #ddd; */
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
 button[type="button"] {
-    display: block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+  display: block;
+  margin-top: 20px;
+  padding: 5px 20px;
+  background-color: #607e96;
+  color: #fff;
+  /* border: 3px solid white; */
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
-
+.btn-outline-info {
+    /* margin-top: 1000px; */
+    top: 1000px;
+    /* padding-top: 10000px; */
+}
 .button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
 }
 
-.button:hover {
-    background-color: #555;
+button[type="button"]:hover {
+  background-color: #56381c;
+  /* border: aqua; */
+  color: white;
+  text-decoration: none;
+
 }
 
-.btn-success:hover {
-    background-color: #218838;
+h1 {
+  color: #56381c !important;
+}
+label {
+  color: #56381c !important;
 }

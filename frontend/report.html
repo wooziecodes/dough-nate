@@ -1,40 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Reports</title>
-    <link rel="stylesheet" type="text/css" href="./css/report.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="./css/report.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-</head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
+      crossorigin="anonymous"
+    />
+  </head>
 
-<body>
-    <div class="container">
-        <h1>Reports</h1>
-        <a href="admin.html" class="button">Go to Admin page (invisible to users)</a>
+  <body>
+    <div class="container container-sm w-50 vh-100 p-5">
+      <!-- <h1>Reports</h1> -->
+      <div class="d-flex align-items-center px-4">
+        <a href="listings.html" class="me-4 pr-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:svgjs="http://svgjs.com/svgjs"
+            width="30"
+            height="30"
+            x="0"
+            y="0"
+            viewBox="0 0 473.654 473.654"
+            style="enable-background: new 0 0 512 512"
+            xml:space="preserve"
+            class=""
+          >
+            <g>
+              <circle
+                cx="236.827"
+                cy="236.827"
+                r="236.827"
+                style=""
+                fill="#56381c"
+                data-original="#4abc96"
+                class=""
+              ></circle>
+              <path
+                d="M338.465 207.969H208.006c11.08-11.08 22.161-22.161 33.241-33.245 25.56-25.56-14.259-65.084-39.883-39.456l-81.029 81.033c-10.841 10.841-10.549 28.907.213 39.669 27.011 27.007 54.018 54.018 81.029 81.025 25.56 25.56 65.084-14.259 39.456-39.883a257240.098 257240.098 0 0 0-33.039-33.035H338.06c36.223 0 36.544-56.108.405-56.108z"
+                style=""
+                fill="#ffffff"
+                data-original="#ffffff"
+                class=""
+              ></path>
+            </g>
+          </svg>
+        </a>
+        <h1 class="text-capitalize fw-bold mr-5">Add new Report</h1>
+      </div>
 
-        <h2>Add new Report</h2>
-        
-        <div class="input-group">
-            <label for="reportWho">Who are you reporting?</label>
-            <select name="bakeryName" id="bakeryName"></select>
-          </div>
-        <div class="mb-3">
-            <label for="reportWhy">Why are you reporting?</label>
-            <textarea class="form-control" placeholder="report Text" aria-label="Name" id="reportText"></textarea>
-        </div>
+      <div class="form-group mt-4 ">
+        <label for="reportWho" class="textStyle">Who are you reporting?</label>
+        <select name="bakeryName" id="bakeryName" class="select"></select>
+      </div>
+      <div class="mt-3 pt-3">
+        <label for="reportWhy" class="textStyle">Why are you reporting?</label>
+        <textarea
+          class="text"
+          placeholder="Tell us what happened"
+          aria-label="Name"
+          rows="5"
+          id="reportText"
+        ></textarea>
+      </div>
 
-        <button type="button" class="btn btn-success" onclick="addReport()">Add Report</button>
-        <script src="../backend/js/report.js"></script>
+      <button type="button" class="btn" onclick="addReport()">
+        Add Report
+      </button>
+      <a href="admin.html" class="btn btn-outline-info mb-3 mt-5"
+        >Go to Admin page (invisible to users)</a
+      >
+
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+        crossorigin="anonymous"
+      ></script>
+      <script src="../backend/js/report.js"></script>
     </div>
-
-
-</body>
-
+  </body>
 </html>
