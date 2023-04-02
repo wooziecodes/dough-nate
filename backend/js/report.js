@@ -68,8 +68,8 @@ function getListingsWithCharityId(charityId) {
         }
       }
     } catch (error) {
-      // alert("nihaoma")
-      alert(error.message);
+      alert("You don't have any listings to make report!")
+    //   alert(error.message);
     }
   });
 }

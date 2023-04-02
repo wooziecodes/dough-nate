@@ -13,7 +13,6 @@ function getReports() {
             const result = await response.json()
             if (response.ok) {
                 if (response.status === 200) {
-                    console.log(result.data)
                     $("#reportTable").empty()
                     var no = 1
                     for (report of result.data) {
@@ -29,7 +28,10 @@ function getReports() {
                                     <button type="button" class="btn btn-warning deleteBtn">Delete</button>
                                 </td>
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-danger updateBtn">Update</button>
+                                    <button type="button" class="btn btn-danger updateBtnBan">Ban</button>
+                                </td>
+                                <td class="align-middle">
+                                    <button type="button" class="btn btn-success updateBtnNoBan">Don't Ban</button>
                                 </td>
                                 <td style="display: none" class="id">${report.id}</td>
                             </tr>
@@ -49,17 +51,26 @@ $(document).on("click", ".deleteBtn", function () {
     deleteReport(id)
 })
 
-$(document).on("click", ".updateBtn", function () {
+$(document).on("click", ".updateBtnBan", function () {
     var id = $(this).parent().siblings('.id').text()
     var report = {
-        reportStatus: 'report reviewed, driver banned', // Replace with updated data
+        reportStatus: 'report reviewed, banned', // Replace with updated data
+        // reportText: 'updated text',
+        // Add other updated fields here
+    }
+    updateReport(id, report)
+})
+$(document).on("click", ".updateBtnNoBan", function () {
+    var id = $(this).parent().siblings('.id').text()
+    var report = {
+        reportStatus: 'report reviewed, not banned', // Replace with updated data
         // reportText: 'updated text',
         // Add other updated fields here
     }
     updateReport(id, report)
 })
 
-function updateReport(id, report) {
+async function updateReport(id, report) {
     $.ajax({
         url: 'http://localhost:5005/reports/' + id,
         type: 'PUT',
