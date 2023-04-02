@@ -17,7 +17,7 @@ const auth = app.auth();
 
 $(document).ready(function () {
     $(".newListingContainer").hide()
-
+    
    
     // Listen for authentication state changes
     auth.onAuthStateChanged((user) => {
