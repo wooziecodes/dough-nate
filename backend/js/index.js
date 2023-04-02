@@ -14,10 +14,11 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
 
+
 $(document).ready(function () {
     $(".newListingContainer").hide()
 
-
+   
     // Listen for authentication state changes
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -25,10 +26,12 @@ $(document).ready(function () {
             retrieveUserType(user.uid)
             console.log('User is signed in:', user);
         } else {
-            // User is signed out
+            // User is signed out\
             console.log('User is signed out');
         }
     });
+    
+    console.log(firebase.firestore.Timestamp.now())
 })
 
 function retrieveUserType(userid) {
@@ -44,6 +47,7 @@ function retrieveUserType(userid) {
                     if (result.data.userType == "bakery") {
                         $(".newListingContainer").show()
                     }
+                    document.getElementById("usertype").innerHTML = "Current Account type: " + result.data.userType
                     showListings(result.data.userType, userid)
                 }
             }
@@ -90,7 +94,7 @@ function showListings(userType, userid) {
                         }
 
                     } else if (userType == "charity") {
-                        var count = 1;
+
                         for (listing of result.data) {
                             if (["picking up", "delivering", "delivered"].includes(listing.status) || (listing.status == "accepted" && listing.charityId == userid)) {
                                 //allergens need to fix
@@ -120,12 +124,13 @@ function showListings(userType, userid) {
     
                                 }
                             }
-                        count++;
+     
                         } 
                         
-                    } else if (info == "volunteer") {
+                    } else if (userType == "volunteer") {
+
                         for (listing of result.data) {
-                            if (["accepted", "picking up", "delivering", "delivered"].includes(listing.status)) {
+                            if (["picking up", "delivering", "delivered"].includes(listing.status)||(listing.status == "picking up" && listing.volunteerId == userid)) {
                                 //allergens need to fix
                                 $("#listings").append(`
                                 <tr>
@@ -133,9 +138,24 @@ function showListings(userType, userid) {
                                     <td class="align-middle">${listing.breadContent}</td>
                                     <td class="align-middle">${listing.releaseTime}</td>
                                     <td class="align-middle">${listing.allergens}</td>
-
+                                    <td class="align-middle"><button type="button" class="btn btn-secondary disabled">${listing.status}</button></td>
                                 </tr>
                             `)
+                            } else if (listing.status == "accepted") {
+                                { 
+                                    //allergens need to fix
+                                    
+                                    $("#listings").append(`
+                                    <tr>
+                                        <td class="align-middle">${listing.bakeryName}</td>
+                                        <td class="align-middle">${listing.breadContent}</td>
+                                        <td class="align-middle">${listing.releaseTime}</td>
+                                        <td class="align-middle">${listing.allergens}</td>
+                                        <td class="align-middle"><button type="button" class="btn btn-primary" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button></td>
+                                    </tr>
+                                `)
+    
+                                }
                             }
 
                         }
@@ -158,6 +178,7 @@ function addAllergen() {
 function addListing() {
     var breadContent = $("#breadContent").val()
     var allergens = []
+    
     $("#allergenList").children().each(function () {
         allergens.push($(this).text())
     })
@@ -171,7 +192,7 @@ function addListing() {
             var bakeryName = result.data.name
 
             var serviceUrl = "http://localhost:5004/listings"
-
+          
             data = JSON.stringify({
                 allergens: allergens,
                 bakeryId: user.uid,
@@ -179,8 +200,8 @@ function addListing() {
                 breadContent: parseInt($("#breadContent").val()),
                 charityId: "",
                 charityName: "",
-                status: "created"
-                //createTime: firestore.Timestamp.now()
+                status: "created",
+                //createTime: "",
             })
 
             try {
@@ -262,38 +283,54 @@ function acceptOrder(listingId) {
         }
     });
 }
+function pickUpOrder(listingId) {
+    var id = listingId
 
-function updateStatus(listingid, status, uid) {
-    $(async () => {
-        var serviceUrl = "http://localhost:5004/listings/" + listingid
-        if (status == "pickedup") {
-            var data = JSON.stringify({
-                status: "delivering"
-            })
-        }
-        else {
-            var data = JSON.stringify({
-                status: "delivered"
-            })
-        }
-        try {
+    document.getElementById(id).className = "btn btn-secondary disabled";
+    document.getElementById(id).innerHTML = "picking up";
+
+
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+
+
+            var serviceUrl = "http://localhost:5003/volunteers/" + user.uid
             const response = await fetch(serviceUrl, {
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                method: "PUT",
-                body: data
+                method: "GET"
             })
             const result = await response.json()
-            if (response.ok) {
-                if (response.status == 200) {
-                    alert("Listing updated.")
-                
+            var volunteerName = result.data.name
+
+            var serviceUrl = "http://localhost:5004/listings/" + id 
+
+            data = JSON.stringify({
+                volunteerId: user.uid,
+                volunteerName: volunteerName,
+                status: "picking up"
+                //createTime: firestore.Timestamp.now()
+            })
+
+            try {
+                const response = await fetch(serviceUrl, {
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    method: "PUT",
+                    body: data
+                })
+                const result = await response.json()
+                if (response.ok) {
+                    if (response.status == 201) {
+                        alert("Accepted")
+                        retrieveUserType(user.uid)
+                    }
                 }
+            } catch (error) {
+                alert("Error creating report.")
+                alert(error.message)
             }
-        } catch (error) {
-            alert("Error updating bakery.")
         }
-    })
+    });
 }
+
