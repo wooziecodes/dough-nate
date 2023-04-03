@@ -66,8 +66,10 @@ def find_by_id(bakeryId):
 @app.route("/bakeries", methods=["POST"])
 def create_bakery():
     data = request.get_json()
+    id = data["id"]
+    del data["id"]
     try:
-        bakeryCollection.document().set(data)
+        bakeryCollection.document(id).set(data)
     except:
         return jsonify({
             "code": 500,
