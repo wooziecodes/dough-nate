@@ -12,7 +12,7 @@ def updateReport(reportId, isBanned, userType):
     listingData = requests.get("http://127.0.0.1:5004/listings/" + listingId)
     listing = listingData.json()["data"]
     data = {
-            "isBanned": isBanned
+            "isBanned": isBanned == "true"
         }
     if userType == "bakery":
         bakeryId = listing["bakeryId"]
