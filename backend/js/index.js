@@ -28,6 +28,7 @@ $(document).ready(function () {
         if (user) {
             // User is signed in
             retrieveUserType(user.uid)
+         
             console.log('User is signed in:', user);
         } else {
             // User is signed out\
@@ -37,6 +38,35 @@ $(document).ready(function () {
     
     console.log(newdate)
 })
+
+function greet(id, userType) {
+    console.log(id,userType)
+    $(async () => {
+        var serviceUrl = "http://localhost:"
+        switch (userType) {
+            case ("charity"):
+                console.log("hi")
+                serviceUrl += "5002/charities/" + id
+                break
+            case ("bakery"):
+                serviceUrl += "5001/bakeries/" + id
+                break
+            case ("volunteer"):
+                serviceUrl += "5003/volunteers/" + id
+                break
+        }
+        
+        const response = await fetch(serviceUrl, {
+            method: "GET"
+        })
+        const result = await response.json()
+        if (response.ok) {
+            if (response.status === 200) {
+                $("#welcome").text("Welcome, " + result.data.name + "!")
+            }
+        }
+    })
+}
 
 function retrieveUserType(userid) {
     $(async () => {
@@ -51,7 +81,8 @@ function retrieveUserType(userid) {
                     if (result.data.userType == "bakery") {
                         $(".newListingContainer").show()
                     }
-                    document.getElementById("usertype").innerHTML = "Current Account type: " + result.data.userType
+                
+                    greet(userid, result.data.userType)
                     showListings(result.data.userType, userid)
                 }
             }
