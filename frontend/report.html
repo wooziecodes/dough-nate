@@ -34,9 +34,6 @@
     />
   </head>
 
-
-
-
   <!-- 1.ban, unbanned update btn
         2. based on report type:  -->
   <body>
@@ -53,7 +50,7 @@
     </div>
     <div class="container container-sm w-50 vh-100 p-5">
       <!-- <h1>Reports</h1> -->
-      <div class="d-flex align-items-center px-4">
+      <div class="d-flex align-items-center">
         <a href="listings.html" class="me-4 pr-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +86,7 @@
             </g>
           </svg>
         </a>
-        <h1 class="text-capitalize fw-bold mr-5">Add new Report</h1>
+        <h1 class="text-capitalize mr-5">Add new Report</h1>
       </div>
 
       <div class="form-group mt-4">
@@ -107,10 +104,10 @@
         ></textarea>
       </div>
 
-      <button type="button" class="btn" onclick="addReport()">
+      <button type="button" class="btn mt-3" onclick="addReport()">
         Add Report
       </button>
-      <a href="admin.html" class="btn btn-outline-info mb-3 mt-5"
+      <a href="admin.html" class="invisible-btn btn btn-outline-info"
         >Go to Admin page (invisible to users)</a
       >
 

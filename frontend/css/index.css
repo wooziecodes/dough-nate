@@ -129,6 +129,10 @@ body {
   animation-direction: normal, alternate;
 }
 
+table {
+    background-color: #fdfaf7cd;
+}
+
 button[type="button"] {
   display: block;
   /* margin-top: 20px; */

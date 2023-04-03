@@ -10,7 +10,8 @@ body {
   width: 100%;
   height: 10%;
   background-color: #fff6ee;
-  margin-bottom: 2%;
+  /* margin-bottom: 2%; */
+  border-bottom: 3px solid white;
   display: flex;
   align-items: center;
 }
@@ -166,45 +167,33 @@ h2 {
     border-color: blue;
   } */
 .container {
-  background-color: #fff6ee;
+  background-color: #fdfaf7cd;
 }
 .select {
   font-size: 16px;
-  font-weight: bolder;
+  /* font-weight: bolder; */
   color: grey;
   background-color: #fff6ee;
   border-color: #a09082;
-  border-width: 3px;
+  border-width: 2px;
   cursor: pointer;
 }
 textarea {
   font-size: 16px;
-  font-weight: bolder;
+  /* font-weight: bolder; */
   color: grey;
   background-color: #fff6ee;
   border-color: #a09082;
-  border-width: 3px;
+  border-width: 2px;
   cursor: pointer;
 }
 textarea:focus {
   outline: none;
-  border-color: burlywood;
+  border-color: #607e96;
 }
 select:focus {
   outline: none;
-  border-color: burlywood;
-}
-option::before {
-  content: "\2022 "; /* adds a bullet point before each option */
-  color: red;
-  font-size: 20px;
-  margin-right: 5px;
-}
-
-option::after {
-  content: " (car)"; /* adds "(car)" after each option */
-  color: blue;
-  font-size: 16px;
+  border-color: #607e96;
 }
 
 /* .option {
@@ -218,7 +207,9 @@ label {
   display: block;
   margin-bottom: 5px;
 }
-
+.btn {
+  margin-top: 20px !important;
+}
 select,
 textarea {
   display: block;
@@ -232,7 +223,7 @@ textarea {
 
 button[type="button"] {
   display: block;
-  margin-top: 20px;
+  margin-top: 40px !important;
   padding: 5px 20px;
   background-color: #607e96;
   color: #fff;
@@ -241,6 +232,9 @@ button[type="button"] {
   font-size: 16px;
   cursor: pointer;
 }
+.invisible-btn {
+  margin-top: 700px !important;
+}
 .btn-outline-info {
   /* margin-top: 1000px; */
   top: 1000px;
@@ -248,7 +242,7 @@ button[type="button"] {
 }
 .button {
   display: inline-block;
-  margin-top: 20px;
+  margin-top: 20px !important;
   padding: 10px 20px;
   background-color: #333;
   color: #fff;

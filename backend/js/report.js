@@ -45,7 +45,7 @@ function getListingsWithCharityId(charityId) {
             createdTime.push(result.data[i].createTime);
             listingId.push(result.data[i].id);
           }
-
+          console.log(createdTime)
           if (bakeryName.length == 1) {
             console.log('yes')
             $("#bakeryName").empty();
