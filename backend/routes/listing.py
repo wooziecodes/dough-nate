@@ -122,14 +122,21 @@ def get_bakery_listings(bakeryId):
 
 @app.route('/listings/volunteer/<string:volunteerId>', methods = ['GET'])
 def get_volunteer_listings(volunteerId):
-    docs = db.collections('listings').where('volunteerId', '==', volunteerId)
-
-    data = []
-    for doc in docs:
-        listing = doc.to_dict()
-        listing['id'] = doc.id
-        data.append(listing)
-    return jsonify(data), 200
+    if volunteerId:
+        listings = []
+        docs = listingsCollection.where('volunteerId', '==', volunteerId).stream()
+        for doc in docs:
+            listing = doc.to_dict()
+            listing['id'] = doc.id
+            listings.append(listing)
+        return jsonify({
+                "code": 200,
+                "data": listings
+            }), 200
+    return jsonify({
+        "code": 404,
+        "message": "No listings with such charity."
+    }), 404
 
 @app.route("/listings", methods=["POST"])
 def create_listing():

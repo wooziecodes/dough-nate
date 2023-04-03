@@ -310,7 +310,7 @@ function pickUpOrder(listingId) {
             data = JSON.stringify({
                 volunteerId: user.uid,
                 volunteerName: volunteerName,
-                status: "picking up",
+                status: "pickingup",
                 deliverBy: utcDate
             })
 

@@ -26,8 +26,7 @@ $(document).ready(function () {
 
 function getListingsWithCharityId(charityId) {
   $(async () => {
-    // charityId = 'rF0Wu8ezcsfKDPbCqf7hc3q2Jm62'
-    var serviceUrl = "http://localhost:5004/listings/charity/" + charityId;
+        var serviceUrl = "http://localhost:5004/listings/charity/" + charityId;
 
     try {
       const response = await fetch(serviceUrl, {
@@ -36,20 +35,19 @@ function getListingsWithCharityId(charityId) {
       const result = await response.json();
       if (response.ok) {
         if (response.status === 200) {
-          console.log(result.data[0].id);
 
           const bakeryName = [];
           const createdTime = [];
           const listingId = [];
           for (let i = 0; i < result.data.length; i++) {
-            // console.log(i);
-            console.log(result.data[i].createTime);
+            console.log(result.data[i].bakeryName);
             bakeryName.push(result.data[i].bakeryName);
             createdTime.push(result.data[i].createTime);
             listingId.push(result.data[i].id);
           }
 
           if (bakeryName.length == 1) {
+            console.log('yes')
             $("#bakeryName").empty();
             $("#bakeryName").append(`
                             <option value="${bakeryName}">${bakeryName} || ${createdTime}</option>

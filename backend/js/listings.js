@@ -213,9 +213,9 @@ function populateTable(id, userType) {
                                     break
                             }
 
-                            var address = getAddress(listing.bakeryId)
-
-                            $("#volunteerTableBody").append(`
+                            await getAddress(listing.bakeryId).then((address) => {
+                                console.log(toAppend)
+                                $("#volunteerTableBody").append(`
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.charityName}</td>
@@ -224,6 +224,7 @@ function populateTable(id, userType) {
                                     ${toAppend}
                                 </tr>
                             `)
+                            })
 
                         }
                     }
@@ -271,24 +272,22 @@ function updateStatus(listingid, status, uid) {
     })
 }
 
-function getAddress(bakeryId) {
-    $(async () => {
-        var serviceUrl = "http://localhost:5001/bakery/" + bakeryId
-        try {
-            const response = await fetch(serviceUrl, {
-                method: "GET"
-            })
-            const result = await response.json()
-            if (response.ok) {
-                if (response.status == 200) {
-                    return result.data.bakeryAddress
-                }
+async function getAddress(bakeryId) {
+    var serviceUrl = "http://localhost:5001/bakeries/" + bakeryId
+    try {
+        const response = await fetch(serviceUrl, {
+            method: "GET"
+        })
+        const result = await response.json()
+        if (response.ok) {
+            if (response.status == 200) {
+                return result.data.bakeryAddress
             }
-        } catch (error) {
-            alert("Error fetching bakery address.")
-            return
         }
-    })
+    } catch (error) {
+        alert("Error fetching bakery address.")
+        return
+    }
 }
 
 async function convertPostal(postals) {
