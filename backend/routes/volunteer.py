@@ -66,8 +66,10 @@ def find_by_id(volunteerId):
 @app.route("/volunteers", methods=["POST"])
 def create_volunteer():
     data = request.get_json()
+    id = data["id"]
+    del data["id"]
     try:
-        volunteerCollection.document().set(data)
+        volunteerCollection.document(id).set(data)
     except:
         return jsonify({
             "code": 500,

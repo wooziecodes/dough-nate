@@ -64,8 +64,10 @@ def find_by_id(charityId):
 @app.route("/charities", methods=["POST"])
 def create_charity():
     data = request.get_json()
+    id = data["id"]
+    del data["id"]
     try:
-        charityCollection.document().set(data)
+        charityCollection.document(id).set(data)
     except:
         return jsonify({
             "code": 500,
