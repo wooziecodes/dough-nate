@@ -91,62 +91,62 @@ $(document).on("click", ".updateBtnNoBan", function () {
 
 
 
-// async function updateReport(id) {
+async function updateReport(id) {
 
-//     var serviceUrl = "http://localhost:5005/reports/" + id
-//     const response = await fetch(serviceUrl, {
-//         method: "GET"
-//     })
-//     const result = await response.json()
-//     var listingId = result.data.listingId
+    var serviceUrl = "http://localhost:5005/reports/" + id
+    const response = await fetch(serviceUrl, {
+        method: "GET"
+    })
+    const result = await response.json()
+    var listingId = result.data.listingId
 
-//     // get banned Status - change address
-//     var serviceUrl = "http://localhost:5005/reports/" + id
-//     const response2 = await fetch(serviceUrl, {
-//         method: "GET"
-//     })
-//     const result2 = await response2.json()
-//     var isBanned = result2.data.isBanned
+    // get banned Status - change address
+    var serviceUrl = "http://localhost:5004/listings/" + listingId
+    const response2 = await fetch(serviceUrl, {
+        method: "GET"
+    })
+    const result2 = await response2.json()
+    var isBanned = result2.data.isBanned
     
 
-//     if (isBanned) {
-//         data = JSON.stringify({
-//         isBanned: false
+    if (isBanned) {
+        data = JSON.stringify({
+        isBanned: false
         
-//     })
-//     } else {
-//         data = JSON.stringify({
-//             isBanned: true
-//         })
-//     }
+    })
+    } else {
+        data = JSON.stringify({
+            isBanned: true
+        })
+    }
 
 
-//     var serviceUrl = "http://localhost:5004/listings/" + id 
+    var serviceUrl = "http://localhost:5004/bakeries/" + id 
 
 
 
 
-//     try {
-//         const response = await fetch(serviceUrl, {
-//             headers: {
-//                 "Accept": "application/json",
-//                 "Content-Type": "application/json"
-//             },
-//             method: "PUT",
-//             body: data
-//         })
-//         const result = await response.json()
-//         if (response.ok) {
-//             if (response.status == 201) {
-//                 alert("Accepted")
-//                 retrieveUserType(user.uid)
-//             }
-//         }
-//     } catch (error) {
-//         alert("Error creating report.")
-//         alert(error.message)
-//     }
-// }
+    try {
+        const response = await fetch(serviceUrl, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            method: "PUT",
+            body: data
+        })
+        const result = await response.json()
+        if (response.ok) {
+            if (response.status == 201) {
+                alert("Accepted")
+                retrieveUserType(user.uid)
+            }
+        }
+    } catch (error) {
+        alert("Error creating report.")
+        alert(error.message)
+    }
+}
 
 
 
