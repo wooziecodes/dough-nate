@@ -52,7 +52,7 @@ function getListingsWithCharityId(charityId) {
           if (bakeryName.length == 1) {
             $("#bakeryName").empty();
             $("#bakeryName").append(`
-                            <option value="${bakeryName}">${bakeryName} | </option>
+                            <option value="${bakeryName}">${bakeryName} || ${createdTime}</option>
                         `);
           } else {
             console.log("meow");

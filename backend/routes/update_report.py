@@ -17,21 +17,25 @@ def updateReport(reportId, userType):
         bakeryId = listing["bakeryId"]
         bakeryData = requests.get("http://127.0.0.1:5001/bakeries/" + bakeryId)
         bakery = bakeryData.json()["data"]
+        
         data = {
             "isBanned": not bakery["isBanned"]
         }
-        requests.put("http://127.0.0.1:5001/bakeries/" + bakeryId, data=data)
+        requests.put("http://127.0.0.1:5001/bakeries/" + bakeryId, json=data)
+        
     else:
+        print("volunteer")
         volunteerId = listing["volunteerId"]
         volunteerData = requests.get("http://127.0.0.1:5003/volunteers/" + volunteerId)
         volunteer = volunteerData.json()["data"]
         data = {
             "isBanned": not volunteer["isBanned"]
         }
-        requests.put("http://127.0.0.1:5003/volunteers/" + volunteerId, data=data)
+        requests.put("http://127.0.0.1:5003/volunteers/" + volunteerId, json=data)
     return jsonify({
             "code": 201,
-            "message": "Report updated successfully."
+            "message": "Report updated successfully.",
+            "data": data
         }), 201
 
 if __name__ == '__main__':

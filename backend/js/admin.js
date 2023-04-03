@@ -1,6 +1,7 @@
 //choi do here
 $(document).ready(function () {
     getReports()
+
     // getListingsWithCharityId()
 })
 function getReports() {
@@ -28,10 +29,8 @@ function getReports() {
                                     <button type="button" class="btn btn-warning deleteBtn">Delete</button>
                                 </td>
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-danger updateBtnBan">Ban</button>
-                                </td>
-                                <td class="align-middle">
-                                    <button type="button" class="btn btn-success updateBtnNoBan">Don't Ban</button>
+                                    <button type="button" class="btn btn-danger updateBtnBan">Ban/Unban</button>
+
                                 </td>
                                 <td style="display: none" class="id">${report.id}</td>
                             </tr>
@@ -58,7 +57,7 @@ $(document).on("click", ".updateBtnBan", function () {
         // reportText: 'updated text',
         // Add other updated fields here
     }
-    updateReport(id, report)
+    updateReport(id)
 })
 $(document).on("click", ".updateBtnNoBan", function () {
     var id = $(this).parent().siblings('.id').text()
@@ -69,25 +68,8 @@ $(document).on("click", ".updateBtnNoBan", function () {
 
         
     }
-    updateReport(id, report)
+    updateReport(id)
 })
-
-
-// async function updateReport(id, report) {
-//     console.log(id)
-    
-    
-//     $.ajax({
-//         url: 'http://localhost:5005/reports/' + id,
-//         type: 'PUT',
-//         contentType: 'application/json',
-//         data: JSON.stringify(report),
-//         success: function () {
-//             // Refresh the report table
-//             getReports()
-//         }
-//     })
-// }
 
 
 
@@ -98,33 +80,12 @@ async function updateReport(id) {
         method: "GET"
     })
     const result = await response.json()
-    var listingId = result.data.listingId
+   // var listingId = result.data.listingId
+    var userType = result.data.reportType
 
     // get banned Status - change address
-    var serviceUrl = "http://localhost:5004/listings/" + listingId
-    const response2 = await fetch(serviceUrl, {
-        method: "GET"
-    })
-    const result2 = await response2.json()
-    var isBanned = result2.data.isBanned
-    
 
-    if (isBanned) {
-        data = JSON.stringify({
-        isBanned: false
-        
-    })
-    } else {
-        data = JSON.stringify({
-            isBanned: true
-        })
-    }
-
-
-    var serviceUrl = "http://localhost:5004/bakeries/" + id 
-
-
-
+    var serviceUrl = "http://localhost:5009/updateReport/" + id + "/" + userType
 
     try {
         const response = await fetch(serviceUrl, {
@@ -133,13 +94,19 @@ async function updateReport(id) {
                 "Content-Type": "application/json"
             },
             method: "PUT",
-            body: data
+            body: {},
+            
         })
         const result = await response.json()
         if (response.ok) {
             if (response.status == 201) {
-                alert("Accepted")
-                retrieveUserType(user.uid)
+
+                if(result.data.isBanned){
+                    alert("User Banned")
+                } else {
+                    alert("User Unbanned")
+                }
+                
             }
         }
     } catch (error) {

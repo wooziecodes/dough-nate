@@ -19,6 +19,7 @@ const newdate = new Date(date + 1.5 * 60 * 60 * 1000)
 
 $(document).ready(function () {
     $(".newListingContainer").hide()
+    $(".report").hide()
 
    
     // Listen for authentication state changes
@@ -64,6 +65,7 @@ function showListings(userType, userid) {
     $(async () => {
         if (userType == "bakery") {
             var serviceUrl = "http://localhost:5004/listings/" + userType + "/" + userid
+
         } else {
             var serviceUrl = "http://localhost:5004/listings"
         }
@@ -78,7 +80,20 @@ function showListings(userType, userid) {
                 if (response.status === 200) {
                     console.log(result.data)
                     if (userType == "charity") {
-
+                        $(".report").show()
+                        $("#listingsTable").append(`
+                        <table class="table">
+                        <thead>
+                          <tr style="font-weight: bolder !important">
+                            <th scope="col">Bakery Name</th>
+                            <th scope="col">Bread Content</th>
+                            <th scope="col">Release Time</th>
+                            <th scope="col">Allergens</th>
+                            <th scope="col">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody id="listings"></tbody>
+                      </table>`)
                         for (listing of result.data) {
                             if (listing.status == "created") {
                                 { 
@@ -100,7 +115,21 @@ function showListings(userType, userid) {
                         } 
                         
                     } else if (userType == "volunteer") {
-
+                        $("#listingsTable").append(`
+                        <table class="table">
+                        <thead>
+                          <tr style="font-weight: bolder !important">
+                            <th scope="col">Bakery Name</th>
+                            <th scope="col">Charity Name</th>
+                            <th scope="col">Bread Content</th>
+                            <th scope="col">Release Time</th>
+                            <th scope="col">Allergens</th>
+                            <th scope="col">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody id="listings"></tbody>
+                      </table>
+                      `)
                         for (listing of result.data) {
                             if (listing.status == "accepted") {
                                 { 
@@ -109,6 +138,7 @@ function showListings(userType, userid) {
                                     $("#listings").append(`
                                     <tr>
                                         <td class="align-middle">${listing.bakeryName}</td>
+                                        <td class="align-middle">${listing.charityName}</td>
                                         <td class="align-middle">${listing.breadContent}</td>
                                         <td class="align-middle">${listing.releaseTime}</td>
                                         <td class="align-middle">${listing.allergens}</td>
@@ -134,6 +164,7 @@ function addAllergen() {
     $("#allergenList").append(`
         <span class="badge text-bg-primary">${allergen}</span>
     `)
+    $("#allergen").val("")
 }
 
 function addListing() {
@@ -154,7 +185,7 @@ function addListing() {
 
             var serviceUrl = "http://localhost:5004/listings"
             const date = new Date();
-            const date2 = new Date(date.getTime() + 1.5 * 60 * 60 * 1000)
+            const date2 = new Date(date.getTime() + 3 * 60 * 60 * 1000)
             
             const utcDate = date.toUTCString();
             const utcDate2 = date2.toUTCString();
@@ -168,7 +199,9 @@ function addListing() {
                 charityName: "",
                 status: "created",
                 createTime: utcDate,
-                releaseTime: utcDate2
+                releaseTime: utcDate2,
+                deliverBy: "",
+                volunteerId: ""
             })
 
             try {
