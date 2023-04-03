@@ -135,7 +135,14 @@
                 if (result.data.userType == "charity") {
                   console.log("no check");
                 } else {
-                  return checkBan(result.data.userType, userid);
+                  checkBan(result.data.userType, userid).then((isBanned) => {
+                    console.log(isBanned + " 2")
+                    if (isBanned) {
+                      alert("You have been banned!");
+                    } else {
+                      window.location.href = "index.html";
+                    }
+                  })
                   
                 }
               }
@@ -159,8 +166,9 @@
             const result = await response.json();
             if (response.ok) {
               if (response.status === 200) {
-                console.log(result.data.isBanned)
-                return result.data.isBanned;
+                isBanned = result.data.isBanned
+                console.log(isBanned + " 1")
+                return isBanned;
                 
               }
             }
@@ -187,13 +195,8 @@
                 if (!querySnapshot.empty) {
                   console.log("Email found:", email);
                   auth.onAuthStateChanged((user) => {
-                    isBanned = retrieveUserType(user.uid);
-                    
-                    if (isBanned) {
-                      alert("You have been banned!");
-                    } else {
-                      window.location.href = "index.html";
-                    }
+                    retrieveUserType(user.uid);
+
                   });
                 } else {
                   console.error("Email not found");
