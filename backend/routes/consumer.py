@@ -1,14 +1,18 @@
 import pika
 import json
 
+# RabbitMQ Connection
 RABBITMQ_HOST = "localhost"
 connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
 channel = connection.channel()
 
-def callback(ch, method, properties, body):
-    data = json.loads(body)
-    print(f" [x] Received {data}")
+channel.queue_declare(queue='timer_ping')
 
-channel.basic_consume(queue='timer_ping', on_message_callback=callback, auto_ack=True)
-print(' [*] Waiting for messages. To exit press CTRL+C')
-channel.start_consuming()
+message_data = {
+    "ping": "Timer",
+    "bakeryName": "Test Bakery",
+    "bakeryAddress": "123 Test Street"
+}
+
+channel.basic_publish(exchange='', routing_key='timer_ping', body=json.dumps(message_data))
+print(" [x] Test message sent")

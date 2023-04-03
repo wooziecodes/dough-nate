@@ -8,6 +8,7 @@ import pika
 from firebase_admin import firestore, credentials, initialize_app
 from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 import requests
+import json
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -17,7 +18,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
 channel = connection.channel()
 channel.queue_declare(queue='timer_ping')
 
-cred = credentials.Certificate("./key.json")
+cred = credentials.Certificate("../key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -25,69 +26,115 @@ timer = Flask(__name__)
 
 sched = BackgroundScheduler()
 
-
 def pull_data():
-    data = requests.get("http://127.0.0.1:5004/listings")
-    docs = data.json()['data']
-    print(docs)
-    # docs = db.collection('listings').get()
-    # now = datetime.now()
+    docs = db.collection('listings').get()
+    now = datetime.now(timezone.utc)
 
     if docs:
         for doc in docs:
-            #handle id and releaseTime
-            # doc_dict = doc.to_dict()
-            doc_id = doc['id']
-            timestamp_str = doc['releaseTime']
-            
-            # timestamp = DatetimeWithNanoseconds.fromisoformat()
-            # Fri 31 Mar 2023 08:28:07 GMT
-            timestamp_str = ''.join(timestamp_str.split(','))
-            timestamp1 = datetime.strptime(timestamp_str, '%a %d %b %Y %H:%M:%S %Z')
-            timestamp = pytz.utc.localize(timestamp1)
-            # print(datetime_object)
-            # timestamp = DatetimeWithNanoseconds.fromisoformat(str(timestamp_str))
-
-            # Get current time in UTC
-            now = datetime.now(timezone.utc)
+            doc_dict = doc.to_dict()
+            doc_id = doc.id
+            timestamp = doc_dict['releaseTime'].replace(tzinfo=timezone.utc)
 
             # Compare timestamps
             if timestamp > now:
-                # print(doc_id)
-                # print(timestamp_str)
-                # print(now)
                 print('The Firestore timestamp is greater than the current time.')
             else:
-                # print(doc_id)
-                print(timestamp_str)
-                print(now)
-
-                print('The current time is greater than the Firestone timestamp.')
+                print('The current time is greater than the Firestore timestamp.')
                 send_timer_ping(doc_id)  # Call send_timer_ping() with the document ID
-                #send listing to telebot
-                # formatted_data = {
-                #     "bakeryName": doc['bakeryName'],
-                #     "breadContent": doc['breadContent'],
-                #     "allergens": doc['allergens']
-                # }
-                # requests.post("http://127.0.0.1:5000/timer_ping", data=jsonify({
-                #     "code": 69,
-                #     "data": formatted_data
-                # }))
-                requests.delete("http://127.0.0.1:5004/listings/" + doc_id)
-
+                doc.reference.delete()  # Delete the document
     else:
         print('no documents found')
 
+# def pull_data():
+#     data = requests.get("http://127.0.0.1:5004/listings")
+#     docs = data.json()['data']
+#     print(docs)
+#     # docs = db.collection('listings').get()
+#     # now = datetime.now()
+
+#     if docs:
+#         for doc in docs:
+#             #handle id and releaseTime
+#             # doc_dict = doc.to_dict()
+#             doc_id = doc['id']
+#             timestamp_str = doc['releaseTime']
+            
+#             # timestamp = DatetimeWithNanoseconds.fromisoformat()
+#             # Fri 31 Mar 2023 08:28:07 GMT
+#             timestamp_str = ''.join(timestamp_str.split(','))
+#             timestamp1 = datetime.strptime(timestamp_str, '%a %d %b %Y %H:%M:%S %Z')
+#             timestamp = pytz.utc.localize(timestamp1)
+#             # print(datetime_object)
+#             # timestamp = DatetimeWithNanoseconds.fromisoformat(str(timestamp_str))
+
+#             # Get current time in UTC
+#             now = datetime.now(timezone.utc)
+
+#             # Compare timestamps
+#             if timestamp > now:
+#                 # print(doc_id)
+#                 # print(timestamp_str)
+#                 # print(now)
+#                 print('The Firestore timestamp is greater than the current time.')
+#             else:
+#                 # print(doc_id)
+#                 print(timestamp_str)
+#                 print(now)
+
+#                 print('The current time is greater than the Firestone timestamp.')
+#                 send_timer_ping(doc_id)  # Call send_timer_ping() with the document ID
+#                 #send listing to telebot
+#                 # formatted_data = {
+#                 #     "bakeryName": doc['bakeryName'],
+#                 #     "breadContent": doc['breadContent'],
+#                 #     "allergens": doc['allergens']
+#                 # }
+#                 # requests.post("http://127.0.0.1:5000/timer_ping", data=jsonify({
+#                 #     "code": 69,
+#                 #     "data": formatted_data
+#                 # }))
+#                 requests.delete("http://127.0.0.1:5004/listings/" + doc_id)
+
+#     else:
+#         print('no documents found')
+
 
 #listing id
-def send_timer_ping(listing_id):
-    data = {
-        "ping": "Timer",
-        "listing_id": listing_id
-    }
-    channel.basic_publish(exchange='', routing_key='timer_ping', body=json.dumps(data))
-    print(" [x] Sent %r" % data)
+# def send_timer_ping(listing_id):
+#     data = {
+#         "ping": "Timer",
+#         "listing_id": listing_id
+#     }
+#     channel.basic_publish(exchange='', routing_key='timer_ping', body=json.dumps(data))
+#     print(" [x] Sent %r" % data)
+
+def send_timer_ping(doc_id):
+    doc_ref = db.collection('listings').document(doc_id)
+    doc = doc_ref.get()
+    if doc.exists:
+        data = doc.to_dict()
+        for key, value in data.items():
+            if isinstance(value, DatetimeWithNanoseconds):
+                data[key] = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        bakery_id = data.get("bakeryId")
+        bakery_ref = db.collection('bakeries').document(bakery_id)
+        bakery = bakery_ref.get()
+        if bakery.exists:
+            bakery_data = bakery.to_dict()
+            data.update({
+                "bakeryName": bakery_data.get("name"),
+                "bakeryAddress": bakery_data.get("address")
+            })
+            print(data)
+            channel.basic_publish(exchange='', routing_key='timer_ping', body=json.dumps(data))
+            print(f"Sent timer ping for doc_id: {doc_id} with data: {data}")
+        else:
+            print(f"No bakery document found for bakery_id: {bakery_id}")
+    else:
+        print(f"Document not found for doc_id: {doc_id}")
+
+
 
 if __name__ == '__main__':
     sched.add_job(id='job1', func=pull_data, trigger='interval', seconds = 3)
