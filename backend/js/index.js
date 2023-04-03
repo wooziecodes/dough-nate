@@ -13,11 +13,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
-
+const date = new Date(); // Fri Feb 17 2023 11:58:30 GMT-0700 (Mountain Standard Time)
+const utcDate = date.toUTCString(); // 'Fri, 17 Feb 2023 18:58:30 GMT'
 
 $(document).ready(function () {
     $(".newListingContainer").hide()
-    
+
    
     // Listen for authentication state changes
     auth.onAuthStateChanged((user) => {
@@ -31,7 +32,7 @@ $(document).ready(function () {
         }
     });
     
-    console.log(firebase.firestore.Timestamp.now())
+    console.log(utcDate)
 })
 
 function retrieveUserType(userid) {
@@ -96,19 +97,7 @@ function showListings(userType, userid) {
                     } else if (userType == "charity") {
 
                         for (listing of result.data) {
-                            if (["picking up", "delivering", "delivered"].includes(listing.status) || (listing.status == "accepted" && listing.charityId == userid)) {
-                                //allergens need to fix
-                                $("#listings").append(`
-                                <tr>
-                                    <td class="align-middle">${listing.bakeryName}</td>
-                                    <td class="align-middle">${listing.breadContent}</td>
-                                    <td class="align-middle">${listing.releaseTime}</td>
-                                    <td class="align-middle">${listing.allergens}</td>
-                                    <td class="align-middle"><button type="button" class="btn btn-secondary disabled">${listing.status}</button></td>
-                                </tr>
-                            `)
-
-                            } else if (listing.status == "created") {
+                            if (listing.status == "created") {
                                 { 
                                     //allergens need to fix
                                     
@@ -130,18 +119,7 @@ function showListings(userType, userid) {
                     } else if (userType == "volunteer") {
 
                         for (listing of result.data) {
-                            if (["picking up", "delivering", "delivered"].includes(listing.status)||(listing.status == "picking up" && listing.volunteerId == userid)) {
-                                //allergens need to fix
-                                $("#listings").append(`
-                                <tr>
-                                    <td class="align-middle">${listing.bakeryName}</td>
-                                    <td class="align-middle">${listing.breadContent}</td>
-                                    <td class="align-middle">${listing.releaseTime}</td>
-                                    <td class="align-middle">${listing.allergens}</td>
-                                    <td class="align-middle"><button type="button" class="btn btn-secondary disabled">${listing.status}</button></td>
-                                </tr>
-                            `)
-                            } else if (listing.status == "accepted") {
+                            if (listing.status == "accepted") {
                                 { 
                                     //allergens need to fix
                                     

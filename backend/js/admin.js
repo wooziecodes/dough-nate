@@ -66,22 +66,90 @@ $(document).on("click", ".updateBtnNoBan", function () {
         reportStatus: 'report reviewed, not banned', // Replace with updated data
         // reportText: 'updated text',
         // Add other updated fields here
+
+        
     }
     updateReport(id, report)
 })
 
-async function updateReport(id, report) {
-    $.ajax({
-        url: 'http://localhost:5005/reports/' + id,
-        type: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify(report),
-        success: function () {
-            // Refresh the report table
-            getReports()
-        }
-    })
-}
+
+// async function updateReport(id, report) {
+//     console.log(id)
+    
+    
+//     $.ajax({
+//         url: 'http://localhost:5005/reports/' + id,
+//         type: 'PUT',
+//         contentType: 'application/json',
+//         data: JSON.stringify(report),
+//         success: function () {
+//             // Refresh the report table
+//             getReports()
+//         }
+//     })
+// }
+
+
+
+// async function updateReport(id) {
+
+//     var serviceUrl = "http://localhost:5005/reports/" + id
+//     const response = await fetch(serviceUrl, {
+//         method: "GET"
+//     })
+//     const result = await response.json()
+//     var listingId = result.data.listingId
+
+//     // get banned Status - change address
+//     var serviceUrl = "http://localhost:5005/reports/" + id
+//     const response2 = await fetch(serviceUrl, {
+//         method: "GET"
+//     })
+//     const result2 = await response2.json()
+//     var isBanned = result2.data.isBanned
+    
+
+//     if (isBanned) {
+//         data = JSON.stringify({
+//         isBanned: false
+        
+//     })
+//     } else {
+//         data = JSON.stringify({
+//             isBanned: true
+//         })
+//     }
+
+
+//     var serviceUrl = "http://localhost:5004/listings/" + id 
+
+
+
+
+//     try {
+//         const response = await fetch(serviceUrl, {
+//             headers: {
+//                 "Accept": "application/json",
+//                 "Content-Type": "application/json"
+//             },
+//             method: "PUT",
+//             body: data
+//         })
+//         const result = await response.json()
+//         if (response.ok) {
+//             if (response.status == 201) {
+//                 alert("Accepted")
+//                 retrieveUserType(user.uid)
+//             }
+//         }
+//     } catch (error) {
+//         alert("Error creating report.")
+//         alert(error.message)
+//     }
+// }
+
+
+
 
 function deleteReport(id) {
     $.ajax({
