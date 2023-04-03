@@ -287,13 +287,13 @@ const firebaseConfig = {
           if (profile === "bakery") {
       data.bakeryAddress = document.getElementById("bakeryAddress").value;
       data.Postal = document.getElementById("bakerypostal").value;
-    
+      data.isBanned = false;
       console.log(data.Postal)
       console.log(document.getElementById("bakerypostal").value)
      
     } else if (profile === "volunteer") {
       data.driverPlate = document.getElementById("driverPlate").value;
-      
+      data.isBanned = false;
     } else if (profile === "charity") {
       data.charityAddress = document.getElementById("charityAddress").value;
     }
@@ -326,10 +326,9 @@ const firebaseConfig = {
 
 function saveUserToUsersCollection(uid, userType, email) {
   const userData = {
-    uid : uid,
-    userType : userType,
-    email : email,
-    isBanned:false
+    uid,
+    userType,
+    email,
   };
   return db.collection("users").add(userData);
 }
