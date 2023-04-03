@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/updateReport/<string:reportId>/<string:isBanned>/<string:userType>", methods=["PUT"])
 def updateReport(reportId, isBanned, userType):
-    reportData = requests.get("http://127.0.0.1:5004/listings/" + reportId)
+    reportData = requests.get("http://127.0.0.1:5005/reports/" + reportId)
     report = reportData.json()["data"]
     listingId = report["listingId"]
     listingData = requests.get("http://127.0.0.1:5004/listings/" + listingId)
