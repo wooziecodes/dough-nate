@@ -29,6 +29,10 @@ def updateReport(reportId, userType):
             "isBanned": not volunteer["isBanned"]
         }
         requests.put("http://127.0.0.1:5003/volunteers/" + volunteerId, data=data)
+    return jsonify({
+            "code": 201,
+            "message": "Report updated successfully."
+        }), 201
 
 if __name__ == '__main__':
     app.run(port=5009, debug=True)
