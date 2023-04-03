@@ -1,11 +1,7 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
 from datetime import datetime, timezone
 import os
 import time
-import firebase_admin
-import pytz
 import pika 
-from firebase_admin import firestore, credentials, initialize_app
 import requests
 import json
 
