@@ -8,6 +8,7 @@ import pika
 from firebase_admin import firestore, credentials, initialize_app
 from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 import requests
+import json
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -17,7 +18,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
 channel = connection.channel()
 channel.queue_declare(queue='timer_ping')
 
-cred = credentials.Certificate("./key.json")
+cred = credentials.Certificate("../key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
