@@ -20,7 +20,8 @@ const newdate = new Date(date + 1.5 * 60 * 60 * 1000)
 $(document).ready(function () {
     $(".newListingContainer").hide()
     $(".report").hide()
-
+    $("#cover").hide()
+    $("#map").hide()
    
     // Listen for authentication state changes
     auth.onAuthStateChanged((user) => {
@@ -411,7 +412,7 @@ function displayMap(listingid) {
                                 }
                             }
                         } catch (error) {
-                            alert("Error retrieving user type")
+                            alert(error)
                         }
                     }
                 });
@@ -419,3 +420,37 @@ function displayMap(listingid) {
         }
     })
 }
+
+async function convertPostal(postals) {
+    var toReturn = []
+    var url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[0]["postal"] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+    var response = await fetch(url)
+    var data = await response.json()
+    var lat = data.results[0].LATITUDE
+    var long = data.results[0].LONGITUDE
+    toReturn.push({
+        "lat": lat,
+        "long": long,
+        "name": postals[0]["name"]
+    })
+
+    if (postals.length > 1) {
+        url = "https://developers.onemap.sg/commonapi/search?searchVal=" + postals[1]["postal"] + "&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+        var response = await fetch(url)
+        var data = await response.json()
+        var lat = data.results[0].LATITUDE
+        var long = data.results[0].LONGITUDE
+        toReturn.push({
+            "lat": lat,
+            "long": long,
+            "name": postals[1]["name"]
+        })
+    }
+
+    return toReturn
+}
+
+$("#cover").click(function () {
+    $("#cover").hide()
+    $("#map").hide()
+})
