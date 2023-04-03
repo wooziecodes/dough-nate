@@ -4,6 +4,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
+CORS(app)
+
 @app.route("/updateReport/<string:reportId>/<string:userType>", methods=["PUT"])
 def updateReport(reportId, userType):
     reportData = requests.get("http://127.0.0.1:5005/reports/" + reportId)
