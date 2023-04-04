@@ -20,10 +20,15 @@ def get_reports():
         report = doc.to_dict()
         report["id"] = doc.id
         reports.append(report)
+    if len(reports) > 0:
+        return jsonify({
+            "code": 200,
+            "data": reports
+        }), 200
     return jsonify({
-        "code": 200,
-        "data": reports
-    }), 200
+        "code": 404,
+        "message": "There are no reports."
+    }), 404
 
 @app.route("/reports/<string:reportId>", methods=["GET"])
 def find_by_id(reportId):

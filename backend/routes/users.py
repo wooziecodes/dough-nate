@@ -20,6 +20,12 @@ def get_user_type(uid):
         user = doc.to_dict()
         users.append(user)
     
+    if len(users) == 0:
+         return jsonify({
+              "code": 404,
+              "message": "user not found"
+         }), 404
+
     for user in users:
         if user["uid"] == uid:
             return jsonify({

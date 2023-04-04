@@ -20,10 +20,16 @@ def get_charities():
         charity = doc.to_dict()
         charity["id"] = doc.id
         charities.append(charity)
+
+    if len(charities) > 0:
+        return jsonify({
+            "code": 200,
+            "data": charities
+        }), 200
     return jsonify({
-        "code": 200,
-        "data": charities
-    }), 200
+        "code": 404,
+        "message": "There are no charities."
+    }), 404
 
 @app.route("/charities/<string:charityId>", methods=["GET"])
 def find_by_id(charityId):

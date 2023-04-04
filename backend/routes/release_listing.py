@@ -2,17 +2,15 @@ from flask import Flask, request, jsonify, render_template, send_from_directory
 from datetime import datetime, timezone
 import os
 import time
-import firebase_admin
-import pytz
 import pika 
-from firebase_admin import firestore, credentials, initialize_app
 import requests
 import json
-
-from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask, request, jsonify
+# from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timezone
 # from dateutil.parser import parse
 
+app = Flask(__name__)
 
 # RabbitMQ Connection
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
@@ -20,6 +18,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
 channel = connection.channel()
 channel.queue_declare(queue='timer_ping')
 
+@app.route('/ping', methods = ['GET'])
 def pull_data():
     data = requests.get(url="http://127.0.0.1:5004/listings")
     docs = data.json()['data']
@@ -49,8 +48,20 @@ def pull_data():
                     })
                 else:
                     print(f"Bakery document with ID {bakery_id} not found")
+                    return jsonify({
+                        "code": 404,
+                        "message": "There is no such listing."
+                    }), 520
+        return jsonify({
+                        "code": 200,
+                        "message": "check successful."
+                    }), 200
     else:
         print('no documents found')
+        return jsonify({
+            "code": 404,
+            "message": "There are no listings."
+        }), 404
 
 
 
@@ -61,13 +72,4 @@ def send_timer_ping(listing_id, bakery_name, bakery_address):
 
 
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(pull_data, 'interval', seconds=5)
-    scheduler.start()
-
-    try:
-        while True:
-            time.sleep(2)
-    except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()
-
+    app.run(port=5070, debug=True)

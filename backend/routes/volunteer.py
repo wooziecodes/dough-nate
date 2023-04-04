@@ -37,10 +37,16 @@ def get_volunteers():
         vol = doc.to_dict()
         vol["id"] = doc.id
         volunteers.append(vol)
+
+    if len(volunteers) > 0:
+        return jsonify({
+            "code": 200,
+            "data": volunteers
+        }), 200
     return jsonify({
-        "code": 200,
-        "data": volunteers
-    }), 200
+        "code": 404,
+        "message": "There are no listings."
+    }), 404
 
 @app.route("/volunteers/<string:volunteerId>", methods=["GET"])
 def find_by_id(volunteerId):
