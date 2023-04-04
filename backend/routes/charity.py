@@ -13,21 +13,6 @@ charityCollection = db.collection("charities")
 
 CORS(app)
 
-class Report(object):
-    def __init__(self, charityName, charityPhone, charityEmail, charityAddress):
-        self.charityName = charityName
-        self.charityPhone = charityPhone
-        self.charityEmail = charityEmail
-        self.charityAddress = charityAddress
-
-    def json(self):
-        return {
-            "charityName": self.charityName,
-            "charityPhone": self.charityPhone,
-            "charityEmail": self.charityEmail,
-            "charityAddress": self.charityAddress
-        }
-
 @app.route("/charities", methods=["GET"])
 def get_charities():
     charities = []
