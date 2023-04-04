@@ -54,14 +54,18 @@
       font-weight: bold;
     }
 
-    input[type="email"],
-    input[type="password"] {
+    .form-control {
       border-radius: 3px;
-      border: 1px solid #ccc;
+      border: 2px solid #ccc;
+      border-radius: 10px;
       padding: 8px;
       margin-bottom: 20px;
       width: 100%;
       box-sizing: border-box;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #607e96;
     }
 
     button[type="submit"] {
@@ -74,16 +78,6 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    /* .button {
-  display: inline-block;
-  margin-top: 20px !important;
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-} */
-
     button[type="submit"]:hover {
       background-color: #56381c;
       color: white;
@@ -95,7 +89,7 @@
       <div class="row justify-content-center">
         <div class="col-md-6">
           <img src="./css/logo.svg" alt="Logo" class="logo" />
-          <h1 class="text-center mt-5">Let's dough it!</h1>
+          <h1 class="text-center mt-3">Let's dough it!</h1>
           <form id="login-form" class="mt-4">
             <div class="form-group">
               <label for="email">Email:</label>
@@ -110,9 +104,31 @@
                 required
               />
             </div>
-            <button type="submit" class="btn btn-primary btn-block">
-              Login
-            </button>
+            <div
+              class="alert alert-danger mt-2 mb-2"
+              style="
+                display: none;
+                /* width: 50%; */
+                text-align: center;
+                /* margin: 0 auto; */
+              "
+              id="error-submit"
+            >
+              Your email or/and password does not match!
+            </div>
+            <div
+              class="alert alert-danger mt-2 mb-2"
+              style="
+                display: none;
+                /* width: 50%; */
+                text-align: center;
+                /* margin: 0 auto; */
+              "
+              id="error-email"
+            >
+              Email not found!
+            </div>
+            <button type="submit" class="btn btn-block">Login</button>
           </form>
         </div>
       </div>
@@ -148,7 +164,6 @@
                 checkBan(result.data.userType, userid).then((isBanned) => {
                   if (isBanned) {
                     window.location.href = "banned.html";
-         
                   } else {
                     window.location.href = "index.html";
                   }
@@ -205,21 +220,27 @@
                   });
                 } else {
                   console.error("Email not found");
-                  alert(
-                    "Email not found. Please check your email and password and try again."
-                  );
+                  document.getElementById("error-email").style.display =
+                    "block";
+
+                  // alert(
+                  //   "Email not found. Please check your email and password and try again."
+                  // );
                 }
               })
               .catch((error) => {
+                // document.getElementById("error-submit").style.display = "block";
                 console.error("Error checking email:", error);
                 alert("Error checking email. Please try again.");
               });
           })
           .catch((error) => {
             console.error("Error logging in:", error);
-            alert(
-              "Failed to log in. Please check your email and password and try again."
-            );
+            document.getElementById("error-submit").style.display = "block";
+
+            // alert(
+            //   "Failed to log in. Please check your email and password and try again."
+            // );
           });
       });
     </script>

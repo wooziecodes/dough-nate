@@ -116,7 +116,10 @@ function populateTable(id, userType) {
         method: "GET",
       });
       const result = await response.json();
+      console.log(response.status)
       if (response.ok) {
+                  // alert('meow')
+
         if (response.status === 200) {
           if (userType == "charity") {
             $("#charityTableBody").empty();
@@ -247,10 +250,13 @@ function populateTable(id, userType) {
               });
             }
           }
+        } 
+        }else{
+          document.getElementById("error-submit").style.display = "block";
         }
-      }
     } catch (error) {
-      alert("There are no listings, or there is a problem.");
+      // alert("There are no listings, or there is a problem.");
+      // console.log(error)
     }
   });
 }

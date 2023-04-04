@@ -120,6 +120,10 @@ function addReport() {
           method: "POST",
           body: data,
         });
+        if (reportText.trim() === "") {
+          document.getElementById("error-submit").style.display = "block";
+          return;
+        }
         const result = await response.json();
         if (response.ok) {
           if (response.status == 201) {
