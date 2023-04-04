@@ -133,7 +133,7 @@ function showListings(userType, userid) {
             <div class="cardDetails">${listing.releaseTime}</div>
             <div class="cardTitle align-middle">Allergens:</div>
             <div class="cardDetails">${
-              listing.allergens.length > 0 ? listing.allergens : "null"
+              listing.allergens.length > 0 ? listing.allergens : "-"
             }</div>
             <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
               <button type="button" class="btn" onclick="acceptOrder(this.id)" id=${
@@ -210,7 +210,7 @@ function showListings(userType, userid) {
                                 <div class="cardDetails">${
                                   listing.allergens.length > 0
                                     ? listing.allergens
-                                    : "null"
+                                    : "-"
                                 }</div>
                                 <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
                                 <button type="button" class="btn" onclick="pickUpOrder(this.id)" id=${

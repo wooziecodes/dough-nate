@@ -152,7 +152,7 @@ function populateTable(id, userType) {
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.breadContent}</td>
-                                    <td class="align-middle">${listing.allergens}</td>
+                                    <td class="align-middle">${listing.allergens.length > 0 ? listing.allergens : "-"}</td>
                                     ${toAppend}
                                     <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
                                 </tr>
