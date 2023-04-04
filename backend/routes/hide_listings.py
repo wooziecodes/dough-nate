@@ -13,13 +13,13 @@ def hide_listing(bakeryId):
         listings = requests.get("http://host.docker.internal:5004/listings/bakery/" + bakeryId).json()['data']
 
         for listing in listings:
-            id = listing['id']
+            listingId = listing['id']
             if listing['hidden'] == True:
-                requests.put("http://host.docker.internal:5004/listings/" + id, json={
+                requests.put("http://host.docker.internal:5004/listings/" + listingId, json={
                     "hidden": False
                 })
             else:
-                requests.put("http://host.docker.internal:5004/listings/" + id, json={
+                requests.put("http://host.docker.internal:5004/listings/" + listingId, json={
                     "hidden": True
                 })
     except:
@@ -33,4 +33,4 @@ def hide_listing(bakeryId):
     }), 200
 
 if __name__ == "__main__":
-    app.run(port=5056, debug=True)
+    app.run(host="0.0.0.0", port=5056, debug=True)

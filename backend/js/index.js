@@ -415,10 +415,15 @@ function pickUpOrder(listingId) {
       var volunteerName = result.data.name;
 
       var serviceUrl = "http://localhost:5004/listings/" + id;
-      const date = new Date().getTime;
+      const date = new Date().getTime();
+      console.log(date)
       const date2 = new Date(date + 1.5 * 60 * 60 * 1000);
+      console.log(date2)
+
 
       const utcDate = date2.toUTCString();
+      console.log(utcDate)
+
 
       data = JSON.stringify({
         volunteerId: user.uid,

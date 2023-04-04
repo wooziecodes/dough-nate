@@ -3,9 +3,12 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
 def pull_data():
-    requests.get('http://127.0.0.1:5069/ping')
-    requests.get('http://127.0.0.1:5070/ping')
-    print('pinging')
+    try:
+        requests.get('http://host.docker.internal:5069/ping')
+        requests.get('http://host.docker.internal:5070/ping')
+        print('pinging')
+    except:
+        print('not working')
 
 
 if __name__ == '__main__':
