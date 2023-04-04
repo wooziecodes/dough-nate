@@ -27,7 +27,6 @@ def add_listing():
     return jsonify({
         "code": 201,
         "message": "Successfully created listing.",
-        "data": data
     }), 201
 
 @app.route("/listings", methods=["GET"])
@@ -37,10 +36,16 @@ def get_listings():
         listing = doc.to_dict()
         listing["id"] = doc.id
         listings.append(listing)
+    
+    if len(listings) > 0:
+        return jsonify({
+            "code": 200,
+            "data": listings
+        }), 200
     return jsonify({
-        "code": 200,
-        "data": listings
-    }), 200
+        "code": 404,
+        "message": "There are no listings."
+    }), 404
 
 @app.route("/listings/<string:listingId>", methods=["GET"])
 def find_by_id(listingId):
@@ -72,16 +77,17 @@ def get_charity_listings(charityId):
             listing = doc.to_dict()
             listing["id"] = doc.id
             listings.append(listing)
-        return jsonify({
-                "code": 200,
-                "data": listings
-            }), 200
+        if len(listings) > 0:
+            return jsonify({
+                    "code": 200,
+                    "data": listings
+                }), 200
     return jsonify({
         "code": 404,
         "message": "No listings with such charity."
     }), 404
 
-@app.route('/listings/bakery/<string:bakeryId>', methods = ['GET'])
+@app.route('/listings/bakery/<string:bakeryId>', methods = ["GET"])
 def get_bakery_listings(bakeryId):
     if bakeryId:
         listings = []
@@ -90,13 +96,14 @@ def get_bakery_listings(bakeryId):
             listing = doc.to_dict()
             listing['id'] = doc.id
             listings.append(listing)
-        return jsonify({
-                "code": 200,
-                "data": listings
-            }), 200
+        if len(listings) > 0:
+            return jsonify({
+                    "code": 200,
+                    "data": listings
+                }), 200
     return jsonify({
         "code": 404,
-        "message": "No listings with such charity."
+        "message": "No listings with such bakery."
     }), 404
 
 @app.route('/listings/volunteer/<string:volunteerId>', methods = ['GET'])
@@ -108,13 +115,14 @@ def get_volunteer_listings(volunteerId):
             listing = doc.to_dict()
             listing['id'] = doc.id
             listings.append(listing)
-        return jsonify({
-                "code": 200,
-                "data": listings
-            }), 200
+        if len(listings) > 0:
+            return jsonify({
+                    "code": 200,
+                    "data": listings
+                }), 200
     return jsonify({
         "code": 404,
-        "message": "No listings with such charity."
+        "message": "No listings with such volunteer."
     }), 404
 
 @app.route("/listings", methods=["POST"])
