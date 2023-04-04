@@ -81,11 +81,11 @@ async function updateReport(id) {
     })
     const result = await response.json()
    // var listingId = result.data.listingId
-    var userType = result.data.reportType
+    var userType = result.data.userType
 
     // get banned Status - change address
 
-    var serviceUrl = "http://localhost:5009/updateReport/" + id + "/" + userType
+    var serviceUrl = "http://localhost:5041/updateReport/" + id + "/" + userType
 
     try {
         const response = await fetch(serviceUrl, {

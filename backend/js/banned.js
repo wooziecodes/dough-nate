@@ -26,19 +26,31 @@ $(document).ready(function () {
 
 function getUserId(userId) {
   $(async () => {
-    switch (result.data.userType) {
-      case ("charity"):
-        $("#charityTable").show()
-        $("#report").show()
-        break
-      case ("bakery"):
-        $("#bakeryTable").show()
-        break
-      case ("volunteer"):
-        $("#volunteerTable").show()
-        break
+    var serviceUrl = "http://localhost:5006/users/" + userId
+    try {
+      const response = await fetch(serviceUrl, {
+        method: "GET",
+      });
+      const result = await response.json();
+      if (response.ok) {
+        if (response.status === 200) {
+          var userType = result.data.userType
+        }
+      }
+    } catch (error) {
+      alert("Error retrieving user type");
     }
-    var serviceUrl = "http://localhost:5004/listings/charity/" + userId
+    var serviceUrl = "http://localhost:5004/listings/";
+    switch (userType) {
+      case "bakery":
+        serviceUrl += "bakery/" + userId
+        var type = "bakeryId"
+        break;
+      case "volunteer":
+        serviceUrl += "volunteer/" + userId;
+        var type = "volunteerId"
+        break;
+    }
 
     try {
       const response = await fetch(serviceUrl, {
@@ -47,57 +59,69 @@ function getUserId(userId) {
       const result = await response.json();
       if (response.ok) {
         if (response.status === 200) {
-
-          const bakeryName = [];
-          const createdTime = [];
-          const listingId = [];
-          for (let i = 0; i < result.data.length; i++) {
-            console.log(result.data[i].bakeryName);
-            bakeryName.push(result.data[i].bakeryName);
-            createdTime.push(result.data[i].createTime);
-            listingId.push(result.data[i].id);
+          var listings = [];
+          for (var listing of result.data) {
+            listings.push(listing.id);
           }
-          console.log(createdTime)
-          if (bakeryName.length == 1) {
-            console.log('yes')
-            $("#bakeryName").empty();
-            $("#bakeryName").append(`
-                            <option value="${bakeryName}">${bakeryName} || ${createdTime}</option>
-                        `);
-          } else {
-            console.log("meow");
-            $("#bakeryName").empty();
-            for (let i = 0; i < bakeryName.length; i++) {
-              // const bakeryname = result.data[0].bakeryName[i]
+          var serviceUrl = "http://localhost:5005/reports"
+          var reported = []
+          try {
+            const response = await fetch(serviceUrl, {
+              method: "GET"
+            })
+            const result = await response.json()
+            if (response.ok) {
+              if (response.status === 200) {
+                for (var report of result.data) {
+                  if (listings.includes(report.listingId)) {
+                    reported.push(report.listingId)
+                  }
+                }
+                console.log(reported)
+                for (var listing of reported) {
+                  $("#reports").append(`
+                        <option value="${listing};${userId};${userType}">${report.id}</option>
+                    `);
+                }
 
-              $("#bakeryName").append(`
-                                <option class='option' value="${listingId[i]}">${bakeryName[i]} || ${createdTime[i]}</option>
-                            `);
+              }
             }
+          } catch (error) {
+            alert("There are no reports, or there is a problem.")
           }
+
         }
       }
     } catch (error) {
       alert("You don't have any listings to make report!")
       //   alert(error.message);
     }
+
+
+
+
+
   });
 }
 
-function addReport() {
+function addAppeal() {
   // var reportWho = $('#reportWho').val()
-  var reportText = $("#reportText").val();
-  var listingId = $("#bakeryName").val();
+  var appealWhy = $("#appealWhy").val();
+  var listingId = $("#reports").val().split(";")[0];
+  var userid = $("#reports").val().split(";")[1];
+  var userType = $("#reports").val().split(";")[2];
   // console.log(reportWho);
 
   $(async () => {
     var serviceUrl = "http://localhost:5005/reports";
     data = JSON.stringify({
       // reportWho: reportWho,
-      reportText: reportText,
-      listingId: listingId,
-      reportStatus: "reviewing",
-      reportType: "bakery",
+      reportText: appealWhy,
+      reportedUser: listingId,
+      reportedBy: userid,
+      type: "Appeal",
+      userType: userType,
+      
     });
     try {
       const response = await fetch(serviceUrl, {
@@ -111,7 +135,7 @@ function addReport() {
       const result = await response.json();
       if (response.ok) {
         if (response.status == 201) {
-          alert("Report added");
+          alert("Appeal Added");
           // $("#newReportWho").val("")
           $("#newReportText").val("");
           $("#newListingId").val("");
