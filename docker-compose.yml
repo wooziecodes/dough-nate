@@ -1,0 +1,70 @@
+Version: "3.8"
+
+services:
+  charity:
+    image: <dockerid>/charity:1.0
+    restart: always
+
+  volunteer:
+    image: <dockerid>/volunteer:1.0
+    restart: always
+  
+  listing:
+    image: <dockerid>/listing:1.0
+    restart: always
+  
+  report:
+    image: <dockerid>/report:1.0
+      restart: always
+
+  users:
+    image: <dockerid>/users:1.0
+    restart: always
+
+  bakery:
+    image: <dockerid>/bakery:1.0
+    restart: always
+  
+  consumer:
+    image: <dockerid>/consumer:1.0
+    restart: always
+  
+  accept_order:
+    image: <dockerid>/accept_order:1.0
+    restart: always
+  
+  add_listing:
+    image: <dockerid>/add_listing:1.0
+    depends_on:
+     - listing
+    restart: always
+
+  create_user:
+    image: <dockerid>/create_user:1.0
+    depends_on:
+      - users
+    restart: always
+
+  get_map_info:
+    image: <dockerid>/get_map_info:1.0
+    restart: always
+
+  release_listing:
+    image: <dockerid>/release_listing:1.0
+    restart: always
+
+  report_volunteer:
+    image: <dockerid>/report_volunteer:1.0
+    restart: always
+
+  telegram_ms:
+    image: <dockerid>/telegram_ms:1.0
+    restart: always
+
+  trigger:
+    image: <dockerid>/trigger:1.0
+    restart: always
+  
+  update_report:
+    image: <dockerid>/update_report:1.0
+    restart: always

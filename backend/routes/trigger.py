@@ -1,14 +1,5 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
-from datetime import datetime, timezone
-import os
 import time
-import pika 
 import requests
-import json
-from flask import Flask, request, jsonify
-# from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, timezone
-# from dateutil.parser import parse
 from apscheduler.schedulers.background import BackgroundScheduler
 
 def pull_data():
