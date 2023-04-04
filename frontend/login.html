@@ -149,7 +149,8 @@
                 checkBan(result.data.userType, userid).then((isBanned) => {
                   console.log(isBanned + " 2");
                   if (isBanned) {
-                    alert("You have been banned!");
+                    window.location.href = "banned.html";
+         
                   } else {
                     window.location.href = "index.html";
                   }
