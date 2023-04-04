@@ -118,7 +118,10 @@ function showListings(userType, userid) {
 
             for (listing of result.data) {
               if (listing.status == "created" && !listing.hidden) {
+                console.log(listing)
+
                 count++;
+                const allergensStr = listing.allergens.length > 0 ? listing.allergens : "null";
 
                 //allergens need to fix
                 cardHtml += `
@@ -133,7 +136,7 @@ function showListings(userType, userid) {
                                 <div class="cardTitle align-middle">Release Time:</div>
                                 <div class="cardDetails">${listing.releaseTime}</div>
                                 <div class="cardTitle align-middle">Allergens:</div>
-                                <div class="cardDetails">${listing.allergens}</div>
+                                <div class="cardDetails">${allergensStr}</div>
                                 <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
                                 <button type="button" class="btn" onclick="acceptOrder(this.id)" id=${listing.id}>Accept</button>
                                 </div>
@@ -146,7 +149,7 @@ function showListings(userType, userid) {
                 // if(count == 0){
 
                 // }
-                if (count % 4 == 0) {
+                if ((count & 3) == 0) {
                   $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
                   cardHtml = "";
                 }
@@ -175,7 +178,6 @@ function showListings(userType, userid) {
           } else if (userType == "volunteer") {
             let count = 0;
             let cardHtml = `<h1 class="mb-5">All Listings</h1>`;
-
             for (listing of result.data) {
               if (listing.status == "accepted") {
                 count++;
