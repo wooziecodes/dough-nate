@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Initialize Firestore DB
 
-cred = credentials.Certificate("../key.json")
+cred = credentials.Certificate("./key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
 listingsCollection = db.collection("listings")
@@ -167,4 +167,4 @@ def delete_listing(listingId):
     }), 500
 
 if __name__ == "__main__":
-    app.run(port=5004, debug=True)
+    app.run(host="0.0.0.0", port=5004, debug=True)

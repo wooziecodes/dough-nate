@@ -6,29 +6,12 @@ app = Flask(__name__)
 
 # Initialize Firestore DB
 
-cred = credentials.Certificate("../key.json")
+cred = credentials.Certificate("./key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
 volunteerCollection = db.collection("volunteers")
 
 CORS(app)
-
-class Report(object):
-    def __init__(self, volunteerName, volunteerPhone, volunteerEmail, driverPlate, isBanned):
-        self.volunteerName = volunteerName
-        self.volunteerPhone = volunteerPhone
-        self.volunteerEmail = volunteerEmail
-        self.driverPlate = driverPlate
-        self.isBanned = isBanned
-
-    def json(self):
-        return {
-            "volunteerName": self.volunteerName,
-            "volunteerPhone": self.volunteerPhone,
-            "volunteerEmail": self.volunteerEmail,
-            "driverPlate": self.driverPlate,
-            "isBanned": self.isBanned
-        }
 
 @app.route("/volunteers", methods=["GET"])
 def get_volunteers():
@@ -128,4 +111,4 @@ def delete_volunteer(volunteerId):
     }), 500
 
 if __name__ == "__main__":
-        app.run(port=5003, debug=True)
+        app.run(host="0.0.0.0", port=5003, debug=True)

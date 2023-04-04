@@ -72,4 +72,4 @@ def send_timer_ping(listing_id, bakery_name, bakery_address):
 
 
 if __name__ == '__main__':
-    app.run(port=5070, debug=True)
+    app.run(host="0.0.0.0", port=5070, debug=True)

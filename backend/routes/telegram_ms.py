@@ -9,7 +9,7 @@ from telegram.ext import Updater
 
 
 # Initialize Firestore
-cred = credentials.Certificate('../key.json')
+cred = credentials.Certificate('./key.json')
 initialize_app(cred)
 db = firestore.client()
 

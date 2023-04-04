@@ -1,0 +1,147 @@
+Version: "3.8"
+
+services:
+  charity:
+    build:
+      context: ./
+      dockerfile: ./charity.Dockerfile .
+    image: <dockerid>/charity:1.0
+    restart: always
+    port: "5002:5002"
+
+  volunteer:
+    build:
+      context: ./
+      dockerfile: ./volunteer.Dockerfile .
+    image: <dockerid>/volunteer:1.0
+    restart: always
+    port: "5003:5003"
+  
+  listing:
+    build:
+      context: ./
+      dockerfile: ./listing.Dockerfile .
+    image: <dockerid>/listing:1.0
+    restart: always
+    port: "5004:5004"
+  
+  report:
+    build:
+      context: ./
+      dockerfile: ./report.Dockerfile .
+    image: <dockerid>/report:1.0
+    restart: always
+    port: "5005:5005"
+
+  users:
+    build:
+      context: ./
+      dockerfile: ./users.Dockerfile .
+    image: <dockerid>/users:1.0
+    restart: always
+    port: "5006:5006"
+
+  bakery:
+    build:
+        context: ./
+        dockerfile: ./bakery.Dockerfile .
+    image: <dockerid>/bakery:1.0
+    restart: always
+    port: "5001:5001"
+  
+  accept_order:
+    build:
+      context: ./
+      dockerfile: ./accept_order.Dockerfile .
+    image: <dockerid>/accept_order:1.0
+    restart: always
+    port: "5038:5038"
+  
+  add_listing:
+    build:
+      context: ./
+      dockerfile: ./add_listing.Dockerfile .
+    image: <dockerid>/add_listing:1.0
+    depends_on:
+     - listing
+    restart: always
+    port: "5020:5020"
+
+  create_user:
+    build:
+      context: ./
+      dockerfile: ./create_user.Dockerfile .
+    image: <dockerid>/create_user:1.0
+    depends_on:
+      - users
+    restart: always
+    port: "5037:5037"
+
+  get_map_info:
+    build:
+      context: ./
+      dockerfile: ./get_map_info.Dockerfile .
+    image: <dockerid>/get_map_info:1.0
+    restart: always
+    port: "5030:5030"
+
+  release_listing:
+    build:
+      context: ./
+      dockerfile: ./release_listing.Dockerfile .
+    image: <dockerid>/release_listing:1.0
+    restart: always
+    depends_on:
+     - rabbitmq
+    eniron:
+      RABBITMQ_HOST: rabbitmq
+    port: "5070:5070"
+
+  report_volunteer:
+    build:
+      context: ./
+      dockerfile: ./report_volunteer.Dockerfile .
+    image: <dockerid>/report_volunteer:1.0
+    restart: always
+    depends_on:
+     - rabbitmq
+    eniron:
+      RABBITMQ_HOST: rabbitmq
+    port: "5069:5069"
+
+  telegram_ms:
+    build:
+      context: ./
+      dockerfile: ./telegram_ms.Dockerfile .
+    image: <dockerid>/telegram_ms:1.0
+    restart: always
+    depends_on:
+     - rabbitmq
+    eniron:
+      RABBITMQ_HOST: rabbitmq
+      TELEGRAM_TOKEN: "6160910424:AAFzXahHVctqzM8zD6mLM-Njqe4_f3x4WJ8"
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: esd-rabbit
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes: 
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  trigger:
+    build:
+      context: ./
+      dockerfile: ./trigger.Dockerfile .
+    image: <dockerid>/trigger:1.0
+    restart: always
+  
+  update_report:
+    build:
+      context: ./
+      dockerfile: ./update_report.Dockerfile .
+    image: <dockerid>/update_report:1.0
+    restart: always
+    port: "5041:5041"
