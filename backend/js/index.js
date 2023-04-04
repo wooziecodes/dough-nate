@@ -81,6 +81,7 @@ function retrieveUserType(userid) {
         if (response.status === 200) {
           if (result.data.userType == "bakery") {
             $(".newListingContainer").show();
+            $("#current").text("Create Listing")
           }
 
           greet(userid, result.data.userType);
