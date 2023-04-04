@@ -264,3 +264,12 @@ h1 {
 label {
   color: #56381c !important;
 }
+.mapbtn:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.logoutText {
+  margin-left: 5px;
+  color: #e2b582;
+  font-weight: bold;
+}

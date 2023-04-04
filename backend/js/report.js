@@ -23,7 +23,18 @@ $(document).ready(function () {
     }
   });
 });
-
+function logOut() {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      // Sign-out successful.
+      window.location.href = "login.html";
+    })
+    .catch((error) => {
+      // An error happened.
+    });
+}
 function getListingsWithCharityId(charityId) {
   $(async () => {
         var serviceUrl = "http://localhost:5004/listings/charity/" + charityId;

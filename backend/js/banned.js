@@ -72,10 +72,14 @@ function getUserId(userId) {
             const result = await response.json()
             if (response.ok) {
               if (response.status === 200) {
+                // console.log(result.data)
                 for (var report of result.data) {
                   if (listings.includes(report.listingId)) {
-                    reported.push(report.listingId)
+                    if (!reported.includes(report.listingId)) {
+                      reported.push(report.listingId)
+                    }
                   }
+                  console.log(reported)
                 }
                 console.log(reported)
                 for (var listing of reported) {
