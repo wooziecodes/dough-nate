@@ -15,7 +15,7 @@ app = Flask(__name__)
 # RabbitMQ Connection
 @app.route('/ping', methods = ['GET'])
 def pull_data():
-    data = requests.get(url="http://127.0.0.1:5004/listings")
+    data = requests.get(url="http://host.docker.internal:5004/listings")
     docs = data.json()['data']
     print(docs)
     now = datetime.now(timezone.utc)
@@ -35,13 +35,13 @@ def pull_data():
                         'reportText': 'Volunteer did not deliver to charity',
                         'reportType': 'volunteer'
                         }
-                    requests.put("http://127.0.0.1:5004/listings/"+doc_id, json={'status': 'reported'})
-                    requests.post("http://127.0.0.1:5005/reports", json=obj)
+                    requests.put("http://host.docker.internal:5004/listings/"+doc_id, json={'status': 'reported'})
+                    requests.post("http://host.docker.internal:5005/reports", json=obj)
                     volunteer_id = doc['volunteerId']
                     ban = {
                         "isBanned" : True
                         }
-                    requests.put("http://127.0.0.1:5003/volunteers/" + volunteer_id, json=ban)
+                    requests.put("http://host.docker.internal:5003/volunteers/" + volunteer_id, json=ban)
 
                     print('report created')
         return jsonify({

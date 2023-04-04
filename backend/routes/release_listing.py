@@ -20,7 +20,7 @@ channel.queue_declare(queue='timer_ping')
 
 @app.route('/ping', methods = ['GET'])
 def pull_data():
-    data = requests.get(url="http://127.0.0.1:5004/listings")
+    data = requests.get(url="http://host.docker.internal:5004/listings")
     docs = data.json()['data']
     print(docs)
     now = datetime.now(timezone.utc)
@@ -35,7 +35,7 @@ def pull_data():
                 print('The current time is greater than the Firestore timestamp.')
                 bakery_id = doc['bakeryId']
                 print(f"bakeryId: {bakery_id}")  # check the retrieved bakeryId
-                bakery_doc = requests.get(url="http://127.0.0.1:5001/bakeries/"+bakery_id)
+                bakery_doc = requests.get(url="http://host.docker.internal:5001/bakeries/"+bakery_id)
                 print(bakery_doc)
 
                 if bakery_doc:
@@ -43,7 +43,7 @@ def pull_data():
                     bakery_name = bakery_data['name']
                     bakery_address = bakery_data['bakeryAddress']
                     send_timer_ping(doc_id, bakery_name, bakery_address)  # Pass the bakery name and address
-                    requests.put(url="http://127.0.0.1:5004/listings/"+doc_id, json={
+                    requests.put(url="http://host.docker.internal:5004/listings/"+doc_id, json={
                         "status": "expired"
                     })
                 else:

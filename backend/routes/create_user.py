@@ -14,13 +14,13 @@ def createUser():
         info = data["info"]
 
         if info["collection"] == "bakeries":
-            requests.post("http://127.0.0.1:5001/bakeries", json=userData)
+            requests.post("http://host.docker.internal:5001/bakeries", json=userData)
         elif info["collection"] == "charities":
-            requests.post("http://127.0.0.1:5002/charities", json=userData)
+            requests.post("http://host.docker.internal:5002/charities", json=userData)
         else:
-            requests.post("http://127.0.0.1:5003/volunteers", json=userData)
+            requests.post("http://host.docker.internal:5003/volunteers", json=userData)
         
-        requests.post("http://127.0.0.1:5006/users", json={
+        requests.post("http://host.docker.internal:5006/users", json={
             "uid": info["uid"],
             "userType": info["userType"],
             "email": info["email"]

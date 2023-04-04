@@ -15,7 +15,7 @@ def addListing():
         allergens = data["allergens"]
         utcDate = data["utcDate"]
         utcDate2 = data["utcDate2"]
-        bakeriesData = requests.get("http://127.0.0.1:5001/bakeries/" + uid)
+        bakeriesData = requests.get("http://host.docker.internal:5001/bakeries/" + uid)
         bakery = bakeriesData.json()["data"]
         bakeryName = bakery["name"]
         newData = {
@@ -30,9 +30,10 @@ def addListing():
             "releaseTime": utcDate2,
             "deliverBy": "",
             "volunteerId": "",
-            "volunteerName": ""
+            "volunteerName": "",
+            "hidden": False
         }
-        requests.post("http://127.0.0.1:5004/listings", json=newData)
+        requests.post("http://host.docker.internal:5004/listings", json=newData)
     except:
         return jsonify({
             "code": 500,

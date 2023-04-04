@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: ./charity.Dockerfile
-    image: japhethlyh/charity:1.0
+    image: chesterchia/charity:1.0
     restart: always
     ports: 
      - "5002:5002"
@@ -24,7 +24,7 @@ services:
     build:
       context: ./
       dockerfile: ./volunteer.Dockerfile
-    image: japhethlyh/volunteer:1.0
+    image: chesterchia/volunteer:1.0
     restart: always
     ports: 
       - "5003:5003"
@@ -33,7 +33,7 @@ services:
     build:
       context: ./
       dockerfile: ./listing.Dockerfile
-    image: japhethlyh/listing:1.0
+    image: chesterchia/listing:1.0
     restart: always
     ports: 
       - "5004:5004"
@@ -42,7 +42,7 @@ services:
     build:
       context: ./
       dockerfile: ./report.Dockerfile
-    image: japhethlyh/report:1.0
+    image: chesterchia/report:1.0
     restart: always
     ports: 
       - "5005:5005"
@@ -51,7 +51,7 @@ services:
     build:
       context: ./
       dockerfile: ./users.Dockerfile
-    image: japhethlyh/users:1.0
+    image: chesterchia/users:1.0
     restart: always
     ports: 
       - "5006:5006"
@@ -60,7 +60,7 @@ services:
     build:
         context: ./
         dockerfile: ./bakery.Dockerfile
-    image: japhethlyh/bakery:1.0
+    image: chesterchia/bakery:1.0
     restart: always
     ports: 
       - "5001:5001"
@@ -69,7 +69,7 @@ services:
     build:
       context: ./
       dockerfile: ./accept_order.Dockerfile
-    image: japhethlyh/accept_order:1.0
+    image: chesterchia/accept_order:1.0
     restart: always
     ports: 
       - "5038:5038"
@@ -78,18 +78,30 @@ services:
     build:
       context: ./
       dockerfile: ./add_listing.Dockerfile
-    image: japhethlyh/add_listing:1.0
+    image: chesterchia/add_listing:1.0
     depends_on:
      - listing
     restart: always
     ports: 
       - "5020:5020"
+  
+  hide_listings:
+    build:
+      context: ./
+      dockerfile: ./hide_listings.Dockerfile
+    image: chesterchia/hide_listings:1.0
+    depends_on:
+     - listing
+     - report
+    restart: always
+    ports: 
+      - "5056:5056"
 
   create_user:
     build:
       context: ./
       dockerfile: ./create_user.Dockerfile
-    image: japhethlyh/create_user:1.0
+    image: chesterchia/create_user:1.0
     depends_on:
       - users
     restart: always
@@ -100,7 +112,7 @@ services:
     build:
       context: ./
       dockerfile: ./get_map_info.Dockerfile
-    image: japhethlyh/get_map_info:1.0
+    image: chesterchia/get_map_info:1.0
     restart: always
     ports: 
       - "5030:5030"
@@ -109,7 +121,7 @@ services:
     build:
       context: ./
       dockerfile: ./release_listing.Dockerfile
-    image: japhethlyh/release_listing:1.0
+    image: chesterchia/release_listing:1.0
     restart: always
     depends_on:
      - rabbitmq
@@ -122,7 +134,7 @@ services:
     build:
       context: ./
       dockerfile: ./report_volunteer.Dockerfile
-    image: japhethlyh/report_volunteer:1.0
+    image: chesterchia/report_volunteer:1.0
     restart: always
     depends_on:
      - rabbitmq
@@ -135,7 +147,7 @@ services:
     build:
       context: ./
       dockerfile: ./telegram_ms.Dockerfile
-    image: japhethlyh/telegram_ms:1.0
+    image: chesterchia/telegram_ms:1.0
     restart: always
     depends_on:
      - rabbitmq
@@ -149,14 +161,14 @@ services:
     build:
       context: ./
       dockerfile: ./trigger.Dockerfile
-    image: japhethlyh/trigger:1.0
+    image: chesterchia/trigger:1.0
     restart: always
   
   update_report:
     build:
       context: ./
       dockerfile: ./update_report.Dockerfile
-    image: japhethlyh/update_report:1.0
+    image: chesterchia/update_report:1.0
     restart: always
     ports: 
       - "5041:5041"

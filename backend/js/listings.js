@@ -75,6 +75,7 @@ function greet(id, userType) {
     switch (userType) {
       case "charity":
         serviceUrl += "5002/charities/" + id;
+        console.log('yes')
         break;
       case "bakery":
         serviceUrl += "5001/bakeries/" + id;
@@ -127,9 +128,9 @@ function populateTable(id, userType) {
                   toAppend = `
                                         <td class="align-middle text-warning">Searching for driver</td>
                                     `
-                                    break
-                                case ("pickingup"):
-                                    toAppend = `
+                  break
+                case ("pickingup"):
+                  toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up</td>
                                     `;
                   break;
@@ -172,9 +173,9 @@ function populateTable(id, userType) {
                   toAppend = `
                                         <td class="align-middle text-warning">Accepted, searching for driver</td>
                                     `
-                                    break
-                                case ("pickingup"):
-                                    toAppend = `
+                  break
+                case ("pickingup"):
+                  toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up
                                         <button type="button" class="btn" onclick="updateStatus('${listing.id}', 'pickedup', '${id}')">Picked up</button>
                                         </td>
@@ -194,24 +195,19 @@ function populateTable(id, userType) {
 
               $("#bakeryTableBody").append(`
                                 <tr>
-                                    <td class="align-middle">${
-                                      listing.charityName
-                                        ? listing.charityName
-                                        : "-"
-                                    }</td>
-                                    <td class="align-middle">${
-                                      listing.breadContent
-                                    }</td>
-                                    <td class="align-middle">${
-                                      listing.allergens
-                                    }</td>
+                                    <td class="align-middle">${listing.charityName
+                  ? listing.charityName
+                  : "-"
+                }</td>
+                                    <td class="align-middle">${listing.breadContent
+                }</td>
+                                    <td class="align-middle">${listing.allergens
+                }</td>
                                     ${toAppend}
-                                    <td class="align-middle mapbtn" onclick="displayMap('${
-                                      listing.id
-                                    }')">View map</td>
-                                    <td class="align-middle"><button type="button" class="btn btn-danger" onclick="deleteListing('${
-                                      listing.id
-                                    }')">Delete</button></td>
+                                    <td class="align-middle mapbtn" onclick="displayMap('${listing.id
+                }')">View map</td>
+                                    <td class="align-middle"><button type="button" class="btn btn-danger" onclick="deleteListing('${listing.id
+                }')">Delete</button></td>
                                 </tr>
                             `);
             }
@@ -237,8 +233,8 @@ function populateTable(id, userType) {
                   break;
               }
 
-                            await getAddress(listing.bakeryId).then((address) => {
-                                $("#volunteerTableBody").append(`
+              await getAddress(listing.bakeryId).then((address) => {
+                $("#volunteerTableBody").append(`
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.charityName}</td>
@@ -347,6 +343,13 @@ async function convertPostal(postals) {
 }
 
 function displayMap(listingid) {
+  var serviceUrl = "http://localhost:5030/getMapInfo";
+  $(async () => {
+    const response = await fetch(serviceUrl, {
+      method: "GET",
+    });
+  })
+
   var serviceUrl = "http://localhost:5030/getMapInfo/" + listingid;
   auth.onAuthStateChanged(async (user) => {
     if (user) {

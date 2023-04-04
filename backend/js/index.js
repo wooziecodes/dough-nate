@@ -117,7 +117,7 @@ function showListings(userType, userid) {
             let cardHtml = `<h1 class="mb-5">All Listings</h1>`;
 
             for (listing of result.data) {
-              if (listing.status == "created") {
+              if (listing.status == "created" && !listing.hidden) {
                 count++;
 
                 //allergens need to fix

@@ -13,7 +13,7 @@ def accept_order():
         response = request.get_json()
         uid = response['uid']
         listingId = response['listingId']
-        charity_data = requests.get(url="http://localhost:5002/charities/" + uid).json()['data']
+        charity_data = requests.get(url="http://host.docker.internal:5002/charities/" + uid).json()['data']
 
         charity_name = charity_data['name']
         data = {
@@ -21,7 +21,7 @@ def accept_order():
             "charityName": charity_name,
             "status": "accepted"
         }
-        requests.put(url='http://localhost:5004/listings/'+listingId, json=data)
+        requests.put(url='http://host.docker.internal:5004/listings/'+listingId, json=data)
     except:
         return jsonify({
             "code": 500,
