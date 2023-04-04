@@ -92,233 +92,146 @@ function retrieveUserType(userid) {
 }
 
 function showListings(userType, userid) {
-  $(async () => {
-    if (userType == "bakery") {
-      var serviceUrl =
-        "http://localhost:5004/listings/" + userType + "/" + userid;
-    } else {
-      var serviceUrl = "http://localhost:5004/listings";
-    }
-
-    try {
-      const response = await fetch(serviceUrl, {
-        method: "GET",
-      });
-      const result = await response.json();
-      if (response.ok) {
-        if (response.status === 200) {
-            console.log('yes')
-          $("#appendCard").empty();
-
-          if (userType == "charity") {
-            $(".report").show();
-            let count = 0;
-            let cardHtml = "";
-
-<<<<<<< Updated upstream
-            for (listing of result.data) {
-              if (listing.status == "created") {
-                count++;
-=======
+    $(async () => {
+        if (userType == "bakery") {
+          var serviceUrl =
+            "http://localhost:5004/listings/" + userType + "/" + userid;
+        } else {
+          var serviceUrl = "http://localhost:5004/listings";
+        }
         try {
             const response = await fetch(serviceUrl, {
-                method: "GET"
-            })
-            const result = await response.json()
+              method: "GET",
+            });
+            const result = await response.json();
             if (response.ok) {
-                if (response.status === 200) {
-                    console.log(result.data)
-                    if (userType == "charity") {
-                        $(".report").show()
-                        $("#listingsTable").append(`
-                        <h1>All Listings</h1>
-                        <table class="table">
-                        <thead>
-                          <tr style="font-weight: bolder !important">
-                            <th scope="col">Bakery Name</th>
-                            <th scope="col">Bread Content</th>
-                            <th scope="col">Release Time</th>
-                            <th scope="col">Allergens</th>
-                            <th scope="col">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody id="listings"></tbody>
-                      </table>`)
-                        for (listing of result.data) {
-                            if (listing.status == "created") {
-                                { 
-                                    //allergens need to fix
-                                    
-                                    $("#listings").append(`
-                                    <tr>
-                                        <td class="align-middle">${listing.bakeryName}</td>
-                                        <td class="align-middle">${listing.breadContent}</td>
-                                        <td class="align-middle">${listing.releaseTime}</td>
-                                        <td class="align-middle">${listing.allergens}</td>
-                                        <td class="align-middle"><button type="button" class="btn btn-primary" onclick="acceptOrder(this.id)" id=${listing.id}>accept</button></td>
-                                    </tr>
-                                `)
-    
-                                }
-                            }
-     
-                        } 
-                        
-                    } else if (userType == "volunteer") {
-                        $("#listingsTable").append(`
-                        <h1>All Listings</h1>
-                        <table class="table">
-                        <thead>
-                          <tr style="font-weight: bolder !important">
-                            <th scope="col">Bakery Name</th>
-                            <th scope="col">Charity Name</th>
-                            <th scope="col">Bread Content</th>
-                            <th scope="col">Release Time</th>
-                            <th scope="col">Allergens</th>
-                            <th scope="col">Status</th>
-                            <th scope="col"></th>
-                          </tr>
-                        </thead>
-                        <tbody id="listings"></tbody>
-                      </table>
-                      `)
-                        for (listing of result.data) {
-                            if (listing.status == "accepted") {
-                                { 
-                                    //allergens need to fix
-                                    
-                                    $("#listings").append(`
-                                    <tr>
-                                        <td class="align-middle">${listing.bakeryName}</td>
-                                        <td class="align-middle">${listing.charityName}</td>
-                                        <td class="align-middle">${listing.breadContent}</td>
-                                        <td class="align-middle">${listing.releaseTime}</td>
-                                        <td class="align-middle">${listing.allergens}</td>
-                                        <td class="align-middle"><button type="button" class="btn btn-primary" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button></td>
-                                        <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
-                                    </tr>
-                                `)
-    
-                                }
-                            }
->>>>>>> Stashed changes
-
-                //allergens need to fix
-                cardHtml += `
-          <div class="col-md-3">
-            <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
-              <div id="card-body">
-                <div class="cardTitle align-middle">Bakery Name:</div>
-                <div class="cardDetails">${listing.bakeryName}</div>
-                
-                <div class="cardTitle align-middle">Bread Content:</div>
-                <div class="cardDetails">${listing.breadContent}</div>
-                <div class="cardTitle align-middle">Release Time:</div>
-                <div class="cardDetails">${listing.releaseTime}</div>
-                <div class="cardTitle align-middle">Allergens:</div>
-                <div class="cardDetails">${listing.allergens}</div>
-                <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-                <button type="button" class="btn" onclick="acceptOrder(this.id)" id=${listing.id}>Accept</button>
+              if (response.status === 200) {
+                  console.log('yes')
+                $("#appendCard").empty();
+      
+                if (userType == "charity") {
+                  $(".report").show();
+                  let count = 0;
+                  let cardHtml = "";
+      
+                  for (listing of result.data) {
+                    if (listing.status == "created") {
+                      count++;
+      
+                      //allergens need to fix
+                      cardHtml += `
+                <div class="col-md-3">
+                  <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
+                    <div id="card-body">
+                      <div class="cardTitle align-middle">Bakery Name:</div>
+                      <div class="cardDetails">${listing.bakeryName}</div>
+                      
+                      <div class="cardTitle align-middle">Bread Content:</div>
+                      <div class="cardDetails">${listing.breadContent}</div>
+                      <div class="cardTitle align-middle">Release Time:</div>
+                      <div class="cardDetails">${listing.releaseTime}</div>
+                      <div class="cardTitle align-middle">Allergens:</div>
+                      <div class="cardDetails">${listing.allergens}</div>
+                      <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
+                      <button type="button" class="btn btn-primary" onclick="acceptOrder(this.id)" id=${listing.id}>Accept</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+      
+                      // Add a new row after every 4 cards
+                      if (count % 4 == 0) {
+                        $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+                        cardHtml = "";
+                      }
+                    }
+                  }
+                   // Add the remaining cards
+            if (cardHtml != "") {
+                $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+              }
+              // $("#listingsTable").append(`
+              //             <table class="table">
+              //             <thead>
+              //               <tr style="font-weight: bolder !important">
+              //                 <th scope="col">Bakery Name</th>
+              //                 <th scope="col">Bread Content</th>
+              //                 <th scope="col">Release Time</th>
+              //                 <th scope="col">Allergens</th>
+              //                 <th scope="col">Status</th>
+              //               </tr>
+              //             </thead>
+              //             <tbody id="listings"></tbody>
+              //           </table>`);
+              // for (listing of result.data) {
+              //   if (listing.status == "created") {
+              //     {
+              //       //allergens need to fix
+  
+              //       $("#listings").append(`
+              //                         <tr>
+              //                             <td class="align-middle">${listing.bakeryName}</td>
+              //                             <td class="align-middle">${listing.breadContent}</td>
+              //                             <td class="align-middle">${listing.releaseTime}</td>
+              //                             <td class="align-middle">${listing.allergens}</td>
+              //                             <td class="align-middle"><button type="button" class="btn btn-primary" onclick="acceptOrder(this.id)" id=${listing.id}>accept</button></td>
+              //                         </tr>
+              //                     `);
+              //     }
+              //   }
+              // }
+            } else if (userType == "volunteer") {
+              let count = 0;
+              let cardHtml = "";
+  
+              for (listing of result.data) {
+                if (listing.status == "accepted") {
+                  count++;
+  
+                  //allergens need to fix
+                  cardHtml += `
+            <div class="col-md-3">
+              <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
+                <div id="card-body">
+                  <div class="cardTitle align-middle">Bakery Name:</div>
+                  <div class="cardDetails">${listing.bakeryName}</div>
+                  <div class="cardTitle align-middle">Charity Name:</div>
+                  <div class="cardDetails">${listing.charityName}</div>
+                  <div class="cardTitle align-middle">Bread Content:</div>
+                  <div class="cardDetails">${listing.breadContent}</div>
+                  <div class="cardTitle align-middle">Release Time:</div>
+                  <div class="cardDetails">${listing.releaseTime}</div>
+                  <div class="cardTitle align-middle">Allergens:</div>
+                  <div class="cardDetails">${listing.allergens}</div>
+                  <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
+                  <button type="button" class="btn btn-primary" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button>
+                  <button type="button" class="btn" style="text-decoration: none; background-color:#E2B582; " onclick="displayMap('${listing.id}')">View map</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        `;
-
-                // Add a new row after every 4 cards
-                if (count % 4 == 0) {
-                  $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
-                  cardHtml = "";
-                }
-              }
-            }
+          `;
+  
+                  // Add a new row after every 4 cards
+                  if (count % 4 == 0) {
+                    $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+                    cardHtml = "";
+                  }}}
 
             // Add the remaining cards
             if (cardHtml != "") {
-              $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
-            }
-            // $("#listingsTable").append(`
-            //             <table class="table">
-            //             <thead>
-            //               <tr style="font-weight: bolder !important">
-            //                 <th scope="col">Bakery Name</th>
-            //                 <th scope="col">Bread Content</th>
-            //                 <th scope="col">Release Time</th>
-            //                 <th scope="col">Allergens</th>
-            //                 <th scope="col">Status</th>
-            //               </tr>
-            //             </thead>
-            //             <tbody id="listings"></tbody>
-            //           </table>`);
-            // for (listing of result.data) {
-            //   if (listing.status == "created") {
-            //     {
-            //       //allergens need to fix
-
-            //       $("#listings").append(`
-            //                         <tr>
-            //                             <td class="align-middle">${listing.bakeryName}</td>
-            //                             <td class="align-middle">${listing.breadContent}</td>
-            //                             <td class="align-middle">${listing.releaseTime}</td>
-            //                             <td class="align-middle">${listing.allergens}</td>
-            //                             <td class="align-middle"><button type="button" class="btn btn-primary" onclick="acceptOrder(this.id)" id=${listing.id}>accept</button></td>
-            //                         </tr>
-            //                     `);
-            //     }
-            //   }
-            // }
-          } else if (userType == "volunteer") {
-            let count = 0;
-            let cardHtml = "";
-
-            for (listing of result.data) {
-              if (listing.status == "accepted") {
-                count++;
-
-                //allergens need to fix
-                cardHtml += `
-          <div class="col-md-3">
-            <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
-              <div id="card-body">
-                <div class="cardTitle align-middle">Bakery Name:</div>
-                <div class="cardDetails">${listing.bakeryName}</div>
-                <div class="cardTitle align-middle">Charity Name:</div>
-                <div class="cardDetails">${listing.charityName}</div>
-                <div class="cardTitle align-middle">Bread Content:</div>
-                <div class="cardDetails">${listing.breadContent}</div>
-                <div class="cardTitle align-middle">Release Time:</div>
-                <div class="cardDetails">${listing.releaseTime}</div>
-                <div class="cardTitle align-middle">Allergens:</div>
-                <div class="cardDetails">${listing.allergens}</div>
-                <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-                <button type="button" class="btn" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button>
-                <button type="button" class="btn" style="text-decoration: none; background-color:#E2B582; " onclick="displayMap('${listing.id}')">View map</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-
-                // Add a new row after every 4 cards
-                if (count % 4 == 0) {
-                  $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
-                  cardHtml = "";
-                }
+                $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
               }
-            }
-
-            // Add the remaining cards
-            if (cardHtml != "") {
-              $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
             }
           }
         }
-      }
     } catch (error) {
       alert("Error generating listings");
     }
   });
 }
+
 
 function addAllergen() {
   var allergen = $("#allergen").val();
@@ -332,7 +245,6 @@ function addListing() {
   var breadContent = $("#breadContent").val();
   var allergens = [];
 
-<<<<<<< Updated upstream
   $("#allergenList")
     .children()
     .each(function () {
@@ -389,56 +301,6 @@ function addListing() {
       }
     }
   });
-=======
-            var serviceUrl = "http://localhost:5004/listings"
-            const date = new Date();
-            const date2 = new Date(date.getTime() + 3 * 60 * 60 * 1000)
-            
-            const utcDate = date.toUTCString();
-            const utcDate2 = date2.toUTCString();
-
-            data = JSON.stringify({
-                allergens: allergens,
-                bakeryId: user.uid,
-                bakeryName: bakeryName,
-                breadContent: parseInt($("#breadContent").val()),
-                charityId: "",
-                charityName: "",
-                status: "created",
-                createTime: utcDate,
-                releaseTime: utcDate2,
-                deliverBy: "",
-                volunteerId: ""
-            })
-
-            try {
-                const response = await fetch(serviceUrl, {
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json"
-                    },
-                    method: "POST",
-                    body: data
-                })
-                const result = await response.json()
-                if (response.ok) {
-                    if (response.status == 201) {
-                        alert("Listing created")
-                        $("#allergenList").empty()
-                        allergens = []
-                        $("#breadContent").val("")
-
-                    }
-                }
-            } catch (error) {
-                alert("Error creating report.")
-                alert(error.message)
-            }
-
-        }
-    });
-
->>>>>>> Stashed changes
 }
 //filter by usertype
 
