@@ -22,7 +22,7 @@ function getReports() {
                                 <th class="align-middle" scope="row">${no}</th>
                                 <td class="align-middle">${report.reportedUser}</th>
                                 <td class="align-middle">${report.reportedBy}</td>
-                                <td class="align-middle">${report.reportStatus}</td>
+                                <td class="align-middle">${report.type}</td>
                                 <td class="align-middle">${report.userType}</td>
                                 <td class="align-middle">${report.reportText}</td>
                                 <td class="align-middle">

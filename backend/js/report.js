@@ -39,6 +39,7 @@ function getListingsWithCharityId(charityId) {
           const bakeryName = [];
           const createdTime = [];
           const listingId = [];
+          const reportedId = [];
           for (let i = 0; i < result.data.length; i++) {
             console.log(result.data[i].bakeryName);
             bakeryName.push(result.data[i].bakeryName);
@@ -94,7 +95,7 @@ function addReport() {
         reportText: reportText,
         reportedUser: reportedUser,
         reportedBy: charityName,
-        reportStatus: "reviewing",
+        type: "Report",
         userType: "bakery",
         listingId: listingId
       });

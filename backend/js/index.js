@@ -236,7 +236,7 @@ function addListing() {
         utcDate2: utcDate2
       })
 
-      var serviceUrl = "http://127.0.0.1:5020/addListing"
+      var serviceUrl = "http://localhost:5020/addListing"
       try {
         const response = await fetch(serviceUrl, {
           headers: {
