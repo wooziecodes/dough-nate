@@ -50,7 +50,7 @@ def updateReport(reportId, userType):
             
             else:
                 print("volunteer")
-                volunteerId = listing["volunteerId"]
+                volunteerId = report["reportedBy"]
                 volunteerData = requests.get("http://host.docker.internal:5003/volunteers/" + volunteerId)
                 volunteer = volunteerData.json()["data"]
                 data = {
