@@ -25,7 +25,7 @@ $(document).ready(function () {
     if (user) {
       // User is signed in
       retrieveUserType(user.uid);
-    } 
+    }
   });
 });
 
@@ -248,54 +248,59 @@ function addAllergen() {
 }
 
 function addListing() {
-  var allergens = [];
+  if ($("#breadContent").val() == "") {
+    document.getElementById("error-bread").style.display = "block";
+  } else {
+    var allergens = [];
 
-  $("#allergenList")
-    .children()
-    .each(function () {
-      allergens.push($(this).text());
-    });
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      const date = new Date();
-      const date2 = new Date(date.getTime() + 3 * 60 * 60 * 1000);
+    $("#allergenList")
+      .children()
+      .each(function () {
+        allergens.push($(this).text());
+      });
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const date = new Date();
+        const date2 = new Date(date.getTime() + 3 * 60 * 60 * 1000);
 
-      const utcDate = date.toUTCString();
-      const utcDate2 = date2.toUTCString();
+        const utcDate = date.toUTCString();
+        const utcDate2 = date2.toUTCString();
 
-      data = JSON.stringify({
-        uid: user.uid,
-        breadContent: parseInt($("#breadContent").val()),
-        allergens: allergens,
-        utcDate: utcDate,
-        utcDate2: utcDate2
-      })
-
-      var serviceUrl = "http://localhost:5020/addListing"
-      try {
-        const response = await fetch(serviceUrl, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: data,
+        data = JSON.stringify({
+          uid: user.uid,
+          breadContent: parseInt($("#breadContent").val()),
+          allergens: allergens,
+          utcDate: utcDate,
+          utcDate2: utcDate2,
         });
-        const result = await response.json();
-        if (response.ok) {
-          if (response.status == 200) {
-            alert("Listing created");
-            $("#allergenList").empty();
-            allergens = [];
-            $("#breadContent").val("");
+
+        var serviceUrl = "http://localhost:5020/addListing";
+        try {
+          const response = await fetch(serviceUrl, {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: data,
+          });
+          const result = await response.json();
+          if (response.ok) {
+            if (response.status == 200) {
+              alert("Listing created");
+              $("#allergenList").empty();
+              allergens = [];
+              $("#breadContent").val("");
+            }
           }
+        } catch (error) {
+          // alert("Error creating report.");
+          // alert(error.message);
+          document.getElementById("error-submit").style.display = "block";
         }
-      } catch (error) {
-        alert("Error creating report.");
-        alert(error.message);
       }
-    }
-  });
+    });
+  }
 }
 
 function acceptOrder(listingId) {
@@ -308,10 +313,10 @@ function acceptOrder(listingId) {
     if (user) {
       console.log(user.uid);
       data = JSON.stringify({
-        uid : user.uid,
-        listingId : id
+        uid: user.uid,
+        listingId: id,
       });
-      console.log(data)
+      console.log(data);
       var serviceUrl = "http://localhost:5038/order";
       try {
         const response = await fetch(serviceUrl, {
@@ -338,7 +343,7 @@ function acceptOrder(listingId) {
       //     Accept: "application/json",
       //     "Content-Type": "application/json",
       //   },
-      //   method: "POST", 
+      //   method: "POST",
       //   body: obj
       // });
       // const result = await response.json();
@@ -441,16 +446,16 @@ function pickUpOrder(listingId) {
 }
 
 async function displayMap(listingid) {
-  var serviceUrl = "http://localhost:5030/getMapInfo/" + listingid
+  var serviceUrl = "http://localhost:5030/getMapInfo/" + listingid;
   auth.onAuthStateChanged(async (user) => {
     if (user) {
-      serviceUrl += "/" + user.uid
+      serviceUrl += "/" + user.uid;
 
       const response = await fetch(serviceUrl, {
-        method: "GET"
-      })
-      const result = await response.json()
-      postals = result.data
+        method: "GET",
+      });
+      const result = await response.json();
+      postals = result.data;
       convertPostal(postals).then(async function (result) {
         const { Map } = await google.maps.importLibrary("maps");
 
@@ -484,7 +489,7 @@ async function displayMap(listingid) {
         $("#map").show();
       });
     }
-  })
+  });
 }
 
 async function convertPostal(postals) {

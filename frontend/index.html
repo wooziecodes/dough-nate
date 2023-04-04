@@ -54,7 +54,7 @@
     </div>
 
     <div class="container newListingContainer">
-      <form>
+      <form id="form">
         <legend>Create new listing</legend>
         <div class="mb-3">
           <label for="breadContent" class="form-label">Number of bread</label>
@@ -69,6 +69,12 @@
           Add allergen
         </button>
         <button type="button" class="btn" onclick="addListing()">Submit</button>
+        <div class="alert alert-danger mt-3" style="display:none; width:50%; text-align:center; margin:0 auto" id='error-submit'>
+          <strong>Error:</strong> There was a problem with your submission.
+        </div>
+        <div class="alert alert-danger mt-3" style="display:none; width:50%; text-align:center; margin:0 auto" id='error-bread'>
+          <strong>Error:</strong> Please specify the number of bread!
+        </div>
       </form>
     </div>
     <div id="map"></div>
