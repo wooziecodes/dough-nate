@@ -173,7 +173,7 @@ h2 {
   font-size: 16px;
   /* font-weight: bolder; */
   color: grey;
-  background-color: #fff6ee;
+  /* background-color: #fff6ee; */
   border-color: #a09082;
   border-width: 2px;
   cursor: pointer;
@@ -182,7 +182,7 @@ textarea {
   font-size: 16px;
   /* font-weight: bolder; */
   color: grey;
-  background-color: #fff6ee;
+  /* background-color: #fff6ee; */
   border-color: #a09082;
   border-width: 2px;
   cursor: pointer;

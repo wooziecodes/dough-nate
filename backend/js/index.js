@@ -218,7 +218,7 @@ function showListings(userType, userid) {
                 <div class="cardTitle align-middle">Allergens:</div>
                 <div class="cardDetails">${listing.allergens}</div>
                 <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-                <button type="button" class="btn btn-primary" onclick="acceptOrder(this.id)" id=${listing.id}>Accept</button>
+                <button type="button" class="btn" onclick="acceptOrder(this.id)" id=${listing.id}>Accept</button>
                 </div>
               </div>
             </div>
@@ -291,7 +291,7 @@ function showListings(userType, userid) {
                 <div class="cardTitle align-middle">Allergens:</div>
                 <div class="cardDetails">${listing.allergens}</div>
                 <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-                <button type="button" class="btn btn-primary" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button>
+                <button type="button" class="btn" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button>
                 <button type="button" class="btn" style="text-decoration: none; background-color:#E2B582; " onclick="displayMap('${listing.id}')">View map</button>
                 </div>
               </div>
@@ -450,7 +450,7 @@ function addListing() {
 function acceptOrder(listingId) {
   var id = listingId;
 
-  document.getElementById(id).className = "btn btn-secondary disabled";
+  document.getElementById(id).className = "btn disabled";
   document.getElementById(id).innerHTML = "accepted";
 
   auth.onAuthStateChanged(async (user) => {
@@ -497,7 +497,7 @@ function acceptOrder(listingId) {
 function pickUpOrder(listingId) {
   var id = listingId;
 
-  document.getElementById(id).className = "btn btn-secondary disabled";
+  document.getElementById(id).className = "btn disabled";
   //   document.getElementById(id).style = `font-size: 1px`
 
   auth.onAuthStateChanged(async (user) => {

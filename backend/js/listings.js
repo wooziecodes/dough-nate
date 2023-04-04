@@ -124,7 +124,7 @@ function populateTable(id, userType) {
                                 case ("delivering"):
                                     toAppend = `
                                         <td class="align-middle text-info">Driver is delivering
-                                        <button type="button" class="btn btn-success" onclick="updateStatus('${listing.id}', 'delivered', '${id}')">Delivered</button>
+                                        <button type="button" class="btn" onclick="updateStatus('${listing.id}', 'delivered', '${id}')">Delivered</button>
                                         </td>
                                     `
                                     break
@@ -174,7 +174,7 @@ function populateTable(id, userType) {
                                     `
                                     toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up
-                                        <button type="button" class="btn btn-success" onclick="updateStatus('${listing.id}', 'pickedup', '${id}')">Picked up</button>
+                                        <button type="button" class="btn" onclick="updateStatus('${listing.id}', 'pickedup', '${id}')">Picked up</button>
                                         </td>
                                     `
                                     break
@@ -198,7 +198,11 @@ function populateTable(id, userType) {
 
                             $("#bakeryTableBody").append(`
                                 <tr>
+<<<<<<< Updated upstream
                                     ${charity}
+=======
+                                    <td class="align-middle">${listing.charityName ? listing.charityName : '-'}</td>
+>>>>>>> Stashed changes
                                     <td class="align-middle">${listing.breadContent}</td>
                                     ${toAppend}
                                     <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
