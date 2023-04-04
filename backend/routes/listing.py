@@ -12,22 +12,7 @@ db = firestore.client()
 listingsCollection = db.collection("listings")
 
 CORS(app)
-    
-@app.route("/listings", methods=["POST"])
-def add_listing():
-    data = request.get_json()
-    try:
-        listingsCollection.document().set(data)
-    except:
-        return jsonify({
-            "code": 500,
-            "message": "Error creating listing."
-        }), 500
-    
-    return jsonify({
-        "code": 201,
-        "message": "Successfully created listing.",
-    }), 201
+
 
 @app.route("/listings", methods=["GET"])
 def get_listings():
@@ -125,8 +110,9 @@ def get_volunteer_listings(volunteerId):
         "message": "No listings with such volunteer."
     }), 404
 
+
 @app.route("/listings", methods=["POST"])
-def create_listing():
+def add_listing():
     data = request.get_json()
     try:
         listingsCollection.document().set(data)
@@ -135,13 +121,12 @@ def create_listing():
             "code": 500,
             "message": "Error creating listing."
         }), 500
-
+    
     return jsonify({
         "code": 201,
         "message": "Successfully created listing.",
-        "data": data
     }), 201
-
+    
 @app.route("/listings/<string:listingId>", methods=["PUT"])
 def update_listing(listingId):
     data = request.get_json()
