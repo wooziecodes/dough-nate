@@ -139,6 +139,7 @@ function populateTable(id, userType) {
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.breadContent}</td>
+                                    <td class="align-middle">${listing.allergens}</td>
                                     ${toAppend}
                                     <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
                                 </tr>
@@ -185,6 +186,7 @@ function populateTable(id, userType) {
                                 <tr>
                                     <td class="align-middle">${listing.charityName ? listing.charityName : '-'}</td>
                                     <td class="align-middle">${listing.breadContent}</td>
+                                    <td class="align-middle">${listing.allergens}</td>
                                     ${toAppend}
                                     <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
                                     <td class="align-middle"><button type="button" class="btn btn-danger" onclick="deleteListing('${listing.id}')">Delete</button></td>
