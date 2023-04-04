@@ -26,12 +26,7 @@ $(document).ready(function () {
     if (user) {
       // User is signed in
       retrieveUserType(user.uid);
-
-      console.log("User is signed in:", user);
-    } else {
-      // User is signed out\
-      console.log("User is signed out");
-    }
+    } 
   });
 
 
@@ -47,12 +42,10 @@ function logOut() {
 }
 
 function greet(id, userType) {
-  console.log(id, userType);
   $(async () => {
     var serviceUrl = "http://localhost:";
     switch (userType) {
       case "charity":
-        console.log("hi");
         serviceUrl += "5002/charities/" + id;
         break;
       case "bakery":
@@ -114,7 +107,6 @@ function showListings(userType, userid) {
       const result = await response.json();
       if (response.ok) {
         if (response.status === 200) {
-          console.log("yes");
           $("#appendCard").empty();
 
           if (userType == "charity") {
@@ -355,7 +347,6 @@ function pickUpOrder(listingId) {
           method: "PUT",
           body: data,
         });
-        console.log(response);
         const result = await response.json();
         if (response.ok) {
           if (response.status == 200) {
@@ -372,7 +363,6 @@ function pickUpOrder(listingId) {
 }
 
 async function displayMap(listingid) {
-  console.log("great success")
   var serviceUrl = "http://localhost:5030/getMapInfo/" + listingid
   auth.onAuthStateChanged(async (user) => {
     if (user) {
