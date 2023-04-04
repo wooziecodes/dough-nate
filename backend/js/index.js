@@ -241,10 +241,15 @@ function showListings(userType, userid) {
 
 function addAllergen() {
   var allergen = $("#allergen").val();
+  if(allergen){
   $("#allergenList").append(`
         <span class="badge text-bg-primary">${allergen}</span>
     `);
   $("#allergen").val("");
+  } else{
+    document.getElementById("error-allergen").style.display = "block";
+
+  }
 }
 
 function addListing() {

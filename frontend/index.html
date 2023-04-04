@@ -65,12 +65,17 @@
           <div id="allergenList"></div>
           <input type="text" class="form-control" id="allergen"/>
         </div>
-        <button type="button" class="btn" onclick="addAllergen()" style="margin-bottom: 5px">
+        <div style="display: flex; gap: 20px">
+        <button type="button" class="btn" onclick="addAllergen()">
           Add allergen
         </button>
         <button type="button" class="btn" onclick="addListing()">Submit</button>
+        </div>
         <div class="alert alert-danger mt-3" style="display:none; width:50%; text-align:center; margin:0 auto" id='error-submit'>
           <strong>Error:</strong> There was a problem with your submission.
+        </div>
+        <div class="alert alert-danger mt-3" style="display:none; width:50%; text-align:center; margin:0 auto" id='error-allergen'>
+          <strong>Error:</strong> Please state the allergen.
         </div>
         <div class="alert alert-danger mt-3" style="display:none; width:50%; text-align:center; margin:0 auto" id='error-bread'>
           <strong>Error:</strong> Please specify the number of bread!
