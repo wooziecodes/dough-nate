@@ -13,21 +13,6 @@ reportsCollection = db.collection("reports")
 
 CORS(app)
 
-class Report(object):
-    def __init__(self, listingId, reportStatus, reportText, reportType):
-        self.listingId = listingId
-        self.reportStatus = reportStatus
-        self.reportText = reportText
-        self.reportType = reportType
-
-    def json(self):
-        return {
-            "listingId": self.listingId,
-            "reportStatus": self.reportStatus,
-            "reportText": self.reportText,
-            "reportType": self.reportType
-        }
-
 @app.route("/reports", methods=["GET"])
 def get_reports():
     reports = []

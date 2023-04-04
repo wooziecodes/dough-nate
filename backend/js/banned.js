@@ -15,18 +15,30 @@ const auth = app.auth();
 $(document).ready(function () {
   // getReports()
   // getListingsWithCharityId()
-//   $(".report").hide();
+  //   $(".report").hide();
   auth.onAuthStateChanged((user) => {
     if (user) {
       // User is signed in
-      getListingsWithCharityId(user.uid);
+      getUserId(user.uid);
     }
   });
 });
 
-function getListingsWithCharityId(charityId) {
+function getUserId(userId) {
   $(async () => {
-        var serviceUrl = "http://localhost:5004/listings/charity/" + charityId;
+    switch (result.data.userType) {
+      case ("charity"):
+        $("#charityTable").show()
+        $("#report").show()
+        break
+      case ("bakery"):
+        $("#bakeryTable").show()
+        break
+      case ("volunteer"):
+        $("#volunteerTable").show()
+        break
+    }
+    var serviceUrl = "http://localhost:5004/listings/charity/" + userId
 
     try {
       const response = await fetch(serviceUrl, {
@@ -50,7 +62,7 @@ function getListingsWithCharityId(charityId) {
             console.log('yes')
             $("#bakeryName").empty();
             $("#bakeryName").append(`
-                            <option value="${listingId};${bakeryName}">${bakeryName} || ${createdTime}</option>
+                            <option value="${bakeryName}">${bakeryName} || ${createdTime}</option>
                         `);
           } else {
             console.log("meow");
@@ -59,7 +71,7 @@ function getListingsWithCharityId(charityId) {
               // const bakeryname = result.data[0].bakeryName[i]
 
               $("#bakeryName").append(`
-                                <option class='option' value="${listingId[i]};${bakeryName[i]}">${bakeryName[i]} || ${createdTime[i]}</option>
+                                <option class='option' value="${listingId[i]}">${bakeryName[i]} || ${createdTime[i]}</option>
                             `);
             }
           }
@@ -67,7 +79,7 @@ function getListingsWithCharityId(charityId) {
       }
     } catch (error) {
       alert("You don't have any listings to make report!")
-    //   alert(error.message);
+      //   alert(error.message);
     }
   });
 }
@@ -75,59 +87,45 @@ function getListingsWithCharityId(charityId) {
 function addReport() {
   // var reportWho = $('#reportWho').val()
   var reportText = $("#reportText").val();
-  var reportedUser = $("#bakeryName").val().split(';')[1];
-  var listingId = $("#bakeryName").val().split(';')[0];
+  var listingId = $("#bakeryName").val();
   // console.log(reportWho);
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      var serviceUrl = "http://localhost:5002/charities/" + user.uid;
+
+  $(async () => {
+    var serviceUrl = "http://localhost:5005/reports";
+    data = JSON.stringify({
+      // reportWho: reportWho,
+      reportText: reportText,
+      listingId: listingId,
+      reportStatus: "reviewing",
+      reportType: "bakery",
+    });
+    try {
       const response = await fetch(serviceUrl, {
-        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: data,
       });
       const result = await response.json();
-      var charityName = result.data.name;
-
-      var serviceUrl = "http://localhost:5005/reports";
-
-      data = JSON.stringify({
-        // reportWho: reportWho,
-        reportText: reportText,
-        reportedUser: reportedUser,
-        reportedBy: charityName,
-        reportStatus: "reviewing",
-        userType: "bakery",
-        listingId: listingId
-      });
-      console.log(data)
-      try {
-        const response = await fetch(serviceUrl, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: data,
-        });
-        const result = await response.json();
-        if (response.ok) {
-          if (response.status == 201) {
-            alert("Report added");
-            // $("#newReportWho").val("")
-            $("#newReportText").val("");
-            $("#newListingId").val("");
-            $("#newReportStatus").val("");
-            $("#newReportType").val("");
-            // $("#newVolunteerId").val("")
-            // $("#newCharityName").val("")
-            // $('#newBakeryName').val('')
-          }
+      if (response.ok) {
+        if (response.status == 201) {
+          alert("Report added");
+          // $("#newReportWho").val("")
+          $("#newReportText").val("");
+          $("#newListingId").val("");
+          $("#newReportStatus").val("");
+          $("#newReportType").val("");
+          // $("#newVolunteerId").val("")
+          // $("#newCharityName").val("")
+          // $('#newBakeryName').val('')
         }
-      } catch (error) {
-        alert(error.message);
-        console.log("reportText", reportText);
-        console.log("lisitgId", listingId);
       }
+    } catch (error) {
+      alert(error.message);
+      console.log("reportText", reportText);
+      console.log("lisitgId", listingId);
     }
   });
-
 }

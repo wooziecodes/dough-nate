@@ -126,10 +126,10 @@ function populateTable(id, userType) {
                 case "accepted":
                   toAppend = `
                                         <td class="align-middle text-warning">Searching for driver</td>
-                                    `;
-                  break;
-                case "picking up":
-                  toAppend = `
+                                    `
+                                    break
+                                case ("pickingup"):
+                                    toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up</td>
                                     `;
                   break;
@@ -171,10 +171,10 @@ function populateTable(id, userType) {
                 case "accepted":
                   toAppend = `
                                         <td class="align-middle text-warning">Accepted, searching for driver</td>
-                                    `;
-                  break;
-                case "picking up":
-                  toAppend = `
+                                    `
+                                    break
+                                case ("pickingup"):
+                                    toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up
                                         <button type="button" class="btn" onclick="updateStatus('${listing.id}', 'pickedup', '${id}')">Picked up</button>
                                         </td>
@@ -237,9 +237,8 @@ function populateTable(id, userType) {
                   break;
               }
 
-              await getAddress(listing.bakeryId).then((address) => {
-                console.log(toAppend);
-                $("#volunteerTableBody").append(`
+                            await getAddress(listing.bakeryId).then((address) => {
+                                $("#volunteerTableBody").append(`
                                 <tr>
                                     <td class="align-middle">${listing.bakeryName}</td>
                                     <td class="align-middle">${listing.charityName}</td>

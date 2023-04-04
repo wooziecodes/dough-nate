@@ -203,18 +203,6 @@
       </div>
     </div>
   </div>
-
-
-  <!-- 
-
-    
-    <div id="charity-inputs" class="hidden">
-      <label for="charityAddress">Charity Address:</label>
-      <input type="text" id="charityAddress">
-      <br>
-    </div>
-    <button type="submit">Sign Up</button>
-  </form> -->
   <script>
 
     const firebaseConfig = {
@@ -299,60 +287,30 @@
 
           data.id = user.uid
 
-          // Save user data to Firestore
-          if (collection == "bakeries") {
-            var serviceUrl = "http://localhost:5001/bakeries"
-          } else if (collection == "charities") {
-            var serviceUrl = "http://localhost:5002/charities"
-          } else {
-            var serviceUrl = "http://localhost:5003/volunteers"
+          var toSend = {}
+          toSend["userData"] = data
+          toSend["info"] = {
+            "collection": collection, 
+            "uid": user.uid,
+            "userType": profile,
+            "email": email
           }
 
-          try {
-            const response = await fetch(serviceUrl, {
-              headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-              },
-              method: "POST",
-              body: JSON.stringify(data)
-            })
-            const result = await response.json()
-            if (response.ok) {
-              if (response.status == 201) {
-                alert("User created")
-              }
+          var serviceUrl = "http://localhost:5037/createUser"
+          const response = await fetch(serviceUrl, {
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify(toSend)
+          })
+          if (response.ok) {
+            if (response.status == 200) {
+              alert("User created.")
+              redirectToIndex(profile, email)
             }
-          } catch (error) {
-            alert("Error creating user.")
-            alert(error.message)
           }
-
-          var serviceUrl = "http://localhost:5006/users"
-          try {
-            const response = await fetch(serviceUrl, {
-              headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-              },
-              method: "POST",
-              body: JSON.stringify({
-                "uid": user.uid,
-                "userType": profile,
-                "email": email
-              })
-            })
-            const result = await response.json()
-            if (response.ok) {
-              if (response.status == 201) {
-                //alert("User created")
-              }
-            }
-          } catch (error) {
-            alert("Error creating user.")
-            alert(error.message)
-          }
-          redirectToIndex(profile, email)
         })
     });
   </script>

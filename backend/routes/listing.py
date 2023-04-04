@@ -12,27 +12,6 @@ db = firestore.client()
 listingsCollection = db.collection("listings")
 
 CORS(app)
-
-class Listing(object):
-    def __init__(self, bakeryId, charityId, volunteerId, breadContent, releaseTime, allergens, status):
-        self.bakeryId = bakeryId
-        self.charityId = charityId
-        self.volunteerId = volunteerId
-        self.breadContent = breadContent
-        self.releaseTime = releaseTime
-        self.allergens = allergens
-        self.status = status
-
-    def json(self):
-        return {
-            "bakeryId": self.bakeryId,
-            "charityId": self.charityId,
-            "volunteerId": self.volunteerId,
-            "breadContent": self.breadContent,
-            "releaseTime": self.releaseTime,
-            "allergens": self.allergens,
-            "status": self.status
-        }
     
 @app.route("/listings", methods=["POST"])
 def add_listing():

@@ -13,19 +13,6 @@ usersCollection = db.collection("users")
 
 CORS(app)
 
-class User(object):
-    def __init__(self, uid, id, userType):
-        self.uid = uid
-        self.id = id
-        self.userType = userType
-
-    def json(self):
-        return {
-            "uid": self.uid,
-            "id": self.id,
-            "userType": self.userType
-        }
-    
 @app.route("/users/<string:uid>", methods=["GET"])
 def get_user_type(uid):
     users = []

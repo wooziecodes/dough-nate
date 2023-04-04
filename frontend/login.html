@@ -143,13 +143,12 @@
           if (response.ok) {
             if (response.status === 200) {
               if (result.data.userType == "charity") {
-                console.log("no check");
                 window.location.href = "index.html";
               } else {
                 checkBan(result.data.userType, userid).then((isBanned) => {
-                  console.log(isBanned + " 2");
                   if (isBanned) {
-                    alert("You have been banned!");
+                    window.location.href = "banned.html";
+         
                   } else {
                     window.location.href = "index.html";
                   }
@@ -201,7 +200,6 @@
               .get()
               .then((querySnapshot) => {
                 if (!querySnapshot.empty) {
-                  console.log("Email found:", email);
                   auth.onAuthStateChanged((user) => {
                     retrieveUserType(user.uid);
                   });

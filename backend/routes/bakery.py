@@ -13,23 +13,6 @@ bakeryCollection = db.collection("bakeries")
 
 CORS(app)
 
-class Bakery(object):
-    def __init__(self, bakeryName, bakeryEmail, bakeryAddress, bakeryPhone, isBanned):
-        self.bakeryName = bakeryName
-        self.bakeryEmail = bakeryEmail
-        self.bakeryAddress = bakeryAddress
-        self.bakeryPhone = bakeryPhone
-        self.isBanned = isBanned
-    
-    def json(self):
-        return {
-            "bakeryName": self.bakeryName,
-            "bakeryEmail": self.bakeryEmail,
-            "bakeryAddress": self.bakeryAddress,
-            "bakeryPhone": self.bakeryPhone,
-            "isBanned": self.isBanned
-        }
-
 @app.route("/bakeries", methods=["GET"])
 def get_bakeries():
     bakeries = []
