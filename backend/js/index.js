@@ -92,146 +92,117 @@ function retrieveUserType(userid) {
 }
 
 function showListings(userType, userid) {
-    $(async () => {
-        if (userType == "bakery") {
-          var serviceUrl =
-            "http://localhost:5004/listings/" + userType + "/" + userid;
-        } else {
-          var serviceUrl = "http://localhost:5004/listings";
-        }
-        try {
-            const response = await fetch(serviceUrl, {
-              method: "GET",
-            });
-            const result = await response.json();
-            if (response.ok) {
-              if (response.status === 200) {
-                  console.log('yes')
-                $("#appendCard").empty();
-      
-                if (userType == "charity") {
-                  $(".report").show();
-                  let count = 0;
-                  let cardHtml = "";
-      
-                  for (listing of result.data) {
-                    if (listing.status == "created") {
-                      count++;
-      
-                      //allergens need to fix
-                      cardHtml += `
-                <div class="col-md-3">
-                  <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
-                    <div id="card-body">
-                      <div class="cardTitle align-middle">Bakery Name:</div>
-                      <div class="cardDetails">${listing.bakeryName}</div>
-                      
-                      <div class="cardTitle align-middle">Bread Content:</div>
-                      <div class="cardDetails">${listing.breadContent}</div>
-                      <div class="cardTitle align-middle">Release Time:</div>
-                      <div class="cardDetails">${listing.releaseTime}</div>
-                      <div class="cardTitle align-middle">Allergens:</div>
-                      <div class="cardDetails">${listing.allergens}</div>
-                      <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-                      <button type="button" class="btn btn-primary" onclick="acceptOrder(this.id)" id=${listing.id}>Accept</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              `;
-      
-                      // Add a new row after every 4 cards
-                      if (count % 4 == 0) {
-                        $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
-                        cardHtml = "";
-                      }
-                    }
-                  }
-                   // Add the remaining cards
-            if (cardHtml != "") {
-                $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+  $(async () => {
+    if (userType == "bakery") {
+      var serviceUrl =
+        "http://localhost:5004/listings/" + userType + "/" + userid;
+    } else {
+      var serviceUrl = "http://localhost:5004/listings";
+    }
+    try {
+      const response = await fetch(serviceUrl, {
+        method: "GET",
+      });
+      const result = await response.json();
+      if (response.ok) {
+        if (response.status === 200) {
+          console.log("yes");
+          $("#appendCard").empty();
+
+          if (userType == "charity") {
+            $(".report").show();
+            let count = 0;
+            let cardHtml = "";
+
+            for (listing of result.data) {
+              if (listing.status == "created") {
+                count++;
+
+                //allergens need to fix
+                cardHtml += `
+                            <div class="col-md-3">
+                            <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
+                                <div id="card-body">
+                                <div class="cardTitle align-middle">Bakery Name:</div>
+                                <div class="cardDetails">${listing.bakeryName}</div>
+                                
+                                <div class="cardTitle align-middle">Bread Content:</div>
+                                <div class="cardDetails">${listing.breadContent}</div>
+                                <div class="cardTitle align-middle">Release Time:</div>
+                                <div class="cardDetails">${listing.releaseTime}</div>
+                                <div class="cardTitle align-middle">Allergens:</div>
+                                <div class="cardDetails">${listing.allergens}</div>
+                                <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
+                                <button type="button" class="btn" onclick="acceptOrder(this.id)" id=${listing.id}>Accept</button>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        `;
+
+                // Add a new row after every 4 cards
+                if (count % 4 == 0) {
+                  $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+                  cardHtml = "";
+                }
               }
-              // $("#listingsTable").append(`
-              //             <table class="table">
-              //             <thead>
-              //               <tr style="font-weight: bolder !important">
-              //                 <th scope="col">Bakery Name</th>
-              //                 <th scope="col">Bread Content</th>
-              //                 <th scope="col">Release Time</th>
-              //                 <th scope="col">Allergens</th>
-              //                 <th scope="col">Status</th>
-              //               </tr>
-              //             </thead>
-              //             <tbody id="listings"></tbody>
-              //           </table>`);
-              // for (listing of result.data) {
-              //   if (listing.status == "created") {
-              //     {
-              //       //allergens need to fix
-  
-              //       $("#listings").append(`
-              //                         <tr>
-              //                             <td class="align-middle">${listing.bakeryName}</td>
-              //                             <td class="align-middle">${listing.breadContent}</td>
-              //                             <td class="align-middle">${listing.releaseTime}</td>
-              //                             <td class="align-middle">${listing.allergens}</td>
-              //                             <td class="align-middle"><button type="button" class="btn btn-primary" onclick="acceptOrder(this.id)" id=${listing.id}>accept</button></td>
-              //                         </tr>
-              //                     `);
-              //     }
-              //   }
-              // }
-            } else if (userType == "volunteer") {
-              let count = 0;
-              let cardHtml = "";
-  
-              for (listing of result.data) {
-                if (listing.status == "accepted") {
-                  count++;
-  
-                  //allergens need to fix
-                  cardHtml += `
-            <div class="col-md-3">
-              <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
-                <div id="card-body">
-                  <div class="cardTitle align-middle">Bakery Name:</div>
-                  <div class="cardDetails">${listing.bakeryName}</div>
-                  <div class="cardTitle align-middle">Charity Name:</div>
-                  <div class="cardDetails">${listing.charityName}</div>
-                  <div class="cardTitle align-middle">Bread Content:</div>
-                  <div class="cardDetails">${listing.breadContent}</div>
-                  <div class="cardTitle align-middle">Release Time:</div>
-                  <div class="cardDetails">${listing.releaseTime}</div>
-                  <div class="cardTitle align-middle">Allergens:</div>
-                  <div class="cardDetails">${listing.allergens}</div>
-                  <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-                  <button type="button" class="btn btn-primary" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button>
-                  <button type="button" class="btn" style="text-decoration: none; background-color:#E2B582; " onclick="displayMap('${listing.id}')">View map</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-  
-                  // Add a new row after every 4 cards
-                  if (count % 4 == 0) {
-                    $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
-                    cardHtml = "";
-                  }}}
+            }
+            // Add the remaining cards
+            if (cardHtml != "") {
+              $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+            }
+          } else if (userType == "volunteer") {
+            let count = 0;
+            let cardHtml = "";
+
+            for (listing of result.data) {
+              if (listing.status == "accepted") {
+                count++;
+
+                //allergens need to fix
+                cardHtml += `
+                            <div class="col-md-3">
+                            <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
+                                <div id="card-body">
+                                <div class="cardTitle align-middle">Bakery Name:</div>
+                                <div class="cardDetails">${listing.bakeryName}</div>
+                                <div class="cardTitle align-middle">Charity Name:</div>
+                                <div class="cardDetails">${listing.charityName}</div>
+                                <div class="cardTitle align-middle">Bread Content:</div>
+                                <div class="cardDetails">${listing.breadContent}</div>
+                                <div class="cardTitle align-middle">Release Time:</div>
+                                <div class="cardDetails">${listing.releaseTime}</div>
+                                <div class="cardTitle align-middle">Allergens:</div>
+                                <div class="cardDetails">${listing.allergens}</div>
+                                <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
+                                <button type="button" class="btn" onclick="pickUpOrder(this.id)" id=${listing.id}>pick up</button>
+                                <button type="button" class="btn" style="text-decoration: none; background-color:#E2B582; " onclick="displayMap('${listing.id}')">View map</button>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        `;
+
+                // Add a new row after every 4 cards
+                if (count % 4 == 0) {
+                  $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+                  cardHtml = "";
+                }
+              }
+            }
 
             // Add the remaining cards
             if (cardHtml != "") {
-                $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
-              }
+              $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
             }
           }
         }
+      }
     } catch (error) {
       alert("Error generating listings");
     }
   });
 }
-
 
 function addAllergen() {
   var allergen = $("#allergen").val();
