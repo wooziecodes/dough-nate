@@ -14,7 +14,6 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
 
-
 $(document).ready(function () {
   $(".newListingContainer").hide();
   $(".report").hide();
@@ -28,17 +27,19 @@ $(document).ready(function () {
       retrieveUserType(user.uid);
     } 
   });
-
-
 });
 
 function logOut() {
-  firebase.auth().signOut().then(() => {
-    // Sign-out successful.
-    window.location.href = "login.html"
-  }).catch((error) => {
-    // An error happened.
-  });
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      // Sign-out successful.
+      window.location.href = "login.html";
+    })
+    .catch((error) => {
+      // An error happened.
+    });
 }
 
 function greet(id, userType) {
@@ -141,15 +142,34 @@ function showListings(userType, userid) {
                         `;
 
                 // Add a new row after every 4 cards
+                // if(count == 0){
+
+                // }
                 if (count % 4 == 0) {
                   $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
                   cardHtml = "";
                 }
               }
             }
+            if (count == 0) {
+              $("#appendCard").append(
+                `<h2 class="row"
+                style="
+                justify-content: center; 
+                // margin-top:300px;
+                max-width: 700px;
+                padding: 15px 0;
+                border: 1px dotted #56381c;
+                border-radius: 14px;
+                background-color:#fff6ee;
+                margin: 200px auto;
+                    ">There are no Listings to show!</h2>`
+              );
+              cardHtml = "";
+            }
             // Add the remaining cards
             if (cardHtml != "") {
-              $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
+              $("#appendCard").append(`<div>${cardHtml}</div>`);
             }
           } else if (userType == "volunteer") {
             let count = 0;
@@ -190,7 +210,22 @@ function showListings(userType, userid) {
                 }
               }
             }
-
+            if (count == 0) {
+              $("#appendCard").append(
+                `<h2 class="row"
+                  style="
+                  justify-content: center; 
+                  max-width: 700px;
+                  padding: 15px 0;
+                  border: 1px dotted #56381c;
+                  border-radius: 14px;
+                  background-color:#fff6ee;
+                  margin: 200px auto;
+                  color: #56381c !important;
+                      ">There are no Listings to show!</h2>`
+              );
+              cardHtml = "";
+            }
             // Add the remaining cards
             if (cardHtml != "") {
               $("#appendCard").append(`<div class="row">${cardHtml}</div>`);
@@ -250,9 +285,9 @@ function addListing() {
         if (response.ok) {
           if (response.status == 200) {
             alert("Listing created");
-            $("#allergenList").empty()
-            allergens = []
-            $("#breadContent").val("")
+            $("#allergenList").empty();
+            allergens = [];
+            $("#breadContent").val("");
           }
         }
       } catch (error) {
