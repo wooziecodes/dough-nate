@@ -9,31 +9,27 @@ CORS(app)
 
 @app.route("/order", methods=['POST'])
 def accept_order():
-    response = request.get_json()
-    uid = response['uid']
-    listingId = response['listingId']
-    charity_data = requests.get(url="http://localhost:5002/charities/" + uid).json()['data']
-
-    charity_name = charity_data['name']
-    data = {
-        "charityId": uid,
-        "charityName": charity_name,
-        "status": "accepted"
-    }
-    # header = {
-    #     "Accept": "application/json",
-    #     "Content-type": "application/json"
-    # }
     try:
+        response = request.get_json()
+        uid = response['uid']
+        listingId = response['listingId']
+        charity_data = requests.get(url="http://localhost:5002/charities/" + uid).json()['data']
+
+        charity_name = charity_data['name']
+        data = {
+            "charityId": uid,
+            "charityName": charity_name,
+            "status": "accepted"
+        }
         requests.put(url='http://localhost:5004/listings/'+listingId, json=data)
     except:
         return jsonify({
             "code": 500,
-            "message": "Error creating bakery."
+            "message": "Error creating accepting order."
         }), 500
     return jsonify({
         'code': 200,
-        "message": "successful acceptance"
+        "message": "Order accepted."
     }), 200
 
 if __name__ == "__main__":
