@@ -20,13 +20,13 @@ function getReports() {
                         $("#reportTable").append(`
                             <tr>
                                 <th class="align-middle" scope="row">${no}</th>
-                                <td class="align-middle">${report.id}</th>
-                                <td class="align-middle">${report.listingId}</td>
+                                <td class="align-middle">${report.reportedUser}</th>
+                                <td class="align-middle">${report.reportedBy}</td>
                                 <td class="align-middle">${report.reportStatus}</td>
+                                <td class="align-middle">${report.userType}</td>
                                 <td class="align-middle">${report.reportText}</td>
-                                <td class="align-middle">${report.reportType}</td>
                                 <td class="align-middle">
-                                    <button type="button" class="btn btn-warning deleteBtn">Delete</button>
+                                    <button type="button" class="btn btn-warning deleteBtn">Delete/Resolve</button>
                                 </td>
                                 <td class="align-middle">
                                     <button type="button" class="btn btn-danger updateBtnBan">Ban/Unban</button>

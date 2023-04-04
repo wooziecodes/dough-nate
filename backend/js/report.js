@@ -50,7 +50,7 @@ function getListingsWithCharityId(charityId) {
             console.log('yes')
             $("#bakeryName").empty();
             $("#bakeryName").append(`
-                            <option value="${bakeryName}">${bakeryName} || ${createdTime}</option>
+                            <option value="${listingId};${bakeryName}">${bakeryName} || ${createdTime}</option>
                         `);
           } else {
             console.log("meow");
@@ -59,7 +59,7 @@ function getListingsWithCharityId(charityId) {
               // const bakeryname = result.data[0].bakeryName[i]
 
               $("#bakeryName").append(`
-                                <option class='option' value="${listingId[i]}">${bakeryName[i]} || ${createdTime[i]}</option>
+                                <option class='option' value="${listingId[i]};${bakeryName[i]}">${bakeryName[i]} || ${createdTime[i]}</option>
                             `);
             }
           }
@@ -75,45 +75,59 @@ function getListingsWithCharityId(charityId) {
 function addReport() {
   // var reportWho = $('#reportWho').val()
   var reportText = $("#reportText").val();
-  var listingId = $("#bakeryName").val();
+  var reportedUser = $("#bakeryName").val().split(';')[1];
+  var listingId = $("#bakeryName").val().split(';')[0];
   // console.log(reportWho);
-
-  $(async () => {
-    var serviceUrl = "http://localhost:5005/reports";
-    data = JSON.stringify({
-      // reportWho: reportWho,
-      reportText: reportText,
-      listingId: listingId,
-      reportStatus: "reviewing",
-      reportType: "bakery",
-    });
-    try {
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      var serviceUrl = "http://localhost:5002/charities/" + user.uid;
       const response = await fetch(serviceUrl, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: data,
+        method: "GET",
       });
       const result = await response.json();
-      if (response.ok) {
-        if (response.status == 201) {
-          alert("Report added");
-          // $("#newReportWho").val("")
-          $("#newReportText").val("");
-          $("#newListingId").val("");
-          $("#newReportStatus").val("");
-          $("#newReportType").val("");
-          // $("#newVolunteerId").val("")
-          // $("#newCharityName").val("")
-          // $('#newBakeryName').val('')
+      var charityName = result.data.name;
+
+      var serviceUrl = "http://localhost:5005/reports";
+
+      data = JSON.stringify({
+        // reportWho: reportWho,
+        reportText: reportText,
+        reportedUser: reportedUser,
+        reportedBy: charityName,
+        reportStatus: "reviewing",
+        userType: "bakery",
+        listingId: listingId
+      });
+      console.log(data)
+      try {
+        const response = await fetch(serviceUrl, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: data,
+        });
+        const result = await response.json();
+        if (response.ok) {
+          if (response.status == 201) {
+            alert("Report added");
+            // $("#newReportWho").val("")
+            $("#newReportText").val("");
+            $("#newListingId").val("");
+            $("#newReportStatus").val("");
+            $("#newReportType").val("");
+            // $("#newVolunteerId").val("")
+            // $("#newCharityName").val("")
+            // $('#newBakeryName').val('')
+          }
         }
+      } catch (error) {
+        alert(error.message);
+        console.log("reportText", reportText);
+        console.log("lisitgId", listingId);
       }
-    } catch (error) {
-      alert(error.message);
-      console.log("reportText", reportText);
-      console.log("lisitgId", listingId);
     }
   });
+
 }
