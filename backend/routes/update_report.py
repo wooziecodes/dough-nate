@@ -26,7 +26,6 @@ def updateReport(reportId, userType):
                 requests.put("http://host.docker.internal:5001/bakeries/" + bakeryId, json=data)
                 requests.get("http://host.docker.internal:5056/hide_listing/" + bakeryId)
             else:
-                print("volunteer")
                 volunteerId = listing["volunteerId"]
                 volunteerData = requests.get("http://host.docker.internal:5003/volunteers/" + volunteerId)
                 volunteer = volunteerData.json()["data"]

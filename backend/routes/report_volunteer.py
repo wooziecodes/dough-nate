@@ -29,15 +29,17 @@ def pull_data():
                 status = doc['status']
                 if timestamp < now and (status == 'pickingup' or status == 'delivering'):
                     doc_id = doc['id']
+                    volunteer_id = doc['volunteerId']
                     obj = {
                         'listingId': doc_id,
-                        'reportStatus': 'reviewing',
                         'reportText': 'Volunteer did not deliver to charity',
-                        'reportType': 'volunteer'
+                        'reportedUser': volunteer_id,
+                        'reportedBy': 'Admin',
+                        'type': 'Report',
+                        'userType': 'Volunteer'
                         }
                     requests.put("http://host.docker.internal:5004/listings/"+doc_id, json={'status': 'reported'})
                     requests.post("http://host.docker.internal:5005/reports", json=obj)
-                    volunteer_id = doc['volunteerId']
                     ban = {
                         "isBanned" : True
                         }
