@@ -116,7 +116,7 @@ function populateTable(id, userType) {
                                         <td class="align-middle text-warning">Searching for driver</td>
                                     `
                                     break
-                                case ("pickingup"):
+                                case ("picking up"):
                                     toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up</td>
                                     `
@@ -153,16 +153,25 @@ function populateTable(id, userType) {
                             //created (charity see), accepted (vol see), picking up, delivering, delivered 
                             switch (listing.status) {
                                 case ("created"):
+                                    charity = `
+                                        <td class="align-middle">Unclaimed</td>
+                                    `
                                     toAppend = `
                                         <td class="align-middle text-info">Created</td>
                                     `
                                     break
                                 case ("accepted"):
+                                    charity = `
+                                        <td class="align-middle">${listing.charityName}</td>
+                                    `
                                     toAppend = `
                                         <td class="align-middle text-warning">Accepted, searching for driver</td>
                                     `
                                     break
-                                case ("pickingup"):
+                                case ("picking up"):
+                                    charity = `
+                                        <td class="align-middle">${listing.charityName}</td>
+                                    `
                                     toAppend = `
                                         <td class="align-middle text-info">Driver is on the way to pick up
                                         <button type="button" class="btn btn-success" onclick="updateStatus('${listing.id}', 'pickedup', '${id}')">Picked up</button>
@@ -170,11 +179,17 @@ function populateTable(id, userType) {
                                     `
                                     break
                                 case ("delivering"):
+                                    charity = `
+                                        <td class="align-middle">${listing.charityName}</td>
+                                    `
                                     toAppend = `
                                         <td class="align-middle text-info">Driver is delivering</td>
                                     `
                                     break
                                 case ("delivered"):
+                                    charity = `
+                                        <td class="align-middle">${listing.charityName}</td>
+                                    `
                                     toAppend = `
                                         <td class="align-middle text-success">Delivered</td>
                                     `
@@ -183,7 +198,7 @@ function populateTable(id, userType) {
 
                             $("#bakeryTableBody").append(`
                                 <tr>
-                                    <td class="align-middle">${listing.charityName}</td>
+                                    <td class="align-middle">${charity}</td>
                                     <td class="align-middle">${listing.breadContent}</td>
                                     ${toAppend}
                                     <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
