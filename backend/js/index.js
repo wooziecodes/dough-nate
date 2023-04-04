@@ -265,35 +265,26 @@ function addListing() {
 
 function acceptOrder(listingId) {
   var id = listingId;
-
+  // var serviceUrl = "http://localhost:5002"
   document.getElementById(id).className = "btn disabled";
   document.getElementById(id).innerHTML = "accepted";
 
   auth.onAuthStateChanged(async (user) => {
     if (user) {
-      var serviceUrl = "http://localhost:5002/charities/" + user.uid;
-      const response = await fetch(serviceUrl, {
-        method: "GET",
-      });
-      const result = await response.json();
-      var charityName = result.data.name;
-
-      var serviceUrl = "http://localhost:5004/listings/" + id;
-
+      console.log(user.uid);
       data = JSON.stringify({
-        charityId: user.uid,
-        charityName: charityName,
-        status: "accepted",
-        //createTime: firestore.Timestamp.now()
+        uid : user.uid,
+        listingId : id
       });
-
+      console.log(data)
+      var serviceUrl = "http://localhost:5038/order";
       try {
         const response = await fetch(serviceUrl, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          method: "PUT",
+          method: "POST",
           body: data,
         });
         const result = await response.json();
@@ -307,6 +298,58 @@ function acceptOrder(listingId) {
         alert("Error creating report.");
         alert(error.message);
       }
+      // const response = await fetch(serviceUrl, {
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //   },
+      //   method: "POST", 
+      //   body: obj
+      // });
+      // const result = await response.json();
+      // if (response.ok) {
+      //   if (response.satus == 200){
+      //     alert("Accepted")
+      //     retrieveUserType(user.uid)
+      //   }
+      // }
+
+      // var serviceUrl = "http://localhost:5002/charities/" + user.uid;
+      // const response = await fetch(serviceUrl, {
+      //   method: "GET",
+      // });
+      // const result = await response.json();
+      // var charityName = result.data.name;
+
+      // var serviceUrl = "http://localhost:5004/listings/" + id;
+
+      // data = JSON.stringify({
+      //   charityId: user.uid,
+      //   charityName: charityName,
+      //   status: "accepted",
+      //   //createTime: firestore.Timestamp.now()
+      // });
+
+      // try {
+      //   const response = await fetch(serviceUrl, {
+      //     headers: {
+      //       Accept: "application/json",
+      //       "Content-Type": "application/json",
+      //     },
+      //     method: "PUT",
+      //     body: data,
+      //   });
+      //   const result = await response.json();
+      //   if (response.ok) {
+      //     if (response.status == 200) {
+      //       alert("Accepted");
+      //       retrieveUserType(user.uid);
+      //     }
+      //   }
+      // } catch (error) {
+      //   alert("Error creating report.");
+      //   alert(error.message);
+      // }
     }
   });
 }
