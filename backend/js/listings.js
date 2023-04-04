@@ -198,7 +198,7 @@ function populateTable(id, userType) {
 
                             $("#bakeryTableBody").append(`
                                 <tr>
-                                    <td class="align-middle">${charity}</td>
+                                    ${charity}
                                     <td class="align-middle">${listing.breadContent}</td>
                                     ${toAppend}
                                     <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
