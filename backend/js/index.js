@@ -112,7 +112,7 @@ function showListings(userType, userid) {
           if (userType == "charity") {
             $(".report").show();
             let count = 0;
-            let cardHtml = "";
+            let cardHtml = `<h1 class="mb-5">All Listings</h1>`;
 
             for (listing of result.data) {
               if (listing.status == "created") {
@@ -153,7 +153,7 @@ function showListings(userType, userid) {
             }
           } else if (userType == "volunteer") {
             let count = 0;
-            let cardHtml = "";
+            let cardHtml = `<h1 class="mb-5">All Listings</h1>`;
 
             for (listing of result.data) {
               if (listing.status == "accepted") {
@@ -264,6 +264,9 @@ function addListing() {
         if (response.ok) {
           if (response.status == 201) {
             alert("Listing created");
+            $("#allergenList").empty()
+            allergens = []
+            $("#breadContent").val("")
           }
         }
       } catch (error) {
