@@ -5,8 +5,13 @@ import requests
 
 app = Flask(__name__)
 
-@app.route("/order/<string:uid>/<string:listingId>", methods=['POST'])
-def accept_order(uid, listingId):
+CORS(app)
+
+@app.route("/order", methods=['POST'])
+def accept_order():
+    response = request.get_json()
+    uid = response['uid']
+    listingId = response['listingId']
     charity_data = requests.get(url="http://localhost:5002/charities/" + uid).json()['data']
 
     charity_name = charity_data['name']
@@ -15,12 +20,12 @@ def accept_order(uid, listingId):
         "charityName": charity_name,
         "status": "accepted"
     }
-    header = {
-        "Accept": "application/json",
-        "Content-type": "application/json"
-    }
+    # header = {
+    #     "Accept": "application/json",
+    #     "Content-type": "application/json"
+    # }
     try:
-        requests.put(url='http://localhost:5004/listings/'+listingId, headers=header, data=data)
+        requests.put(url='http://localhost:5004/listings/'+listingId, json=data)
     except:
         return jsonify({
             "code": 500,
