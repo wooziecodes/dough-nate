@@ -13,8 +13,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
-const date = new Date().getTime();
-const newdate = new Date(date + 1.5 * 60 * 60 * 1000);
+
 
 $(document).ready(function () {
   $(".newListingContainer").hide();
@@ -35,8 +34,17 @@ $(document).ready(function () {
     }
   });
 
-  console.log(newdate);
+
 });
+
+function logOut() {
+  firebase.auth().signOut().then(() => {
+    // Sign-out successful.
+    window.location.href = "login.html"
+  }).catch((error) => {
+    // An error happened.
+  });
+}
 
 function greet(id, userType) {
   console.log(id, userType);

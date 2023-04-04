@@ -25,6 +25,14 @@ $(document).ready(function () {
     });
 })
 
+function logOut() {
+    firebase.auth().signOut().then(() => {
+      // Sign-out successful.
+      window.location.href = "login.html"
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
 function getListings(uid) {
     $(async () => {
         var serviceUrl = "http://localhost:5006/users/" + uid

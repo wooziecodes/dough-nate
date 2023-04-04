@@ -50,6 +50,11 @@ body {
   color: #56381c;
   font-weight: bold;
 }
+.logoutText {
+  margin-left: 5px;
+  color: #e2b582;
+  font-weight: bold;
+}
 
 .first {
   margin-left: auto;

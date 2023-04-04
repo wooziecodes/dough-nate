@@ -146,3 +146,8 @@ body {
     cursor: pointer;
     text-decoration: underline;
 }
+.logoutText {
+    margin-left: 5px;
+    color: #e2b582;
+    font-weight: bold;
+  }
