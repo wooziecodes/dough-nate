@@ -221,7 +221,6 @@ function addAllergen() {
 }
 
 function addListing() {
-  var breadContent = $("#breadContent").val();
   var allergens = [];
 
   $("#allergenList")
@@ -231,14 +230,6 @@ function addListing() {
     });
   auth.onAuthStateChanged(async (user) => {
     if (user) {
-      var serviceUrl = "http://localhost:5001/bakeries/" + user.uid;
-      const response = await fetch(serviceUrl, {
-        method: "GET",
-      });
-      const result = await response.json();
-      var bakeryName = result.data.name;
-
-      var serviceUrl = "http://localhost:5004/listings";
       const date = new Date();
       const date2 = new Date(date.getTime() + 3 * 60 * 60 * 1000);
 
@@ -246,19 +237,14 @@ function addListing() {
       const utcDate2 = date2.toUTCString();
 
       data = JSON.stringify({
-        allergens: allergens,
-        bakeryId: user.uid,
-        bakeryName: bakeryName,
+        uid: user.uid,
         breadContent: parseInt($("#breadContent").val()),
-        charityId: "",
-        charityName: "",
-        status: "created",
-        createTime: utcDate,
-        releaseTime: utcDate2,
-        deliverBy: "",
-        volunteerId: "",
-      });
+        allergens: allergens,
+        utcDate: utcDate,
+        utcDate2: utcDate2
+      })
 
+      var serviceUrl = "http://127.0.0.1:5020/addListing"
       try {
         const response = await fetch(serviceUrl, {
           headers: {
@@ -270,7 +256,7 @@ function addListing() {
         });
         const result = await response.json();
         if (response.ok) {
-          if (response.status == 201) {
+          if (response.status == 200) {
             alert("Listing created");
             $("#allergenList").empty()
             allergens = []
@@ -284,13 +270,7 @@ function addListing() {
     }
   });
 }
-//filter by usertype
 
-// function acceptOrder(userid) {
-//     console.log(userid)
-//     // document.getElementById("acceptButton"+count).innerHTML = `<button type="button" class="btn btn-secondary disabled">Accepted</button>`
-
-// }
 function acceptOrder(listingId) {
   var id = listingId;
 
@@ -391,92 +371,52 @@ function pickUpOrder(listingId) {
   });
 }
 
-function displayMap(listingid) {
-  $(async () => {
-    var serviceUrl = "http://localhost:5004/listings/" + listingid;
-    var postals = [];
-    const response = await fetch(serviceUrl, {
-      method: "GET",
-    });
-    const result = await response.json();
-    if (response.ok) {
-      if (response.status == 200) {
-        serviceUrl = "http://localhost:5001/bakeries/" + result.data.bakeryId;
-        const bresponse = await fetch(serviceUrl, {
-          method: "GET",
+async function displayMap(listingid) {
+  console.log("great success")
+  var serviceUrl = "http://localhost:5030/getMapInfo/" + listingid
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      serviceUrl += "/" + user.uid
+
+      const response = await fetch(serviceUrl, {
+        method: "GET"
+      })
+      const result = await response.json()
+      postals = result.data
+      convertPostal(postals).then(async function (result) {
+        const { Map } = await google.maps.importLibrary("maps");
+
+        const position = {
+          lat: parseFloat(result[0].lat),
+          lng: parseFloat(result[0].long),
+        };
+
+        var map = new Map($("#map")[0], {
+          center: position,
+          zoom: 13,
         });
-        const bresult = await bresponse.json();
-        postals.push({
-          postal: bresult.data.postal,
-          name: bresult.data.name,
+
+        new google.maps.Marker({
+          position: position,
+          map,
+          title: result[0].name,
         });
-        auth.onAuthStateChanged(async (user) => {
-          if (user) {
-            // User is signed in
-            var serviceUrl = "http://localhost:5006/users/" + user.uid;
-            try {
-              const response = await fetch(serviceUrl, {
-                method: "GET",
-              });
-              const uresult = await response.json();
-              if (response.ok) {
-                if (response.status === 200) {
-                  userType = uresult.data.userType;
-                  if (userType != "bakery" || result.data.charityId != "") {
-                    serviceUrl =
-                      "http://localhost:5002/charities/" +
-                      result.data.charityId;
-                    const cresponse = await fetch(serviceUrl, {
-                      method: "GET",
-                    });
-                    const cresult = await cresponse.json();
-                    postals.push({
-                      postal: cresult.data.postal,
-                      name: cresult.data.name,
-                    });
-                  }
-                  convertPostal(postals).then(async function (result) {
-                    const { Map } = await google.maps.importLibrary("maps");
 
-                    const position = {
-                      lat: parseFloat(result[0].lat),
-                      lng: parseFloat(result[0].long),
-                    };
-
-                    var map = new Map($("#map")[0], {
-                      center: position,
-                      zoom: 13,
-                    });
-
-                    new google.maps.Marker({
-                      position: position,
-                      map,
-                      title: result[0].name,
-                    });
-
-                    if (result.length > 1) {
-                      new google.maps.Marker({
-                        position: {
-                          lat: parseFloat(result[1].lat),
-                          lng: parseFloat(result[1].long),
-                        },
-                        map,
-                        title: result[1].name,
-                      });
-                    }
-                    $("#cover").show();
-                    $("#map").show();
-                  });
-                }
-              }
-            } catch (error) {
-              alert(error);
-            }
-          }
-        });
-      }
+        if (result.length > 1) {
+          new google.maps.Marker({
+            position: {
+              lat: parseFloat(result[1].lat),
+              lng: parseFloat(result[1].long),
+            },
+            map,
+            title: result[1].name,
+          });
+        }
+        $("#cover").show();
+        $("#map").show();
+      });
     }
-  });
+  })
 }
 
 async function convertPostal(postals) {
