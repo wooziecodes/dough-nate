@@ -187,6 +187,7 @@ function populateTable(id, userType) {
                                     <td class="align-middle">${listing.breadContent}</td>
                                     ${toAppend}
                                     <td class="align-middle mapbtn" onclick="displayMap('${listing.id}')">View map</td>
+                                    <td class="align-middle"><button type="button" class="btn btn-danger" onclick="deleteListing('${listing.id}')">Delete</button></td>
                                 </tr>
                             `)
 
@@ -397,6 +398,25 @@ function displayMap(listingid) {
             }
         }
     })
+}
+
+async function deleteListing(listingId) {
+    var serviceUrl = "http://localhost:5004/listings/" + listingId
+    try {
+        const response = await fetch(serviceUrl, {
+            method: "DELETE"
+        })
+        // const result = await response.json()
+        if (response.ok) {
+            if (response.status == 200) {
+                alert("Listing deleted successfully")
+                location.reload()
+            }
+        }
+    } catch (error) {
+        alert("Error deleting listing.")
+        return
+    }
 }
 
 $("#cover").click(function () {
