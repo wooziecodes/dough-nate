@@ -7,30 +7,32 @@ app = Flask(__name__)
 
 CORS(app)
 
-@app.route("/order", methods=['PUT'])
-def accept_order():
+@app.route("/pickup", methods=['PUT'])
+def pickup_order():
     try:
         response = request.get_json()
         uid = response['uid']
         listingId = response['listingId']
-        charity_data = requests.get(url="http://host.docker.internal:5002/charities/" + uid).json()['data']
+        utcDate = response['utcDate']
+        volunteer_data = requests.get(url="http://host.docker.internal:5003/volunteers/" + uid).json()['data']
 
-        charity_name = charity_data['name']
+        volunteer_name = volunteer_data['name']
         data = {
-            "charityId": uid,
-            "charityName": charity_name,
-            "status": "accepted"
+            "volunteerId": uid,
+            "volunteerName": volunteer_name,
+            "status": "pickingup",
+            "deliverBy": utcDate
         }
         requests.put(url='http://host.docker.internal:5004/listings/'+listingId, json=data)
     except:
         return jsonify({
             "code": 500,
-            "message": "Error creating accepting order."
+            "message": "Error picking up order."
         }), 500
     return jsonify({
         'code': 200,
-        "message": "Order accepted."
+        "message": "Order picked up."
     }), 200
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5038, debug=True)
+    app.run(host="0.0.0.0", port=5033, debug=True)

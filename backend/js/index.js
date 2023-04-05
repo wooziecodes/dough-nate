@@ -132,13 +132,11 @@ function showListings(userType, userid) {
             <div class="cardTitle align-middle">Release Time:</div>
             <div class="cardDetails">${listing.releaseTime}</div>
             <div class="cardTitle align-middle">Allergens:</div>
-            <div class="cardDetails">${
-              listing.allergens.length > 0 ? listing.allergens : "-"
-            }</div>
+            <div class="cardDetails">${listing.allergens.length > 0 ? listing.allergens : "-"
+                  }</div>
             <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-              <button type="button" class="btn" onclick="acceptOrder(this.id)" id=${
-                listing.id
-              }>Accept</button>
+              <button type="button" class="btn" onclick="acceptOrder(this.id)" id=${listing.id
+                  }>Accept</button>
             </div>
           </div>
         </div>
@@ -191,34 +189,27 @@ function showListings(userType, userid) {
                             <div class="card p-4" style="width: 18rem; display:inline-block; background-color: #faf7f5">
                                 <div id="card-body">
                                 <div class="cardTitle align-middle">Bakery Name:</div>
-                                <div class="cardDetails">${
-                                  listing.bakeryName
-                                }</div>
+                                <div class="cardDetails">${listing.bakeryName
+                  }</div>
                                 <div class="cardTitle align-middle">Charity Name:</div>
-                                <div class="cardDetails">${
-                                  listing.charityName
-                                }</div>
+                                <div class="cardDetails">${listing.charityName
+                  }</div>
                                 <div class="cardTitle align-middle">Bread Content:</div>
-                                <div class="cardDetails">${
-                                  listing.breadContent
-                                }</div>
+                                <div class="cardDetails">${listing.breadContent
+                  }</div>
                                 <div class="cardTitle align-middle">Release Time:</div>
-                                <div class="cardDetails">${
-                                  listing.releaseTime
-                                }</div>
+                                <div class="cardDetails">${listing.releaseTime
+                  }</div>
                                 <div class="cardTitle align-middle">Allergens:</div>
-                                <div class="cardDetails">${
-                                  listing.allergens.length > 0
-                                    ? listing.allergens
-                                    : "-"
-                                }</div>
+                                <div class="cardDetails">${listing.allergens.length > 0
+                    ? listing.allergens
+                    : "-"
+                  }</div>
                                 <div style="display: flex; justify-content: center;" class="gap-4 mt-3">
-                                <button type="button" class="btn" onclick="pickUpOrder(this.id)" id=${
-                                  listing.id
-                                }>pick up</button>
-                                <button type="button" class="btn" style="text-decoration: none; background-color:#E2B582; " onclick="displayMap('${
-                                  listing.id
-                                }')">View map</button>
+                                <button type="button" class="btn" onclick="pickUpOrder(this.id)" id=${listing.id
+                  }>pick up</button>
+                                <button type="button" class="btn" style="text-decoration: none; background-color:#E2B582; " onclick="displayMap('${listing.id
+                  }')">View map</button>
                                 </div>
                                 </div>
                             </div>
@@ -337,12 +328,10 @@ function acceptOrder(listingId) {
 
   auth.onAuthStateChanged(async (user) => {
     if (user) {
-      console.log(user.uid);
       data = JSON.stringify({
         uid: user.uid,
         listingId: id,
       });
-      console.log(data);
       var serviceUrl = "http://localhost:5038/order";
       try {
         const response = await fetch(serviceUrl, {
@@ -350,7 +339,7 @@ function acceptOrder(listingId) {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          method: "POST",
+          method: "PUT",
           body: data,
         });
         const result = await response.json();
@@ -426,51 +415,30 @@ function pickUpOrder(listingId) {
   //   document.getElementById(id).style = `font-size: 1px`
 
   auth.onAuthStateChanged(async (user) => {
+    const date = new Date().getTime();
+    const date2 = new Date(date + 1.5 * 60 * 60 * 1000);
+    const utcDate = date2.toUTCString();
     if (user) {
-      var serviceUrl = "http://localhost:5003/volunteers/" + user.uid;
+      data = JSON.stringify({
+        uid: user.uid,
+        listingId: listingId,
+        utcDate: utcDate,
+      });
+      var serviceUrl = "http://localhost:5033/pickup"
       const response = await fetch(serviceUrl, {
-        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: data,
       });
       const result = await response.json();
-      var volunteerName = result.data.name;
-
-      var serviceUrl = "http://localhost:5004/listings/" + id;
-      const date = new Date().getTime();
-      console.log(date)
-      const date2 = new Date(date + 1.5 * 60 * 60 * 1000);
-      console.log(date2)
-
-
-      const utcDate = date2.toUTCString();
-      console.log(utcDate)
-
-
-      data = JSON.stringify({
-        volunteerId: user.uid,
-        volunteerName: volunteerName,
-        status: "pickingup",
-        deliverBy: utcDate,
-      });
-
-      try {
-        const response = await fetch(serviceUrl, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "PUT",
-          body: data,
-        });
-        const result = await response.json();
-        if (response.ok) {
-          if (response.status == 200) {
-            alert("Listing picked up. Please proceed with delivery.");
-            retrieveUserType(user.uid);
-          }
+      if (response.ok) {
+        if (response.status == 200) {
+          alert("Accepted. Please proceed with pickup.");
+          retrieveUserType(user.uid);
         }
-      } catch (error) {
-        alert("Error creating report.");
-        alert(error.message);
       }
     }
   });

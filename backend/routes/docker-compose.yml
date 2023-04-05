@@ -73,7 +73,15 @@ services:
     restart: always
     ports: 
       - "5038:5038"
-  
+
+  pickup_order:
+    build:
+      context: ./
+      dockerfile: ./pickup_order.Dockerfile
+    image: weisheng284/pickup_order:1.0
+    restart: always
+    ports:
+      - "5033:5033"  
   add_listing:
     build:
       context: ./
@@ -163,6 +171,9 @@ services:
       dockerfile: ./trigger.Dockerfile
     image: weisheng284/trigger:1.0
     restart: always
+    depends_on:
+      - release_listing
+      - report_volunteer
   
   update_report:
     build:
