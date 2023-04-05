@@ -83,6 +83,23 @@
       color: white;
       text-decoration: none;
     }
+
+    .toggle-btn {
+    display: inline-block;
+    background-color: #607E96;
+    color: #ffffff;
+    padding: 8px 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 3px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  .toggle-btn:hover {
+    background-color: #56381c;
+  }
   </style>
   <body>
     <div class="container">
@@ -130,6 +147,9 @@
             </div>
             <button type="submit" class="btn btn-block">Login</button>
           </form>
+          <div class="text-center">
+            <a href="signup.html" class="toggle-btn">Don't have an account? Sign up</a>
+          </div>
         </div>
       </div>
     </div>
@@ -243,6 +263,23 @@
             // );
           });
       });
+
+      document.getElementById("toggleForms").addEventListener("click", function () {
+    const signupForm = document.getElementById("signup");
+    const loginForm = document.getElementById("login");
+    const toggleButton = document.getElementById("toggleForms");
+
+    if (signupForm.style.display === "none") {
+      signupForm.style.display = "block";
+      loginForm.style.display = "none";
+      toggleButton.textContent = "Switch to Login";
+    } else {
+      signupForm.style.display = "none";
+      loginForm.style.display = "block";
+      toggleButton.textContent = "Switch to Signup";
+    }
+  });
+
     </script>
   </body>
 </html>
